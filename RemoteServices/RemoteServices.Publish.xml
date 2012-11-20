@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<publishData>
+  <publishProfile publishUrl="c:\publish\remote-services-2012-10-30" deleteExistingFiles="False" ftpAnonymousLogin="False" ftpPassiveMode="True" msdeploySite="" msdeploySiteID="" msdeployRemoteSitePhysicalPath="" msdeployAllowUntrustedCertificate="False" msdeploySkipExtraFilesOnServer="True" msdeployMarkAsApp="False" profileName="Profile1" publishMethod="FileSystem" replaceMatchingFiles="True" userName="" savePWD="False" userPWD="" SelectedForPublish="True">
+    <file relUrl="Web.config" publishTime="08/31/2012 09:55:13" />
+    <file relUrl="TIMService.svc" publishTime="08/22/2011 14:01:50" />
+    <file relUrl="bin/Spring.Core.dll" publishTime="12/16/2009 20:25:43" />
+    <file relUrl="bin/ShippingService.Shared.dll" publishTime="10/30/2012 10:13:22" />
+    <file relUrl="bin/ShippingService.Business.dll" publishTime="10/30/2012 10:13:23" />
+    <file relUrl="bin/Spring.Data.dll" publishTime="12/16/2009 20:25:46" />
+    <file relUrl="bin/Spring.Aop.dll" publishTime="12/16/2009 20:25:44" />
+    <file relUrl="bin/RemoteServices.pdb" publishTime="10/30/2012 10:13:23" />
+    <file relUrl="ERPService.svc" publishTime="08/31/2012 09:57:55" />
+    <file relUrl="bin/RemoteServices.dll" publishTime="10/30/2012 10:13:23" />
+    <file relUrl="bin/Tweddle.Commons.Vies.pdb" publishTime="09/24/2012 15:18:52" />
+    <file relUrl="bin/Common.Logging.dll" publishTime="07/20/2009 19:50:50" />
+    <file relUrl="bin/log4net.dll" publishTime="04/09/2008 19:10:46" />
+    <file relUrl="bin/ShippingService.Business.pdb" publishTime="10/30/2012 10:13:23" />
+    <file relUrl="bin/Tweddle.Commons.dll" publishTime="09/24/2012 15:18:52" />
+    <file relUrl="bin/Tweddle.Commons.Vies.dll" publishTime="09/24/2012 15:18:52" />
+    <file relUrl="bin/Tweddle.Commons.pdb" publishTime="09/24/2012 15:18:52" />
+    <file relUrl="bin/ShippingService.Shared.pdb" publishTime="10/30/2012 10:13:22" />
+  </publishProfile>
+</publishData>

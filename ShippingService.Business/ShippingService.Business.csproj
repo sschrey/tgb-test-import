@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B7A5BD42-ABDC-4B10-9534-2646D8AB2D99}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ShippingService.Business</RootNamespace>
+    <AssemblyName>ShippingService.Business</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\Lib\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Aop">
+      <HintPath>..\Lib\Spring.Aop.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Core">
+      <HintPath>..\Lib\Spring.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Spring.Data">
+      <HintPath>..\Lib\Spring.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CarrierServices\GeneralShipping.cs" />
+    <Compile Include="CarrierServices\IUPS.cs" />
+    <Compile Include="CarrierServices\ShippingTNTPriceInfo.cs" />
+    <Compile Include="CarrierServices\TNTErrorCodes.cs" />
+    <Compile Include="CarrierServices\TNTShipping.cs" />
+    <Compile Include="CarrierServices\UPSBelgium.cs" />
+    <Compile Include="CarrierServices\UPSRRDonnely.cs" />
+    <Compile Include="CarrierServices\UPSShipping.cs" />
+    <Compile Include="Dao\IShippingServiceDAO.cs" />
+    <Compile Include="Dao\ShippingServiceDAO.cs" />
+    <Compile Include="Dao\ShippingServiceDAO.E1Link.cs" />
+    <Compile Include="Dao\ShippingServiceDAO.RowMappings.cs" />
+    <Compile Include="Domain\Address.cs" />
+    <Compile Include="Domain\BarcodeScanLog.cs" />
+    <Compile Include="Domain\Carrier.cs" />
+    <Compile Include="Domain\CarrierMode.cs" />
+    <Compile Include="Domain\Container.cs" />
+    <Compile Include="Domain\E1Statusses.cs" />
+    <Compile Include="Domain\Order.cs" />
+    <Compile Include="Domain\OrderCriteria.cs" />
+    <Compile Include="Domain\OrderExtension.cs" />
+    <Compile Include="Domain\OrderLine.cs" />
+    <Compile Include="Domain\OrderStatus.cs" />
+    <Compile Include="Domain\PackedContainer.cs" />
+    <Compile Include="Domain\PackedOrderLine.cs" />
+    <Compile Include="Domain\ShipToAddress.cs" />
+    <Compile Include="Domain\SoldToAddress.cs" />
+    <Compile Include="Facade.cs" />
+    <Compile Include="IFacade.cs" />
+    <Compile Include="CarrierServices\IShipping.cs" />
+    <Compile Include="Printing\PrintManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CarrierServices\ShippingFactory.cs" />
+    <Compile Include="CarrierServices\TGBAddress.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ShippingService.Shared\ShippingService.Shared.csproj">
+      <Project>{23F292A5-45DE-4DF7-A1DE-62A9D0921EDF}</Project>
+      <Name>ShippingService.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tweddle.Commons.Vies\Tweddle.Commons.Vies.csproj">
+      <Project>{FF64CB9B-E081-45E3-8C8F-A12EEBB0C75D}</Project>
+      <Name>Tweddle.Commons.Vies</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tweddle.Commons\Tweddle.Commons.csproj">
+      <Project>{4B30FAC0-3044-46C8-8FD3-FC0EED06C846}</Project>
+      <Name>Tweddle.Commons</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CarrierServices\UPS-Documentation.pdf" />
+    <None Include="CarrierServices\TNTfull_import_for_ExpressManager.pdf" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="sql\BarCodeLog.sql" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

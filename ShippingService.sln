@@ -1,0 +1,109 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingService.Business", "ShippingService.Business\ShippingService.Business.csproj", "{B7A5BD42-ABDC-4B10-9534-2646D8AB2D99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tweddle.Commons", "Tweddle.Commons\Tweddle.Commons.csproj", "{4B30FAC0-3044-46C8-8FD3-FC0EED06C846}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{B69A9F14-13E6-4F3B-AFA6-48BB99E84D8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tweddle.Commons.Vies", "Tweddle.Commons.Vies\Tweddle.Commons.Vies.csproj", "{FF64CB9B-E081-45E3-8C8F-A12EEBB0C75D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingService.Shared", "ShippingService.Shared\ShippingService.Shared.csproj", "{23F292A5-45DE-4DF7-A1DE-62A9D0921EDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteServices", "RemoteServices\RemoteServices.csproj", "{24DC34E9-6CD9-4F2B-9D1E-DD10FC7E099B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RemoteServices.Client", "RemoteServices.Client\RemoteServices.Client.csproj", "{E93ADBC7-3C87-478C-AB72-A8818E5B9526}"
+	ProjectSection(ProjectDependencies) = postProject
+		{24DC34E9-6CD9-4F2B-9D1E-DD10FC7E099B} = {24DC34E9-6CD9-4F2B-9D1E-DD10FC7E099B}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingService.Test", "ShippingService.Test\ShippingService.Test.csproj", "{1B20A72A-CAEC-463B-9704-C07BBA1F008C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{AA8FE97E-6F7E-4483-B288-96E018BA8583}"
+	ProjectSection(SolutionItems) = preProject
+		Lib\AjaxControlToolkit.dll = Lib\AjaxControlToolkit.dll
+		Lib\Common.Logging.dll = Lib\Common.Logging.dll
+		Lib\log4net.dll = Lib\log4net.dll
+		Lib\nunit.framework.dll = Lib\nunit.framework.dll
+		Lib\Spring.Aop.dll = Lib\Spring.Aop.dll
+		Lib\Spring.Core.dll = Lib\Spring.Core.dll
+		Lib\Spring.Data.dll = Lib\Spring.Data.dll
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 9
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://mis-tfs2010:8080/tfs/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = ShippingService.Business\\ShippingService.Business.csproj
+		SccProjectName1 = ShippingService.Business
+		SccLocalPath1 = ShippingService.Business
+		SccProjectUniqueName2 = Tweddle.Commons\\Tweddle.Commons.csproj
+		SccProjectName2 = Tweddle.Commons
+		SccLocalPath2 = Tweddle.Commons
+		SccProjectUniqueName3 = Web\\Web.csproj
+		SccProjectName3 = Web
+		SccLocalPath3 = Web
+		SccProjectUniqueName4 = Tweddle.Commons.Vies\\Tweddle.Commons.Vies.csproj
+		SccProjectName4 = Tweddle.Commons.Vies
+		SccLocalPath4 = Tweddle.Commons.Vies
+		SccProjectUniqueName5 = ShippingService.Shared\\ShippingService.Shared.csproj
+		SccProjectName5 = ShippingService.Shared
+		SccLocalPath5 = ShippingService.Shared
+		SccProjectUniqueName6 = RemoteServices\\RemoteServices.csproj
+		SccProjectName6 = RemoteServices
+		SccLocalPath6 = RemoteServices
+		SccProjectUniqueName7 = RemoteServices.Client\\RemoteServices.Client.csproj
+		SccProjectName7 = RemoteServices.Client
+		SccLocalPath7 = RemoteServices.Client
+		SccProjectUniqueName8 = ShippingService.Test\\ShippingService.Test.csproj
+		SccProjectName8 = ShippingService.Test
+		SccLocalPath8 = ShippingService.Test
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B7A5BD42-ABDC-4B10-9534-2646D8AB2D99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7A5BD42-ABDC-4B10-9534-2646D8AB2D99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7A5BD42-ABDC-4B10-9534-2646D8AB2D99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7A5BD42-ABDC-4B10-9534-2646D8AB2D99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B30FAC0-3044-46C8-8FD3-FC0EED06C846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B30FAC0-3044-46C8-8FD3-FC0EED06C846}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B30FAC0-3044-46C8-8FD3-FC0EED06C846}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B30FAC0-3044-46C8-8FD3-FC0EED06C846}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B69A9F14-13E6-4F3B-AFA6-48BB99E84D8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B69A9F14-13E6-4F3B-AFA6-48BB99E84D8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B69A9F14-13E6-4F3B-AFA6-48BB99E84D8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B69A9F14-13E6-4F3B-AFA6-48BB99E84D8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF64CB9B-E081-45E3-8C8F-A12EEBB0C75D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF64CB9B-E081-45E3-8C8F-A12EEBB0C75D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF64CB9B-E081-45E3-8C8F-A12EEBB0C75D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF64CB9B-E081-45E3-8C8F-A12EEBB0C75D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23F292A5-45DE-4DF7-A1DE-62A9D0921EDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23F292A5-45DE-4DF7-A1DE-62A9D0921EDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23F292A5-45DE-4DF7-A1DE-62A9D0921EDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23F292A5-45DE-4DF7-A1DE-62A9D0921EDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24DC34E9-6CD9-4F2B-9D1E-DD10FC7E099B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24DC34E9-6CD9-4F2B-9D1E-DD10FC7E099B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24DC34E9-6CD9-4F2B-9D1E-DD10FC7E099B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24DC34E9-6CD9-4F2B-9D1E-DD10FC7E099B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E93ADBC7-3C87-478C-AB72-A8818E5B9526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E93ADBC7-3C87-478C-AB72-A8818E5B9526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E93ADBC7-3C87-478C-AB72-A8818E5B9526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E93ADBC7-3C87-478C-AB72-A8818E5B9526}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B20A72A-CAEC-463B-9704-C07BBA1F008C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B20A72A-CAEC-463B-9704-C07BBA1F008C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B20A72A-CAEC-463B-9704-C07BBA1F008C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B20A72A-CAEC-463B-9704-C07BBA1F008C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		VisualSVNWorkingCopyRoot = 
+	EndGlobalSection
+EndGlobal

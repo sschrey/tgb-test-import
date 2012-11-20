@@ -1,0 +1,37 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="Web.Site" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head runat="server">
+    <title></title>
+    <link href="~/Style/style.css" rel="stylesheet" type="text/css" />
+
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/themes/smoothness/jquery-ui.css" rel="Stylesheet" type="text/css" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.17/jquery-ui.min.js"></script>
+    
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+
+    <asp:ScriptManager ID="scriptMan" runat="server" EnablePartialRendering="true" EnableScriptGlobalization="true" />
+    <div>
+        <asp:ValidationSummary ID="valSummary" runat="server" />
+        <div>
+            <asp:HyperLink ID="hlBarcodeEntry" runat="server" Text="Barcode entry" NavigateUrl="~/Barcode-entry.aspx" /> 
+            |
+            <asp:HyperLink ID="hlList" runat="server" Text="List" NavigateUrl="~/List.aspx" /> 
+            |
+            <asp:HyperLink ID="hlSearch" runat="server" Text="Search" NavigateUrl="~/Search.aspx" /> 
+        </div>
+        
+        <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+        
+        </asp:ContentPlaceHolder>
+    </div>
+    </form>
+</body>
+</html>
