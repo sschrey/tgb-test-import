@@ -29,6 +29,7 @@ namespace ShippingService.Business.CarrierServices
         internal XmlDocument AcceptResponse;
 
         private bool isReturnShipment { get; set; }
+        private static IUPS shippingData = new T();
         
 
         public UPSShipping()
@@ -247,7 +248,7 @@ namespace ShippingService.Business.CarrierServices
 
         private static XmlDocument LoadShipmentConfirmRequest(CarrierMode vendorInfo)
         {
-            var shippingData = new T();
+           
             var doc = new XmlDocument { PreserveWhitespace = false };
             doc.LoadXml(
                 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -264,9 +265,25 @@ namespace ShippingService.Business.CarrierServices
         <PaymentInformation>
             <Prepaid>
                 <BillShipper>
-                    <AccountNumber>" + shippingData.CustomerShipperNumber + @"</AccountNumber>
+                    <AccountNumber>" + shippingData.PaymentAccountNumber + @"</AccountNumber>
                 </BillShipper>
             </Prepaid>
+            <FreightCollect>
+                <BillReceiver>
+                    <AccountNumber>" + shippingData.PaymentAccountNumber + @"</AccountNumber>
+                </BillReceiver>
+            </FreightCollect>
+            <BillThirdParty>
+                <BillThirdPartyShipper>
+                    <AccountNumber>" + shippingData.PaymentAccountNumber + @"</AccountNumber>
+                    <ThirdParty> 
+                            <Address> 
+                                <PostalCode>48236</PostalCode> 
+                                <CountryCode>US</CountryCode> 
+                            </Address> 
+                    </ThirdParty>
+                </BillThirdPartyShipper>
+            </BillThirdParty>
         </PaymentInformation>
         <Description>Reference Materials</Description>
         <Shipper>
@@ -366,6 +383,27 @@ namespace ShippingService.Business.CarrierServices
                 Shipment.InsertAfter(referenceNumber2, referenceNumber);
             }
 
+
+            var payment = Shipment.SelectSingleNode("PaymentInformation");
+
+            switch(shippingData.PaymentOption)
+            {
+                case Payment.Collect:
+                    var collect = payment.SelectSingleNode("FreightCollect");
+                    payment.RemoveAll();
+                    payment.AppendChild(collect);
+                    break;
+                case Payment.Prepaid:
+                    var prepaid = payment.SelectSingleNode("Prepaid");
+                    payment.RemoveAll();
+                    payment.AppendChild(prepaid);
+                    break;
+                case Payment.BillThirdParty:
+                    var thirdParty = payment.SelectSingleNode("BillThirdParty");
+                    payment.RemoveAll();
+                    payment.AppendChild(thirdParty);
+                    break;
+            }
             
             //shipFrom is fairly static (we don't change Shipper at all)
             XmlNode ShipFrom = null;

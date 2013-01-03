@@ -19,5 +19,23 @@ namespace ShippingService.Business.CarrierServices
                 return num.ToString(); 
             }
         }
+
+
+        public Payment PaymentOption
+        {
+            get { return Payment.Prepaid; }
+        }
+
+        public string PaymentAccountNumber
+        {
+            get
+            {
+                var num = ConfigurationManager.AppSettings["UPS_BELGIUM_SHIPPER_NUMBER"];
+                if (num == null)
+                    throw new Exception("Oeps, the UPS_BELGIUM_SHIPPER_NUMBER is specified in web.config file!");
+
+                return num.ToString();
+            }
+        }
     }
 }
