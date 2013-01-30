@@ -1,5 +1,20 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Ship.aspx.cs" Inherits="Web.Ship" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+
+    <script type="text/javascript" language="javascript">
+        var prevcarrier;
+        $(document).ready(function () {
+            $('#<%= ddlCarrier.ClientID%>').focus(function () {
+                prevcarrier = $(this).val();
+            });
+            $("#<%= ddlCarrier.ClientID%>").change(function (event, ctrl) {
+                if (!confirm("Are you sure you want to change the carrier?"))
+                    $(this).val(prevcarrier);
+            });
+        });
+
+    </script>
+
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
    
