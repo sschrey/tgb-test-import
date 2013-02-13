@@ -74,6 +74,8 @@ namespace ShippingService.Business.Dao
             }
         }
 
+       
+
         public class ShippingConfirmationRowMapper<T> : IRowMapper<ShippingConfirmation>
         {
             ShippingConfirmation IRowMapper<ShippingConfirmation>.MapRow(IDataReader dr, int rowNum)

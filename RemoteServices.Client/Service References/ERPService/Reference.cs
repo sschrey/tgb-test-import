@@ -21,6 +21,9 @@ namespace RemoteServices.Client.ERPService {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IERPService/GetOrderConfirmations", ReplyAction="http://tempuri.org/IERPService/GetOrderConfirmationsResponse")]
         byte[] GetOrderConfirmations(string appId);
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IERPService/GetOrders", ReplyAction="http://tempuri.org/IERPService/GetOrdersResponse")]
+        byte[] GetOrders(string orderIds);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IERPService/MarkOrderConfirmation", ReplyAction="http://tempuri.org/IERPService/MarkOrderConfirmationResponse")]
         bool MarkOrderConfirmation(out string error, string orderId, string lineNumber);
         
@@ -64,6 +67,10 @@ namespace RemoteServices.Client.ERPService {
         
         public byte[] GetOrderConfirmations(string appId) {
             return base.Channel.GetOrderConfirmations(appId);
+        }
+        
+        public byte[] GetOrders(string orderIds) {
+            return base.Channel.GetOrders(orderIds);
         }
         
         public bool MarkOrderConfirmation(out string error, string orderId, string lineNumber) {

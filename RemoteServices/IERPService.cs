@@ -17,6 +17,9 @@ namespace RemoteServices
         byte[] GetOrderConfirmations(string appId);
 
         [OperationContract]
+        byte[] GetOrders(string orderIds);
+
+        [OperationContract]
         bool MarkOrderConfirmation(string orderId, string lineNumber, out string error);
 
         [OperationContract]

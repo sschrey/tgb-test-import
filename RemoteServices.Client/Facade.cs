@@ -41,6 +41,15 @@ namespace RemoteServices.Client
             return CompressedSerializer.Decompress<List<OrderConfirmation>>(res, CompressedSerializer.Serializer.XML);
         }
 
+        public IList<ERPOrder> GetERPOrders(string orderIds)
+        {
+            var client = GetClient();
+
+            var res = client.GetOrders(orderIds);
+
+            return CompressedSerializer.Decompress<List<ERPOrder>>(res, CompressedSerializer.Serializer.XML);
+        }
+
         public IList<OrderConfirmation> GetOrderConfirmations(string appId)
         {
             var client = GetClient();

@@ -21,6 +21,7 @@ namespace ShippingService.Business
         void SaveReturnLabel(Order o);
         int GetNextTNTConsignmentNoteNumber();
         IList<Order> GetOrders(OrderCriteria crit);
+        IList<ERPOrder> GetERPOrders(string orderIds);
         void LogBarcodeScan(BarcodeScanLog log);
         void UpdateTrackingNumber(string oldTrackingNumber, string newTrackingNumber);
         #region E1Link

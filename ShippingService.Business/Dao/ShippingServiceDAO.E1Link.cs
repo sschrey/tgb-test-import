@@ -8,6 +8,7 @@ using Spring.Transaction;
 using Spring.Transaction.Interceptor;
 using System.Data.Common;
 using Spring.Data.Common;
+using ShippingService.Business.Domain;
 
 namespace ShippingService.Business.Dao
 {
@@ -142,6 +143,7 @@ namespace ShippingService.Business.Dao
                new ShippingConfirmationRowMapper<ShippingConfirmation>());
         }
 
+        
         
         [Transaction]
         public void MarkTIMShippingConfirmation(string orderId)

@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ShippingService.Business.Mapping;
+using ShippingService.Shared;
+using ShippingService.Shared.Mapping;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +9,7 @@ using Tweddle.Commons.Business;
 
 namespace ShippingService.Business.Domain
 {
-    public partial class Order: Entity
+    public partial class Order: MappableEntity<Order, ERPOrder>
     {
         public virtual string ProposedCarrier { get; set; }
         public virtual string ProposedCarrierMode { get; set; }
@@ -16,6 +19,8 @@ namespace ShippingService.Business.Domain
         public virtual List<OrderLine> Lines { get; set; }
         public virtual string E1Status { get; set; }
 
+        public virtual string CustomerPONumber { get; set; }
+        public virtual string InvoiceNumber { get; set; }
         public virtual string OrderNumber { get; set; }
         public virtual string ZoneNumberDescription { get; set; }
 
@@ -48,5 +53,14 @@ namespace ShippingService.Business.Domain
             SoldToAddress = new SoldToAddress();
         }
 
+        public override ERPOrder Map()
+        {
+            var dtoOrder = new ERPOrder();
+
+            dtoOrder.InvoiceNumber = this.InvoiceNumber;
+            dtoOrder.CustomerPONumber = this.CustomerPONumber.TrimEnd(' ');
+
+            return dtoOrder;
+        }
     }
 }

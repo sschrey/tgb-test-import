@@ -68,6 +68,10 @@
       <Project>{B7A5BD42-ABDC-4B10-9534-2646D8AB2D99}</Project>
       <Name>ShippingService.Business</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ShippingService.Shared\ShippingService.Shared.csproj">
+      <Project>{23f292a5-45de-4df7-a1de-62a9d0921edf}</Project>
+      <Name>ShippingService.Shared</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tweddle.Commons\Tweddle.Commons.csproj">
       <Project>{4B30FAC0-3044-46C8-8FD3-FC0EED06C846}</Project>
       <Name>Tweddle.Commons</Name>

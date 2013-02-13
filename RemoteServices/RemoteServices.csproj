@@ -21,6 +21,11 @@
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
     <SccProvider>SAK</SccProvider>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -106,6 +111,10 @@
     <ProjectReference Include="..\ShippingService.Shared\ShippingService.Shared.csproj">
       <Project>{23F292A5-45DE-4DF7-A1DE-62A9D0921EDF}</Project>
       <Name>ShippingService.Shared</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tweddle.Commons\Tweddle.Commons.csproj">
+      <Project>{4b30fac0-3044-46c8-8fd3-fc0eed06c846}</Project>
+      <Name>Tweddle.Commons</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -242,13 +242,10 @@ namespace ShippingService.Business.Dao
             return code;
         }
 
-      
-
+        
 
         public IList<Order> GetOrders(OrderCriteria crit)
         {
-            
-
             return AdoTemplate.Execute<IList<Order>>(delegate(DbCommand cmd)
             {
                 IList<Order> orders = new List<Order>();
@@ -302,6 +299,7 @@ namespace ShippingService.Business.Dao
                                           ,a.[SoldToState]
                                           ,a.[SoldToPostalCode]
                                           ,a.[SoldToCountryCode]
+                                          ,a.[InvoiceNumber]
                                           ,pol.[OrderLineId] as packedorderlineid
                                           ,pol.[PackedContainerId]
                                           ,pol.[Qty] as packedqty
@@ -313,7 +311,7 @@ namespace ShippingService.Business.Dao
                                           ,pc.[ShipConfirmedOn]
                                           ,pc.[ReturnUPSLabel]
                                           ,pc.[ShippedOn]
-                                            from shippingservice.AllOrders a
+                                            from shippingservice.AllOrdersInvoiceNumIncl a
                 left outer join dbo.PackedOrderLine pol on a.orderlineid = pol.orderlineid
                 left outer join packedcontainer pc on pol.packedcontainerid = pc.packagecode";
 
@@ -326,6 +324,16 @@ namespace ShippingService.Business.Dao
                     p.ParameterName = "id";
                     p.Value = crit.Id;
                     cmd.Parameters.Add(p);
+                }
+
+                if (crit.Ids != null && crit.Ids.Count()>0)
+                {
+                    var pStr = string.Empty;
+                    foreach (var pId in crit.Ids)
+                        pStr += string.Format("'{0}',", pId);
+
+                    pStr = pStr.TrimEnd(new char[] { ',' });
+                    whereClauses.Add(string.Format("a.[CustomerPONumber] in ({0})", pStr));
                 }
 
                 if (!string.IsNullOrEmpty(crit.E1Status))
@@ -388,6 +396,8 @@ namespace ShippingService.Business.Dao
                     }
 
                     o.OrderNumber = dr["SalesOrderNumber"].ToString();
+                    o.InvoiceNumber = dr["InvoiceNumber"].ToString();
+                    o.CustomerPONumber = dr["CustomerPONumber"].ToString();
                     o.MainAddress.AddressLine1 = dr["AddressLine1"].ToString();
                     o.MainAddress.AddressLine2 = dr["AddressLine2"].ToString();
                     o.MainAddress.AddressLine3 = dr["AddressLine3"].ToString();

@@ -23,6 +23,12 @@ namespace RemoteServices
             return CompressedSerializer.Compress(list, CompressedSerializer.Serializer.XML);
         }
 
+        public byte[] GetOrders(string orderIds)
+        {
+            var list = ApplicationContextHolder.Instance.Facade.GetERPOrders(orderIds);
+            return CompressedSerializer.Compress(list, CompressedSerializer.Serializer.XML);
+        }
+
         public bool MarkOrderConfirmation(string orderId, string lineNumber, out string error)
         {
             error = null;

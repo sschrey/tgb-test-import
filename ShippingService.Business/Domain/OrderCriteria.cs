@@ -11,5 +11,6 @@ namespace ShippingService.Business.Domain
         public string TrackingNumber { get; set; }
         public DateTime? ShippedDate { get; set; }
         public string E1Status { get; set; }
+        public string[] Ids { get; set; }
     }
 }
