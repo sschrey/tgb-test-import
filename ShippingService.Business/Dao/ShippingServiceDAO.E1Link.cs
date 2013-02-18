@@ -14,7 +14,6 @@ namespace ShippingService.Business.Dao
 {
     public partial class ShippingServiceDAO
     {
-
         public IList<InventoryItem> GetInventory(string appId)
         {
             return AdoTemplate.Execute<IList<InventoryItem>>(delegate(DbCommand cmd)
@@ -29,9 +28,29 @@ namespace ShippingService.Business.Dao
 
                 return GetInventory(cmd);
             });
-        }
+        } 
 
-        
+        public IList<InventoryItem> GetInventoryByBranch(string appId, string branch)
+        {
+            return AdoTemplate.Execute<IList<InventoryItem>>(delegate(DbCommand cmd)
+            {
+                cmd.CommandText = "InventoryExtractByBranch";
+                cmd.CommandType = CommandType.StoredProcedure;
+                var parameter = cmd.CreateParameter();
+                parameter.ParameterName = "AppId";
+                parameter.Value = appId;
+
+                cmd.Parameters.Add(parameter);
+
+                parameter = cmd.CreateParameter();
+                parameter.ParameterName = "Branch";
+                parameter.Value = branch;
+
+                cmd.Parameters.Add(parameter); 
+
+                return GetInventory(cmd);
+            });
+        }       
 
         public IList<InventoryItem> GetTIMInventory()
         {

@@ -107,15 +107,17 @@ namespace ShippingService.Business
             return Dao.GetInventory(appId);
         }
 
+        public IList<InventoryItem> GetInventoryByBranch(string appId, string branch)
+        {
+            return Dao.GetInventoryByBranch(appId, branch);
+        }
+
         public IList<ERPOrder> GetERPOrders(string orderIds)
         {
             IList<Order> orders = GetOrders(new Domain.OrderCriteria() { Ids = orderIds.Split(';') });
 
             return Mapping.MappableEntity<Order, ERPOrder>.Map(orders);
         }
-
-       
-
 
         public IList<OrderConfirmation> GetTIMOrderConfirmations()
         {

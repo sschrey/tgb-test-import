@@ -31,7 +31,17 @@ namespace RemoteServices.Client
             return CompressedSerializer.Decompress<List<InventoryItem>>(res, CompressedSerializer.Serializer.XML);
         }
 
-        
+        public IList<InventoryItem> GetInventoryByBranch(string appId, string branch)
+        {
+            var client = GetClient();
+
+            var res = client.GetInventoryByBranch(appId, branch);
+
+            client.CloseConnection();
+
+            return CompressedSerializer.Decompress<List<InventoryItem>>(res, CompressedSerializer.Serializer.XML);
+        }
+
         public IList<OrderConfirmation> GetTIMOrderConfirmations()
         {
             var client = GetTIMClient();

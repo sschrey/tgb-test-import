@@ -14,6 +14,21 @@
       </xs:sequence>
     </xs:complexType>
   </xs:element>
+  <xs:element name="GetInventoryByBranch">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="appId" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="branch" nillable="true" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetInventoryByBranchResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="GetInventoryByBranchResult" nillable="true" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
   <xs:element name="GetOrderConfirmations">
     <xs:complexType>
       <xs:sequence>
