@@ -22,15 +22,26 @@
     <table>
         <tr>
             <td align="right">Order id:</td>
-            <td>00002-SU-<asp:TextBox ID="tbOrderId" runat="server" Width="100" /></td>
+            <td>00002-SU-<asp:TextBox ID="tbOrderId" runat="server" Width="140" /></td>
         </tr>
         <tr>
             <td align="right">Tracking number:</td>
             <td><asp:TextBox ID="tbTrackingNumber" runat="server" Width="200" /> </td>
         </tr>
         <tr>
-            <td align="right">Shipped date:</td>
-            <td><asp:TextBox ID="tbShippedDate" runat="server" Width="100" /> </td>
+            <td valign="top" align="right">Shipped date:</td>
+            <td>
+                <div>
+                <asp:TextBox ID="tbShippedDateFrom" runat="server" Width="200" />
+                </div>
+                <div>
+                <asp:TextBox ID="tbShippedDateTo" runat="server" Width="200" /> 
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" align="right">Carrier:</td>
+            <td><asp:DropDownList ID="ddlCarrier" DataTextField="Name" DataValueField="Id" runat="server" /> </td>
         </tr>
         <tr>
             <td>
@@ -252,7 +263,7 @@
 
         $(".shipto").click(function () {
             var self = this;
-           
+
             $("#dialog-modal").find("div").each(function () {
                 $(this).html(containsId(self, $(this).attr("id")));
             });
@@ -266,7 +277,7 @@
 
         $(".soldto").click(function () {
             var self = this;
-          
+
             $("#dialog-modal").find("div").each(function () {
                 $(this).html(containsId(self, $(this).attr("id")));
             });
@@ -278,8 +289,24 @@
             });
         });
 
+        $("#<%= tbShippedDateFrom.ClientID %>").datepicker({
 
-        $("#<%= tbShippedDate.ClientID %>").datepicker({ dateFormat: "yy-mm-dd" });
+            dateFormat: "yy-mm-dd",
+            onClose: function (selectedDate) {
+                $("#<%= tbShippedDateTo.ClientID %>").datepicker("option", "minDate", selectedDate);
+            }
+        });
+        $("#<%= tbShippedDateTo.ClientID %>").datepicker({
+
+            dateFormat: "yy-mm-dd",
+            onClose: function (selectedDate) {
+                $("#<%= tbShippedDateFrom.ClientID %>").datepicker("option", "maxDate", selectedDate);
+            }
+        });
+
+        $("#<%= tbShippedDateFrom.ClientID %>").watermark("From");
+        $("#<%= tbShippedDateTo.ClientID %>").watermark("To");
+
 
         var onblurhandler = function (event) {
             $(this).hide();

@@ -9,8 +9,10 @@ namespace ShippingService.Business.Domain
     {
         public string Id { get; set; }
         public string TrackingNumber { get; set; }
-        public DateTime? ShippedDate { get; set; }
+        public DateTime? ShippedDateFrom { get; set; }
+        public DateTime ShippedDateTo { get; set; }
         public string E1Status { get; set; }
         public string[] Ids { get; set; }
+        public string Carrier { get; set; }
     }
 }

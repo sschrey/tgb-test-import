@@ -354,20 +354,32 @@ namespace ShippingService.Business.Dao
                     cmd.Parameters.Add(p);
                 }
 
-                if (crit.ShippedDate.HasValue)
+                if (crit.ShippedDateFrom.HasValue)
                 {
-
-                    whereClauses.Add("pc.ShippedOn between @ShippedDateStart and @ShippedDateEnd");
+                    whereClauses.Add("pc.ShippedOn > @ShippedDateFrom");
                     var p = cmd.CreateParameter();
-                    p.ParameterName = "ShippedDateStart";
-                    p.Value = crit.ShippedDate;
+                    p.ParameterName = "ShippedDateFrom";
+                    p.Value = crit.ShippedDateFrom;
                     cmd.Parameters.Add(p);
 
-                    p = cmd.CreateParameter();
-                    p.ParameterName = "ShippedDateEnd";
-                    p.Value = crit.ShippedDate.Value.AddDays(1);
+                    whereClauses.Add("pc.ShippedOn < @ShippedDateTo");
+                    var p2 = cmd.CreateParameter();
+                    p2.ParameterName = "ShippedDateTo";
+                    p2.Value = crit.ShippedDateTo.AddDays(1);
+                    cmd.Parameters.Add(p2);
+                }
+
+                if (!string.IsNullOrEmpty(crit.Carrier))
+                {
+                    whereClauses.Add("a.CarrierCode = @Carrier");
+                    var p = cmd.CreateParameter();
+                    p.ParameterName = "Carrier";
+                    p.Value = crit.Carrier;
                     cmd.Parameters.Add(p);
                 }
+
+                
+                
 
                 if (whereClauses.Count != 0)
                     cmdText += " where ";

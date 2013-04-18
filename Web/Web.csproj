@@ -104,6 +104,7 @@
     <Content Include="Barcode-entry.aspx" />
     <Content Include="Images\barcode-scanner.jpg" />
     <Content Include="Images\indicator.gif" />
+    <Content Include="Scripts\jquery.watermark.min.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

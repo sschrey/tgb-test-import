@@ -13,7 +13,12 @@ namespace Web
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            
+            if (!Page.IsPostBack)
+            {
+                ddlCarrier.DataSource = ApplicationContextHolder.Instance.Facade.GetCarriers();
+                ddlCarrier.DataBind();
+                ddlCarrier.Items.Insert(0, new ListItem("Select carrier", ""));
+            }
         }
 
         protected bool isFirstRow
@@ -41,11 +46,19 @@ namespace Web
                 brokenRules = new List<string>();
                 if (string.IsNullOrEmpty(criteria.Id)
                     && string.IsNullOrEmpty(criteria.TrackingNumber)
-                    && !criteria.ShippedDate.HasValue)
+                    && !criteria.ShippedDateFrom.HasValue)
                 {
-                    brokenRules.Add("Please specify at least one criteria");
+                    brokenRules.Add("Please specify order id, trackingnumber or date range");
                     return false;
                 }
+
+                if (criteria.ShippedDateFrom.HasValue
+                    && criteria.ShippedDateTo.Subtract(criteria.ShippedDateFrom.Value).Days > 29)
+                {
+                    brokenRules.Add("Maximum days between from and to is 30");
+                    return false;
+                }
+
                 return true;
             }
         }
@@ -55,7 +68,9 @@ namespace Web
             var oc = new OrderCriteria();
             oc.Id = !string.IsNullOrEmpty(tbOrderId.Text) ? "00002-SU-" + tbOrderId.Text : null;
             oc.TrackingNumber = tbTrackingNumber.Text;
-            oc.ShippedDate = !string.IsNullOrEmpty(tbShippedDate.Text) ? (DateTime?)DateTime.Parse(tbShippedDate.Text) : null;
+            oc.ShippedDateFrom = !string.IsNullOrEmpty(tbShippedDateFrom.Text) ? (DateTime?)DateTime.Parse(tbShippedDateFrom.Text) : null;
+            oc.ShippedDateTo = !string.IsNullOrEmpty(tbShippedDateTo.Text) ? (DateTime)DateTime.Parse(tbShippedDateTo.Text) : DateTime.Now;
+            oc.Carrier = ddlCarrier.SelectedValue;
 
             OrderCriteriaCheck check = new OrderCriteriaCheck(oc);
             List<string> brokenRules;
