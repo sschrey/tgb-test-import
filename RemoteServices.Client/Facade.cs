@@ -123,7 +123,7 @@ namespace RemoteServices.Client
 
         public bool MarkOrderConfirmation(string orderId, string lineNumber, out string error)
         {
-            var client = GetTIMClient();
+            var client = GetClient();
 
             var res = client.MarkOrderConfirmation(out error, orderId, lineNumber);
 
