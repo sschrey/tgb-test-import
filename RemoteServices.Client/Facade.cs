@@ -31,11 +31,11 @@ namespace RemoteServices.Client
             return CompressedSerializer.Decompress<List<InventoryItem>>(res, CompressedSerializer.Serializer.XML);
         }
 
-        public IList<InventoryItem> GetInventoryByBranch(string appId, string branch)
+        public IList<InventoryItem> GetInventoryByBranch(string appId, string branch, bool inclCrossRefData = false)
         {
             var client = GetClient();
 
-            var res = client.GetInventoryByBranch(appId, branch);
+            var res = client.GetInventoryByBranch(appId, branch, inclCrossRefData);
 
             client.CloseConnection();
 

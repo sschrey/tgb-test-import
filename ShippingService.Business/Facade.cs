@@ -107,9 +107,9 @@ namespace ShippingService.Business
             return Dao.GetInventory(appId);
         }
 
-        public IList<InventoryItem> GetInventoryByBranch(string appId, string branch)
+        public IList<InventoryItem> GetInventoryByBranch(string appId, string branch, bool inclCrossRefData = false)
         {
-            return Dao.GetInventoryByBranch(appId, branch);
+            return Dao.GetInventoryByBranch(appId, branch, inclCrossRefData);
         }
 
         public IList<ERPOrder> GetERPOrders(string orderIds)

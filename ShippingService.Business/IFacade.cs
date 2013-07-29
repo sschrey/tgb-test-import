@@ -32,7 +32,7 @@ namespace ShippingService.Business
         void MarkTIMOrderConfirmation(string orderId, string lineNumber);
 
         IList<InventoryItem> GetInventory(string appId);
-        IList<InventoryItem> GetInventoryByBranch(string appId, string branch);
+        IList<InventoryItem> GetInventoryByBranch(string appId, string branch, bool inclCrossRefData = false);
         IList<OrderConfirmation> GetOrderConfirmations(string appId);
         IList<ShippingConfirmation> GetShippingConfirmations(string appId);
         void MarkShippingConfirmation(string orderLineId);

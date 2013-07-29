@@ -14,7 +14,7 @@ namespace RemoteServices
         byte[] GetInventory(string appId);
         
         [OperationContract]
-        byte[] GetInventoryByBranch(string appId, string branch);
+        byte[] GetInventoryByBranch(string appId, string branch, bool inclCrossRefData = false);
 
         [OperationContract]
         byte[] GetOrderConfirmations(string appId);

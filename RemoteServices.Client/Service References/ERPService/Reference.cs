@@ -19,7 +19,7 @@ namespace RemoteServices.Client.ERPService {
         byte[] GetInventory(string appId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IERPService/GetInventoryByBranch", ReplyAction="http://tempuri.org/IERPService/GetInventoryByBranchResponse")]
-        byte[] GetInventoryByBranch(string appId, string branch);
+        byte[] GetInventoryByBranch(string appId, string branch, bool inclCrossRefData);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IERPService/GetOrderConfirmations", ReplyAction="http://tempuri.org/IERPService/GetOrderConfirmationsResponse")]
         byte[] GetOrderConfirmations(string appId);
@@ -68,8 +68,8 @@ namespace RemoteServices.Client.ERPService {
             return base.Channel.GetInventory(appId);
         }
         
-        public byte[] GetInventoryByBranch(string appId, string branch) {
-            return base.Channel.GetInventoryByBranch(appId, branch);
+        public byte[] GetInventoryByBranch(string appId, string branch, bool inclCrossRefData) {
+            return base.Channel.GetInventoryByBranch(appId, branch, inclCrossRefData);
         }
         
         public byte[] GetOrderConfirmations(string appId) {

@@ -19,6 +19,7 @@
       <xs:sequence>
         <xs:element minOccurs="0" name="appId" nillable="true" type="xs:string" />
         <xs:element minOccurs="0" name="branch" nillable="true" type="xs:string" />
+        <xs:element minOccurs="0" name="inclCrossRefData" type="xs:boolean" />
       </xs:sequence>
     </xs:complexType>
   </xs:element>

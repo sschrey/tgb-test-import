@@ -17,9 +17,9 @@ namespace RemoteServices
             return CompressedSerializer.Compress(list, CompressedSerializer.Serializer.XML);
         }
 
-        public byte[] GetInventoryByBranch(string appId, string branch)
+        public byte[] GetInventoryByBranch(string appId, string branch, bool inclCrossRefData = false)
         {
-            var list = ApplicationContextHolder.Instance.Facade.GetInventoryByBranch(appId, branch);
+            var list = ApplicationContextHolder.Instance.Facade.GetInventoryByBranch(appId, branch, inclCrossRefData);
             return CompressedSerializer.Compress(list, CompressedSerializer.Serializer.XML);
         }
 

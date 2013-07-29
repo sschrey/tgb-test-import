@@ -28,13 +28,13 @@ namespace ShippingService.Business.Dao
 
                 return GetInventory(cmd);
             });
-        } 
+        }
 
-        public IList<InventoryItem> GetInventoryByBranch(string appId, string branch)
+        public IList<InventoryItem> GetInventoryByBranch(string appId, string branch, bool inclCrossRefData = false)
         {
             return AdoTemplate.Execute<IList<InventoryItem>>(delegate(DbCommand cmd)
             {
-                cmd.CommandText = "InventoryExtractByBranch";
+                cmd.CommandText = inclCrossRefData ? "InventoryExtractByBranchSoldto" : "InventoryExtractByBranch";
                 cmd.CommandType = CommandType.StoredProcedure;
                 var parameter = cmd.CreateParameter();
                 parameter.ParameterName = "AppId";
@@ -112,6 +112,11 @@ namespace ShippingService.Business.Dao
                 item.ItemNumber = dr["InternalPartNumber"].ToString();
                 item.Edition = dr["Edition"].ToString();
                 item.InPlantDate = dr["InPlantDate"].ToString();
+
+                
+                if (dr["Soldtolist"] != DBNull.Value)
+                    item.AddressCrossReferenceList = dr["Soldtolist"].ToString();
+                
                 //effective date can be empty
                 if (dr["Effectivedate"] == DBNull.Value)
                     item.EffectiveDate = DateTime.Now;
