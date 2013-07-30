@@ -10,5 +10,6 @@ namespace ShippingService.Shared
     {
         public string InvoiceNumber { get; set; }
         public string CustomerPONumber { get; set; }
+        public string ERPOrderID { get; set; }
     }
 }

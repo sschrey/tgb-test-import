@@ -59,6 +59,7 @@ namespace ShippingService.Business.Domain
 
             dtoOrder.InvoiceNumber = this.InvoiceNumber;
             dtoOrder.CustomerPONumber = this.CustomerPONumber.TrimEnd(' ');
+            dtoOrder.ERPOrderID = this.Id;
 
             return dtoOrder;
         }

@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationContextHolder.cs" />
+    <Compile Include="OrderTest.cs" />
     <Compile Include="UPSTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
