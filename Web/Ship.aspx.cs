@@ -86,6 +86,12 @@ namespace Web
 
             order.ShippedCarrier = ddlCarrier.SelectedValue;
             order.ShippedCarrierMode = ddlCarrierMode.SelectedValue;
+            var carrierModeText = ddlCarrierMode.SelectedItem.Text;
+            if (carrierModeText.Contains('{') && carrierModeText.Contains('}'))
+            {
+                order.ShippedCarrierModeOption = carrierModeText.Substring(carrierModeText.IndexOf('{') + 1, carrierModeText.IndexOf('}') - carrierModeText.IndexOf('{') - 1);
+            }
+           
 
             var carrierMode = ApplicationContextHolder.Instance.Facade.GetCarrierModeById(ddlCarrierMode.SelectedValue);
             var carrier = ApplicationContextHolder.Instance.Facade.GetCarrierById(ddlCarrier.SelectedValue);

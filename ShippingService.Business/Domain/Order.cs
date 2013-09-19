@@ -15,6 +15,7 @@ namespace ShippingService.Business.Domain
         public virtual string ProposedCarrierMode { get; set; }
         public virtual string ShippedCarrier { get; set; }
         public virtual string ShippedCarrierMode { get; set; }
+        public virtual string ShippedCarrierModeOption { get; set; }
         
         public virtual List<OrderLine> Lines { get; set; }
         public virtual string E1Status { get; set; }

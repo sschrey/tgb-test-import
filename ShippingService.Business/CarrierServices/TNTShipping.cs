@@ -139,7 +139,7 @@ namespace ShippingService.Business.CarrierServices
             sb.Append(WriteField("", 60)); //6 Special Instructions len60
             sb.Append(WriteField(Order.ShippedCarrierMode, 5)); //7 Service Code len5
             sb.Append(WriteField("S", 1)); //8 Payment Indicator len1
-            sb.Append(WriteField("", 3)); //9 Sub Service Option 1 len3 (eg PR for priority- we always remove)
+            sb.Append(WriteField(string.IsNullOrEmpty(Order.ShippedCarrierModeOption)?"": Order.ShippedCarrierModeOption, 3)); //9 Sub Service Option 1 len3 (eg PR for priority- we always remove)
             sb.Append(WriteField("", 3)); //10 Sub Service Option 2 len3
             sb.Append(WriteField("", 3)); //11 Sub Service Option 3
             sb.Append(WriteField("", 3)); //12 Sub Service Option 4
@@ -497,6 +497,13 @@ namespace ShippingService.Business.CarrierServices
             {
                 shipCode = "15N";
             }
+
+            //another exception for 728 = TNT Budget Freight service
+            if (shipCode == "728")
+            {
+                return 1;
+            }
+
 
             var rate = responseDoc.SelectSingleNode(@"//PRICE[OPTION[.='NONE'] and SERVICE[.='" + shipCode + "']]/RATE");
             if (rate != null)
