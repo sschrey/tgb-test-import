@@ -32,6 +32,8 @@ namespace ShippingService.Shared
         public string InPlantDate { get; set; }
         public DateTime EffectiveDate { get; set; }
         public string AddressCrossReferenceList { get; set; }
+        public string MarketCode { get; set; }
+        public string MarketText { get; set; }
 
 
         public InventoryItem()

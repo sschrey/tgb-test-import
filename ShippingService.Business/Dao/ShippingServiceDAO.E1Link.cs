@@ -116,6 +116,13 @@ namespace ShippingService.Business.Dao
                 
                 if (dr["Soldtolist"] != DBNull.Value)
                     item.AddressCrossReferenceList = dr["Soldtolist"].ToString();
+
+                if (dr["MarketCode"] != DBNull.Value)
+                    item.MarketCode = dr["MarketCode"].ToString();
+
+                if (dr["MarketText"] != DBNull.Value)
+                    item.MarketText = dr["MarketText"].ToString();
+                    
                 
                 //effective date can be empty
                 if (dr["Effectivedate"] == DBNull.Value)
