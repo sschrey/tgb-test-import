@@ -22,7 +22,17 @@ namespace ShippingService.Business.Dao
                 c.Name = dr["Dsc"].ToString();
                 c.Depth = Convert.ToInt32((double)dr["Depth"]*10);
                 c.Height = Convert.ToInt32((double)dr["Height"]*10);
-                c.Weight = (double)dr["Weight"];
+
+
+                switch (dr["WeightUOM"].ToString())
+                {
+                    case "KG":
+                        c.Weight = (int)((double)dr["Weight"] * 1000);
+                        break;
+                    case "GM":
+                        c.Weight = (int)((double)dr["Weight"]);
+                        break;
+                }
                 c.Width = Convert.ToInt32((double)dr["Width"]*10);
 
                 if (c.Weight == 0)

@@ -116,6 +116,7 @@
                             <th>OrderLine id</th>
                             <th>Part id</th>
                             <th>Part name</th>
+                            <th>Part weight</th>
                             <th>Order qty</th>
                             <th>Pack container id</th>
                             <th>Pack container name</th>
@@ -191,6 +192,7 @@
                                     <%# Eval("Id") %></td>
                                     <td><%# Eval("PartId") %></td>
                                     <td><%# Eval("PartName") %></td>
+                                    <td><%# Eval("PartWeight") %>gr</td>
                                     <td><%# Eval("OrderQty") %></td>
                                         <td>
                                         <asp:Repeater runat="server" ID="rptPacked" DataSource='<%# Eval("Packs") %>'>

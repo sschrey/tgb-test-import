@@ -17,6 +17,7 @@
                 <th>Line</th>
                 <th>Part</th>
                 <th>Qty</th>
+                <th>Part weight</th>
                 <th>Packs</th>
                 <th>
                 
@@ -41,8 +42,11 @@
                     <asp:Label runat="server" ID="labPartName" Text='<%# Eval("PartName") %>' />
                     <br />
                 </td>
-                <td width="150">
+                <td width="75">
                     <asp:Label runat="server" ID="labQuantity" Text='<%# Eval("OrderQty") %>' />
+                </td>
+                <td width="75">
+                    <asp:Label runat="server" ID="lblWeight" Text='<%# Eval("PartWeight") %>' />gr                   
                 </td>
                 <td>
                     <asp:Repeater runat="server" ID="rptPacked" DataSource='<%# Eval("Packs") %>'>
@@ -83,6 +87,7 @@
                     <th>
                         Container name
                     </th>
+                    <th>Estimated weight</th>
                     <th>Weight</th>
                     <th>
                         Containing products
@@ -98,6 +103,11 @@
                 <td>
                     <asp:HiddenField ID="packedContainerId" runat="server" Value='<%# Eval("Key.Id") %>' />
                     <%# Eval("Key.Container.Name") %>
+                    [<%# Eval("Key.Container.Weight") %>gr]
+                </td>
+                <td>
+                <asp:HiddenField ID="EstimatedWeight" runat="server" Value='<%# Eval("Key.EstimatedWeight") %>' />
+                <%# Eval("Key.EstimatedWeightAsString") %>
                 </td>
                 <td>
                     <asp:Label ID="lblWeight" Visible='<%# (int)Eval("Key.Weight") > 0 %>' runat="server" Text='<%# Eval("Key.Weight") %>' />
@@ -138,11 +148,10 @@
 <asp:Panel CssClass="modalPopup" ID="pnlPopup" runat="server" style="display:none">
     <asp:HiddenField ID="action" runat="server" />
     <asp:Label EnableViewState="false" CssClass="modelPopupTitle" ID="lblPopupTitle" runat="server"
-               Text="The weight seems to be the same as the ordernumber. Press confirm if the weight is indeed correct." /><br /><br />
+               Text="" /><br /><br />
     <asp:Button ID="btnConfirm" runat="server" Text="Confirm" OnClick="btnConfirm_Click" />
     <asp:Button ID="btnCancelPopup" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
 </asp:Panel> 
-
 
 <script type="text/javascript">
     function EnsureNumeric(e) {

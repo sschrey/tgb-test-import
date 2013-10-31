@@ -13,7 +13,7 @@ namespace ShippingService.Business.Domain
         public virtual string PartName { get; set; }
         public virtual int OrderQty { get; set; }
         public virtual IList<PackedOrderLine> Packs { get; set; }
-        public virtual int PartWeight { get { return 0; } }
+        public virtual int PartWeight { get; set; }
         public int UnitPrice { get; set; }
         /// <summary>
         /// Qty to pack

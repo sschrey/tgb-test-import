@@ -26,6 +26,7 @@
                             <th>OrderLine id</th>
                             <th>Part id</th>
                             <th>Part name</th>
+                            <th>Part weight</th>
                             <th>Order qty</th>
                             
                         </tr>
@@ -70,6 +71,7 @@
                                     <td><%# Eval("Id") %></td>
                                     <td><%# Eval("PartId") %></td>
                                     <td><%# Eval("PartName") %></td>
+                                    <td><%# Eval("PartWeight") %>gr</td>
                                     <td><%# Eval("OrderQty") %></td>
                                 </tr>
                                 <%isFirstRow = false; %>

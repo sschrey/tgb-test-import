@@ -16,7 +16,18 @@ namespace Web
             if (!Page.IsPostBack)
             {
                 ResetOrder();
-                var carriers = ApplicationContextHolder.Instance.Facade.GetContainers();
+
+                List<dynamic> ctrs = new List<dynamic>();
+                foreach (var c in ApplicationContextHolder.Instance.Facade.GetContainers())
+                {
+                    ctrs.Add(new 
+                    {
+                        Id = c.Id,
+                        Name = c.Name + "[" + c.Weight + "gr]"
+                    });
+                }
+
+                var carriers = ctrs;
 
                 ddlContainers.DataSource = carriers;
                 ddlContainers.DataBind();
@@ -143,9 +154,27 @@ namespace Web
 
             foreach (RepeaterItem item in rptPacks.Items)
             {
-                if (((TextBox)item.FindControl("tbWeight")).Text.Equals(o.OrderNumber.ToString())) {
+                int weight = Convert.ToInt32(((TextBox)item.FindControl("tbWeight")).Text);
+                if (weight.ToString().Equals(o.OrderNumber.ToString())) {
                     valid = false;
+                    lblPopupTitle.Text += "The weight seems to be the same as the ordernumber. Press confirm if the weight is indeed correct.";
                 }
+
+                int estimatedWeight = Convert.ToInt32((item.FindControl("EstimatedWeight") as HiddenField).Value);
+                if (estimatedWeight > 0)
+                {
+                    //10% difference is allowed
+                    int estimatedWeightplus = estimatedWeight + estimatedWeight / 10;
+                    int estimatedWeightmin = estimatedWeight - estimatedWeight / 10;
+
+                    if (weight < estimatedWeightmin || weight > estimatedWeightplus)
+                    {
+                        lblPopupTitle.Text += "There is more than 10% difference between the estimated weight and the entered weight.";
+                        valid = false;
+                    }
+                }
+
+
             }
 
             if (valid) {

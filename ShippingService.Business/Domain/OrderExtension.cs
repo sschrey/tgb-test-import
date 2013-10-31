@@ -120,9 +120,13 @@ namespace ShippingService.Business.Domain
             get
             {
                 Dictionary<PackedContainer, Dictionary<string, int>> pcwp = new Dictionary<PackedContainer, Dictionary<string, int>>();
-
+                int estimatedWeight = 0;
                 foreach (PackedContainer pc in PackedContainers)
                 {
+                    if (pc.Container.Weight > 0)
+                        estimatedWeight += pc.Container.Weight;
+                    else
+                        estimatedWeight = -1;
                     Dictionary<string, int> parts = new Dictionary<string, int>();
 
                     foreach (OrderLine ol in Lines)
@@ -131,14 +135,22 @@ namespace ShippingService.Business.Domain
                         {
                             if (pol.PackedContainer.Equals(pc))
                             {
-                                if (parts.ContainsKey(ol.PartName))
-                                    parts[ol.PartName] += pol.Qty;
+                                var partname = ol.PartName + " [" + ol.PartWeight + "gr]";
+                                if (parts.ContainsKey(partname))
+                                    parts[partname] += pol.Qty;
                                 else
-                                    parts.Add(ol.PartName, pol.Qty);
+                                    parts.Add(partname, pol.Qty);
+                                if (estimatedWeight > 0)
+                                {
+                                    if (ol.PartWeight > 0)
+                                        estimatedWeight += ol.PartWeight * pol.Qty;
+                                    else
+                                        estimatedWeight = -1;
+                                }
                             }
                         }
                     }
-
+                    pc.EstimatedWeight = estimatedWeight;
                     pcwp.Add(pc, parts);
                 }
 

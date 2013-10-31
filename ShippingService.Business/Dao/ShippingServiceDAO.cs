@@ -470,6 +470,8 @@ namespace ShippingService.Business.Dao
                     ol.PartName = dr["ItemDesc"].ToString();
                     ol.UnitPrice = (int)((double)dr["UnitPrice"] * 100);
 
+                    ol.PartWeight = (int)(dr["ItemWeight"].Equals(DBNull.Value) ? 0 : (double)dr["ItemWeight"]);
+
                     string packedOrderLineID = dr["packedorderlineid"].ToString();
 
                     if (string.IsNullOrEmpty(packedOrderLineID))

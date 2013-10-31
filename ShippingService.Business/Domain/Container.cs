@@ -22,9 +22,9 @@ namespace ShippingService.Business.Domain
         /// </summary>
         public virtual int Depth { get; set; }
         /// <summary>
-        /// Weight in grams, can be decimal
+        /// Weight in grams
         /// </summary>
-        public virtual double Weight { get; set; }
+        public virtual int Weight { get; set; }
 
         public long VolumeInMm3
         {
