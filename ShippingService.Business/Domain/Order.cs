@@ -22,6 +22,7 @@ namespace ShippingService.Business.Domain
 
         public virtual string CustomerPONumber { get; set; }
         public virtual string InvoiceNumber { get; set; }
+        public virtual DateTime? InvoiceDate { get; set; }
         public virtual string OrderNumber { get; set; }
         public virtual string ZoneNumberDescription { get; set; }
 
@@ -59,6 +60,7 @@ namespace ShippingService.Business.Domain
             var dtoOrder = new ERPOrder();
 
             dtoOrder.InvoiceNumber = this.InvoiceNumber;
+            dtoOrder.InvoiceDate = this.InvoiceDate;
             dtoOrder.CustomerPONumber = this.CustomerPONumber.TrimEnd(' ');
             dtoOrder.ERPOrderID = this.Id;
 

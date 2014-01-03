@@ -300,6 +300,7 @@ namespace ShippingService.Business.Dao
                                           ,a.[SoldToPostalCode]
                                           ,a.[SoldToCountryCode]
                                           ,a.[InvoiceNumber]
+                                          ,a.[InvoiceDate]
                                           ,pol.[OrderLineId] as packedorderlineid
                                           ,pol.[PackedContainerId]
                                           ,pol.[Qty] as packedqty
@@ -409,6 +410,11 @@ namespace ShippingService.Business.Dao
 
                     o.OrderNumber = dr["SalesOrderNumber"].ToString();
                     o.InvoiceNumber = dr["InvoiceNumber"].ToString();
+                    
+                    DateTime invoiceDate;
+                    if (dr["InvoiceDate"] != null && DateTime.TryParse(dr["InvoiceDate"].ToString(), out invoiceDate))
+                        o.InvoiceDate = invoiceDate;                    
+                    
                     o.CustomerPONumber = dr["CustomerPONumber"].ToString();
                     o.MainAddress.AddressLine1 = dr["AddressLine1"].ToString();
                     o.MainAddress.AddressLine2 = dr["AddressLine2"].ToString();
