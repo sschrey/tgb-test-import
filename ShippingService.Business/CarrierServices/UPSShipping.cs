@@ -292,9 +292,9 @@ namespace ShippingService.Business.CarrierServices
             <ShipperNumber>" + shippingData.CustomerShipperNumber + @"</ShipperNumber>
             <PhoneNumber>+3215451820</PhoneNumber>
             <Address>
-                <AddressLine1>E. Walschaertsstraat 15 / 3</AddressLine1>
-                <City>Mechelen</City>
-                <PostalCode>2800</PostalCode>
+                <AddressLine1>Brownfieldlaan 15-2</AddressLine1>
+                <City>Willebroek</City>
+                <PostalCode>2830</PostalCode>
                 <CountryCode>BE</CountryCode>
             </Address>
         </Shipper>

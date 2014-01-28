@@ -24,17 +24,17 @@ namespace ShippingService.Business.CarrierServices
 
         public static string AddressLine1
         {
-            get { return "E. Walschaertsstraat 15 / 3"; }
+            get { return "Brownfieldlaan 15-2"; }
         }
 
         public static string City
         {
-            get {return "MECHELEN"; }
+            get {return "WILLEBROEK"; }
         }
 
         public static string PostalCode
         {
-            get {return "2800"; }
+            get {return "2830"; }
         }
 
         public static string CountryCode
