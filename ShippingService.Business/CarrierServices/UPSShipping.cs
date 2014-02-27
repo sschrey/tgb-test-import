@@ -127,7 +127,7 @@ namespace ShippingService.Business.CarrierServices
                 counter++;
                 var tracker = package.SelectSingleNode("TrackingNumber").InnerText;
                 var gif = package.SelectSingleNode("LabelImage/GraphicImage").InnerText;
-                var fileName = Path.Combine(gifStoragePath, string.Format((isReturnShipment?"Return":"") + "Order{0}_{1}.gif", Order.ReferenceNumber, tracker));
+                var fileName = Path.Combine(gifStoragePath, string.Format((isReturnShipment?"Return":"") + "Order{0}_{1}.epl", Order.ReferenceNumber, tracker));
 
                 WriteGif(fileName, tracker, gif);
 
@@ -135,9 +135,9 @@ namespace ShippingService.Business.CarrierServices
                     Order.PackedContainers[counter - 1].TrackingNumber = tracker;
 
                 if(isReturnShipment)
-                    Order.PackedContainers[counter - 1].ReturnUPSLabel = string.Format("ReturnOrder{0}_{1}.gif", Order.ReferenceNumber, tracker);
+                    Order.PackedContainers[counter - 1].ReturnUPSLabel = string.Format("ReturnOrder{0}_{1}.epl", Order.ReferenceNumber, tracker);
                 else
-                    Order.PackedContainers[counter - 1].UPSLabel = string.Format("Order{0}_{1}.gif", Order.ReferenceNumber, tracker);
+                    Order.PackedContainers[counter - 1].UPSLabel = string.Format("Order{0}_{1}.epl", Order.ReferenceNumber, tracker);
             }
         }
 
@@ -350,14 +350,17 @@ namespace ShippingService.Business.CarrierServices
         </Service>
     </Shipment>
     <LabelSpecification>
+        <LabelStockSize>
+            <Height>4</Height>
+            <Width>6</Width>
+        </LabelStockSize>
+        
         <LabelPrintMethod>
-            <Code>GIF</Code>
-            <Description>GIF</Description>
+            <Code>EPL</Code>
         </LabelPrintMethod>
         <HTTPUserAgent>Mozilla/4.5</HTTPUserAgent>
         <LabelImageFormat>
-            <Code>GIF</Code>
-            <Description>GIF</Description>
+            <Code>EPL</Code>
         </LabelImageFormat>
     </LabelSpecification>
 </ShipmentConfirmRequest>");

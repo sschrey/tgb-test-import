@@ -9,6 +9,7 @@ using ShippingService.Business.Domain;
 using ShippingService.Business.CarrierServices;
 using ShippingService.Business.Printing;
 using System.IO;
+using Tweddle.Commons.RAWPrinter;
 
 namespace Web
 {
@@ -124,7 +125,8 @@ namespace Web
             foreach (ListItem item in bullFiles.Items)
             {
                 if (string.IsNullOrEmpty(item.Text)) continue;
-                PrintManager.Print(item.Text, printer);
+                //PrintManager.Print(item.Text, printer);
+                RAWPrinterHelper.SendFileToPrinter(printer, item.Text);
             };
         }
 
