@@ -17,6 +17,7 @@ namespace ShippingService.Business.Dao
         void SaveReturnLabel(Order o);
         void LogBarcodeScan(BarcodeScanLog log);
         void UpdateTrackingNumber(string oldTrackingNumber, string newTrackingNumber);
+        void UnPack(string orderid);
 
         #region E1Link
         IList<InventoryItem> GetTIMInventory();

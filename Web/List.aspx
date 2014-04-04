@@ -37,6 +37,7 @@
                     <td rowspan='<%# Eval("Lines.Count") %>'>
                         <asp:Button Visible='<%# (int)Eval("Status") == (int)ShippingService.Business.Domain.OrderStatus.Unpacked %>' ID="btnPack" runat="server" CommandName="PACK" CommandArgument='<%# Eval("Id") %>' Text="Pack" />
                         <asp:Button Visible='<%# (int)Eval("Status") == (int)ShippingService.Business.Domain.OrderStatus.Packed %>' ID="btnShip" runat="server" CommandName="SHIP" CommandArgument='<%# Eval("Id") %>' Text="Ship" />
+                        <asp:Button Visible='<%# (int)Eval("Status") == (int)ShippingService.Business.Domain.OrderStatus.Packed %>' ID="btnUnPack" runat="server" CommandName="UNPACK" CommandArgument='<%# Eval("Id") %>' Text="UnPack" />
                     </td>
                     <td rowspan='<%# Eval("Lines.Count") %>'>
                         <%# Eval("Id") %>

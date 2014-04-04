@@ -24,6 +24,7 @@ namespace ShippingService.Business
         IList<ERPOrder> GetERPOrders(string orderIds);
         void LogBarcodeScan(BarcodeScanLog log);
         void UpdateTrackingNumber(string oldTrackingNumber, string newTrackingNumber);
+        void UnPack(string orderid);
         #region E1Link
         IList<InventoryItem> GetTIMInventory();
         IList<OrderConfirmation> GetTIMOrderConfirmations();

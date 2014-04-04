@@ -174,6 +174,62 @@ namespace ShippingService.Business.Dao
             AdoTemplate.ExecuteNonQuery(CommandType.Text, cmdText, insertParams);
 
         }
+
+        public void UnPack(string orderid)
+        {
+            var orders = GetOrders(new OrderCriteria() { Id = orderid, E1Status="556" });
+            if(orders.Count == 1)
+            {
+                if (orders[0].Status == OrderStatus.Packed)
+                {
+                    
+                    var containers = AdoTemplate.Execute<List<string>>(delegate(DbCommand cmd)
+                    {
+                        List<string> ctrs  = new List<string>();
+                        string cmdText = @"select packedcontainerid from packedorderline
+                        where orderlineid like @orderid";
+
+                        var parameter = cmd.CreateParameter();
+                        parameter.ParameterName = "orderid";
+                        parameter.Value = orderid + "-%";
+                        cmd.Parameters.Add(parameter);
+
+                        cmd.CommandText = cmdText;
+
+
+                        var r = cmd.ExecuteReader();
+
+                        while(r.Read())
+                        {
+                            ctrs.Add(r["packedcontainerid"].ToString());
+                        }
+                        r.Close();
+                        return ctrs;
+                    });
+
+                    string cmdText2 = @"delete from packedorderline
+                    where orderlineid like @orderid";
+
+                    IDbParameters updateParams2 = CreateDbParameters();
+                    updateParams2.AddWithValue("orderid", orderid + "-%");
+
+                    AdoTemplate.ExecuteNonQuery(CommandType.Text, cmdText2, updateParams2);
+
+                    foreach(var id in containers)
+                    {
+                        string cmdText3 = @"delete from packedcontainer
+                        where packagecode = @id";
+
+                        IDbParameters updateParams3 = CreateDbParameters();
+                        updateParams3.AddWithValue("id", id);
+
+                        AdoTemplate.ExecuteNonQuery(CommandType.Text, cmdText3, updateParams3);
+                    }
+   
+                }
+            }
+        }
+
         public void Pack(Order o)
         {
 

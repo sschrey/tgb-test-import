@@ -10,6 +10,7 @@ using ShippingService.Business.CarrierServices;
 using ShippingService.Business.Printing;
 using System.IO;
 using Tweddle.Commons.RAWPrinter;
+using System.Configuration;
 
 namespace Web
 {
@@ -54,6 +55,20 @@ namespace Web
             {
                 ddlCarrier.SelectedValue = carrier;
             }
+
+            string blockedCarrierCodes = ConfigurationManager.AppSettings["BlockedCarrierCodes"];
+
+            if (!string.IsNullOrEmpty(blockedCarrierCodes))
+            {
+                string[] blockedCarrierCodesA = blockedCarrierCodes.Split(new string[]{","}, StringSplitOptions.RemoveEmptyEntries);
+                if (blockedCarrierCodesA.Contains(ddlCarrier.SelectedValue))
+                {
+                    ddlCarrier.Enabled = false;
+                }
+            }
+
+
+            
 
             var carrierMode = GetOrder().ProposedCarrierMode;
             if (carrierMode != null)

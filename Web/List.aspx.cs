@@ -50,6 +50,10 @@ namespace Web
                 case "SHIP":
                     Response.Redirect("~/Ship.aspx?id=" + e.CommandArgument);
                     break;
+                case "UNPACK":
+                    ApplicationContextHolder.Instance.Facade.UnPack(e.CommandArgument.ToString());
+                    Response.Redirect(Request.Url.ToString());
+                    break;
             }
         }
     }

@@ -96,6 +96,12 @@ namespace ShippingService.Business
             return Dao.GetNextTNTConsignmentNoteNumber();
         }
 
+        [Transaction]
+        public void UnPack(string orderid)
+        {
+            Dao.UnPack(orderid);
+        }
+
         #region E1Link
         public IList<InventoryItem> GetTIMInventory()
         {
