@@ -23,6 +23,9 @@ namespace RemoteServices
             var list = ApplicationContextHolder.Instance.Facade.GetInventoryByBranch(appId, branch, inclCrossRefData);
             var tmp = CompressedSerializer.Compress(list, CompressedSerializer.Serializer.XML);
 
+
+            /* Note LVDS: remove code below from comment if you want to temporary save the xml output to a text file  */
+
             //FileStream fs = new FileStream(@"c:\temp\test.zip", FileMode.CreateNew);
 
             //XmlSerializer ser = new XmlSerializer(list.GetType());
