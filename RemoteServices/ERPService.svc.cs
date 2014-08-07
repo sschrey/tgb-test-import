@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.Text;
 using ShippingService.Shared;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace RemoteServices
 {
@@ -20,7 +21,20 @@ namespace RemoteServices
         public byte[] GetInventoryByBranch(string appId, string branch, bool inclCrossRefData = false)
         {
             var list = ApplicationContextHolder.Instance.Facade.GetInventoryByBranch(appId, branch, inclCrossRefData);
-            return CompressedSerializer.Compress(list, CompressedSerializer.Serializer.XML);
+            var tmp = CompressedSerializer.Compress(list, CompressedSerializer.Serializer.XML);
+
+            //FileStream fs = new FileStream(@"c:\temp\test.zip", FileMode.CreateNew);
+
+            //XmlSerializer ser = new XmlSerializer(list.GetType());
+            //ser.Serialize(fs, list);
+
+            
+            ////fs.Write(tmp, 0, tmp.Length);
+            //fs.Close();
+            //fs.Dispose();
+
+
+            return tmp;
         }
 
         public byte[] GetOrderConfirmations(string appId)

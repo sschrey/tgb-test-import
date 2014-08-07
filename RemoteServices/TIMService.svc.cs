@@ -15,7 +15,8 @@ namespace RemoteServices
         public byte[] GetInventory()
         {
             var list = ApplicationContextHolder.Instance.Facade.GetTIMInventory();
-            return CompressedSerializer.Compress(list, CompressedSerializer.Serializer.XML);
+            var tmp = CompressedSerializer.Compress(list, CompressedSerializer.Serializer.XML);
+            return tmp;
         }
 
         public byte[] GetOrderConfirmations()
