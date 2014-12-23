@@ -100,7 +100,15 @@ namespace ShippingService.Business.CarrierServices
             sp.TNTLogin = ConfigurationManager.AppSettings["TNTLogin"];
             sp.TNTPass = ConfigurationManager.AppSettings["TNTPass"];
 
-            ShipPrice = GetTNTPrice(sp);
+            string skipPriceCheck = ConfigurationManager.AppSettings["SkipTNTPriceCheck"];
+            if(!string.IsNullOrEmpty(skipPriceCheck) && skipPriceCheck == "1")
+            {
+                ShipPrice = 1;
+            }
+            else
+            { 
+                ShipPrice = GetTNTPrice(sp);
+            }
         }
 
         internal void UpdateTrackingNumber()
