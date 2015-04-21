@@ -131,7 +131,9 @@
             </table>
         </FooterTemplate>
     </asp:Repeater>
-    <asp:Button runat="server" ID="btnSave" OnClick="btnSave_Click" Text="SAVE" />
+    <asp:Button runat="server" ID="btnSave" OnClick="btnSave_Click" Text="SAVE"
+        OnClientClick="if (!Page_ClientValidate()){ return false; } this.disabled = true; this.value = 'Saving...';" 
+   UseSubmitBehavior="false" />
 </asp:Panel>
 
 

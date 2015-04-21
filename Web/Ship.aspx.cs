@@ -141,7 +141,10 @@ namespace Web
             {
                 if (string.IsNullOrEmpty(item.Text)) continue;
                 //PrintManager.Print(item.Text, printer);
-                RAWPrinterHelper.SendFileToPrinter(printer, item.Text);
+                if(RAWPrinterHelper.SendFileToPrinter(printer, item.Text))
+                {
+                    Response.Redirect("barcode-entry.aspx");
+                }
             };
         }
 

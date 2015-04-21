@@ -93,7 +93,9 @@
         <p>
             PRINT TO:</p>
         <asp:DropDownList runat="server" ID="ddlPrinters" />
-        <asp:Button runat="server" ID="btnPrint" Text="Print" OnClick="btnPrint_Click" />
+        <asp:Button runat="server" ID="btnPrint" Text="Print" OnClick="btnPrint_Click" 
+            OnClientClick="if (!Page_ClientValidate()){ return false; } this.disabled = true; this.value = 'Printing...';" 
+            UseSubmitBehavior="false" />
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlReturnLabel" Visible="false">
         <div style="margin-top: 10px;">

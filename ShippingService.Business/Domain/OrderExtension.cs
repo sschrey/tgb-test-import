@@ -120,9 +120,10 @@ namespace ShippingService.Business.Domain
             get
             {
                 Dictionary<PackedContainer, Dictionary<string, int>> pcwp = new Dictionary<PackedContainer, Dictionary<string, int>>();
-                int estimatedWeight = 0;
+                
                 foreach (PackedContainer pc in PackedContainers)
                 {
+                    int estimatedWeight = 0;
                     if (pc.Container.Weight > 0)
                         estimatedWeight += pc.Container.Weight;
                     else

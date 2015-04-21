@@ -163,13 +163,13 @@ namespace Web
                 int estimatedWeight = Convert.ToInt32((item.FindControl("EstimatedWeight") as HiddenField).Value);
                 if (estimatedWeight > 0)
                 {
-                    //10% difference is allowed
-                    int estimatedWeightplus = estimatedWeight + estimatedWeight / 10;
-                    int estimatedWeightmin = estimatedWeight - estimatedWeight / 10;
+                    //5% difference is allowed
+                    int estimatedWeightplus = estimatedWeight + estimatedWeight / 5;
+                    int estimatedWeightmin = estimatedWeight - estimatedWeight / 5;
 
                     if (weight < estimatedWeightmin || weight > estimatedWeightplus)
                     {
-                        lblPopupTitle.Text += "There is more than 10% difference between the estimated weight and the entered weight.";
+                        lblPopupTitle.Text += "There is more than 5% difference between the estimated weight and the entered weight.";
                         valid = false;
                     }
                 }
