@@ -35,9 +35,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{AA8FE97E-6F7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RAWPrinter", "RAWPrinter\RAWPrinter.csproj", "{F3BD58F5-C07D-49D9-9AE4-9990C56F7080}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingService.Business.EF", "ShippingService.Business.EF\ShippingService.Business.EF.csproj", "{43FC1B5A-40F2-4BFF-96B4-F610854D4D3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingService.Business.EF.Test", "ShippingService.Business.EF.Test\ShippingService.Business.EF.Test.csproj", "{60DCCBE9-31BC-496B-96A6-4CEDB03D156C}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 10
+		SccNumberOfProjects = 12
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = http://mis-tfs2010:8080/tfs/tweddle%20belgium
 		SccLocalPath0 = .
@@ -68,6 +72,12 @@ Global
 		SccProjectUniqueName9 = RAWPrinter\\RAWPrinter.csproj
 		SccProjectName9 = RAWPrinter
 		SccLocalPath9 = RAWPrinter
+		SccProjectUniqueName10 = ShippingService.Business.EF\\ShippingService.Business.EF.csproj
+		SccProjectName10 = ShippingService.Business.EF
+		SccLocalPath10 = ShippingService.Business.EF
+		SccProjectUniqueName11 = ShippingService.Business.EF.Test\\ShippingService.Business.EF.Test.csproj
+		SccProjectName11 = ShippingService.Business.EF.Test
+		SccLocalPath11 = ShippingService.Business.EF.Test
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -110,6 +120,14 @@ Global
 		{F3BD58F5-C07D-49D9-9AE4-9990C56F7080}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3BD58F5-C07D-49D9-9AE4-9990C56F7080}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3BD58F5-C07D-49D9-9AE4-9990C56F7080}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43FC1B5A-40F2-4BFF-96B4-F610854D4D3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43FC1B5A-40F2-4BFF-96B4-F610854D4D3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43FC1B5A-40F2-4BFF-96B4-F610854D4D3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43FC1B5A-40F2-4BFF-96B4-F610854D4D3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60DCCBE9-31BC-496B-96A6-4CEDB03D156C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60DCCBE9-31BC-496B-96A6-4CEDB03D156C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60DCCBE9-31BC-496B-96A6-4CEDB03D156C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60DCCBE9-31BC-496B-96A6-4CEDB03D156C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
