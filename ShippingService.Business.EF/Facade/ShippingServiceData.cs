@@ -10,11 +10,10 @@ namespace ShippingService.Business.EF.Facade
 {
     public class ShippingServiceData : DbContext
     {
-
         ContextConfiguration configuration;
 
         public ShippingServiceData()
-            : base("name=toms_techdoc_2008")
+            : base("name=ShippingServiceData")
         {
             this.configuration = new ContextConfiguration();
         }

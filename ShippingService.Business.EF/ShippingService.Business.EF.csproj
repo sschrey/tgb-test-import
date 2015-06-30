@@ -64,18 +64,35 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Domain\Blog.cs" />
+    <Compile Include="Domain\E1\E1Carton.cs" />
+    <Compile Include="Domain\E1\E1OrderLine.cs" />
     <Compile Include="Domain\Entity.cs" />
+    <Compile Include="Domain\SNOrders\SNPackedContainer.cs" />
+    <Compile Include="Domain\SNOrders\SNPackedOrderLine.cs" />
+    <Compile Include="Facade\E1Data.cs" />
     <Compile Include="Facade\BaseFacade.cs" />
-    <Compile Include="Facade\BlogService.cs" />
     <Compile Include="Facade\ContextConfiguration.cs" />
+    <Compile Include="Facade\E1\E1Facade.cs" />
+    <Compile Include="Facade\E1\IE1Facade.cs" />
+    <Compile Include="Facade\E1\E1TestData.cs" />
+    <Compile Include="Facade\E1\E1TestFacade.cs" />
+    <Compile Include="Facade\E1\VMPackData.cs" />
     <Compile Include="Facade\FacadeFactory.cs" />
     <Compile Include="Facade\ShippingServiceData.cs" />
+    <Compile Include="Facade\SNOrders\PackingLine.cs" />
+    <Compile Include="Facade\SNOrders\PackingList.cs" />
+    <Compile Include="Facade\SNOrders\SNOrderFacade.cs" />
+    <Compile Include="Facade\SNOrders\VMOrderLine.cs" />
+    <Compile Include="Facade\SNOrders\VMPackedContainer.cs" />
+    <Compile Include="Facade\SNOrders\VMPackedParts.cs" />
+    <Compile Include="Facade\SNOrders\VMPackingData.cs" />
     <Compile Include="Facade\TestingFactory.cs" />
     <Compile Include="Facade\Validation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Domain\SNOrders\YUML\YUML.txt" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />

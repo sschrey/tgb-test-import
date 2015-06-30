@@ -28,6 +28,8 @@ namespace ShippingService.Business.EF.Facade
         public BaseFacadeMock(Mock<Y> context)
             : base(context.Object)
         {
+            
+            
         }
     }
 

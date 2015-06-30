@@ -1,0 +1,174 @@
+﻿
+@{
+    ViewBag.Title = "Pack";
+    
+}
+@model ShippingService.Business.EF.Facade.E1.VMPackData
+@using Newtonsoft.Json
+
+
+@section scripts {
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            var orderlines = ko.mapping.fromJSON('@Html.Raw(JsonConvert.SerializeObject(this.Model.OrderLines))');
+            var cartons = ko.mapping.fromJSON('@Html.Raw(JsonConvert.SerializeObject(this.Model.Cartons))');
+            
+            var inputForm = new InputForm();
+
+            inputForm.OrderLines = ko.mapping.fromJS(orderlines);
+            inputForm.Cartons = ko.mapping.fromJS(cartons);
+            inputForm.PackedContainers = ko.mapping.fromJS([]);
+
+            ko.applyBindings(inputForm);
+        });
+
+    function InputForm() {
+        var self = this;
+        self.OrderLines = ko.observableArray();
+        self.Cartons = ko.observableArray();
+        self.SelectedCarton = ko.observable();
+        self.Errors = ko.observableArray([]);
+        self.PackedContainers = ko.observableArray();
+        self.PostPack = function(formelement)
+        {
+            $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "@Url.Content("~/SNOrders/Pack")",
+                    data: ko.mapping.toJSON({ OrderLines: self.OrderLines, Carton: self.SelectedCarton, Containers: self.PackedContainers }),
+                    dataType: "json",
+                    success: function (data) {
+                        ko.mapping.fromJS(data.OrderLines, self.OrderLines);
+                        ko.mapping.fromJS(data.Containers, self.PackedContainers);
+                        self.Errors(data.Errors);
+                    }
+            });
+        }
+        self.Save = function()
+        {
+
+        }
+    }
+
+
+
+    </script>
+}
+
+
+
+<div class="page-header">
+    <h2>2. Pack order</h2>
+</div>
+
+<div data-bind="visible: Errors().length>0">
+    <div data-bind="foreach: Errors" class="alert alert-danger" role="alert">
+        <div>
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            <span data-bind="text: $data"></span>
+        </div>
+    </div>
+</div>
+
+<form method="post" class="form-inline" data-bind="submit: PostPack">
+    <input type="hidden" name="OrderId" value="@Model.OrderId" />
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Order number</th>
+                <th>Case number</th>
+                <th>Part number</th>
+                <th>Part weight</th>
+                <th>Quantity</th>
+                <th>Request Quantity</th>
+                <th>
+
+                    <select data-bind="options: Cartons,
+                    optionsText: 'Name',
+                    value: SelectedCarton,
+                    optionsCaption: 'Choose carton...'" name="CartonId" class="form-control center-block"></select>
+
+                </th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: OrderLines">
+            <tr>
+                <th scope="row">
+                    <input data-bind="value:Id" type="hidden" />
+                    <span data-bind="text: Id"></span>
+                </th>
+                <td><span data-bind="text: OrderNumber"></span></td>
+                <td><span data-bind="text: CaseNumber"></span></td>
+                <td><span data-bind="text: PartNumber"></span></td>
+                <td><span data-bind="text: PartWeight"></span></td>
+                <td><span data-bind="text: Quantity"></span></td>
+                <td class="col-sm-1">
+                    <input data-bind="value: RequestQuantity" type="text" class="form-control">
+                </td>
+                <td>
+                    <div data-bind="foreach: PackingData">
+                        <div>
+                            [<span data-bind="text: CartonName"></span>] x
+                            <span data-bind="text: Quantity"></span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-default">Pack</button>
+</form>
+
+<form method="post" class="form-inline" data-bind="submit: Save">
+    <h3>Boxes:</h3>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Order number</th>
+                <th>Case number</th>
+                <th>Carton</th>
+                <th>Carton weight</th>
+                <th>Parts weight</th>
+                <th>Total weight</th>
+                <th>Measured weight</th>
+                <td>Parts</td>
+                <td>Part weight</td>
+                <td>Quantity</td>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: PackedContainers">
+            <tr>
+                <th data-bind="attr: { rowspan: Count }" scope="row">
+                    <span data-bind="text: Id"></span>
+                </th>
+                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: OrderNumber"></span></td>
+                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: CaseNumber"></span></td>
+                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: Carton"></span></td>
+                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: CartonWeight"></span></td>
+                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: PartsWeight"></span></td>
+                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: TotalWeight"></span></td>
+                <td class="col-sm-1" data-bind="attr: { rowspan: Count }">
+
+                    <input class="form-control" type="text" />
+
+                </td>
+            </tr>
+            <!-- ko foreach: PackedParts -->
+            <tr>
+                <td><span data-bind="text: PartNumber" /> </td>
+                <td><span data-bind="text: PartWeight" /> </td>
+                <td><span data-bind="text: Quantity" /> </td>
+            </tr>
+            <!-- /ko -->
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-default">Save</button>
+</form>
+
+

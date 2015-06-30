@@ -1,0 +1,22 @@
+﻿
+@{
+    ViewBag.Title = "Scan";
+}
+
+<div class="page-header">
+    <h2>1. Scan order id</h2>
+</div>
+    
+@using(Html.BeginForm("BarcodeScan", "SNOrders", FormMethod.Get, new { @class="form-inline" }))
+{
+    <div class="form-group">
+        <img src="@Url.Content("~/")Images/barcode-scanner.jpg" />
+    </div>
+    <div class="form-group">
+        <input type="text" class="form-control" name="orderid" id="orderid" placeholder="Order id">
+    </div>
+    <button type="submit" class="btn btn-default">Submit</button>
+}
+
+
+   

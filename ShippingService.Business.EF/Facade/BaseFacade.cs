@@ -30,9 +30,14 @@ namespace ShippingService.Business.EF.Facade
             return db;
         }
 
-        public IQueryable<T> GetAll<T>() where T : class
+        public virtual IQueryable<T> GetAll<T>() where T : class
         {
             return db.Set<T>().AsQueryable();
+        }
+
+        public virtual List<T> GetByQuery<T>(string sql, params object[] paramaters) where T : class
+        {
+            return db.Set<T>().SqlQuery(sql, paramaters).ToList();
         }
 
         public T GetById<T>(string id) where T : EntityWithTypedId<string>
