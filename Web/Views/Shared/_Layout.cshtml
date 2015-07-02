@@ -6,6 +6,7 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+   
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -21,8 +22,8 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     
-                    <li><a href="#">Barcode entry </a></li>
-                    <li><a href="#">Search </a></li>
+                    <li>@Html.ActionLink("Barcode entry", "Index", "SNOrders")</li>
+                    <li>@Html.ActionLink("Search", "Search", "SNOrders")</li>
                 </ul>
             </div>
         </div>
@@ -37,6 +38,7 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/knockout")
     @RenderSection("scripts", required: false)

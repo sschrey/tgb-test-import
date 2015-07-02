@@ -49,7 +49,7 @@ namespace ShippingService.Business.EF.Facade.E1
                         OrderNumber = 2081900,
                         CaseNumber = "84530944",
                         PartNumber = "PZ471Y0501PA",
-                        Quantity = 1,
+                        Quantity = 14,
                         PartWeight = 500
                 },
                 new E1OrderLine()
@@ -58,7 +58,7 @@ namespace ShippingService.Business.EF.Facade.E1
                         OrderNumber = 2081900,
                         CaseNumber = "84530967",
                         PartNumber = "PZ485P0513NL",
-                        Quantity = 1,
+                        Quantity = 5,
                         PartWeight = 750
                 }
             };

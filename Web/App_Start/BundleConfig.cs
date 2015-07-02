@@ -25,11 +25,16 @@ namespace Web
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css",
-                      "~/Content/bootstrap-responsive.css"));
+                      "~/Content/bootstrap-responsive.css",
+                      "~/Content/jquery-ui-{version}.css",
+                      "~/Content/jquery-ui-{version}.theme.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                       "~/Scripts/knockout-{version}.js",
                        "~/Scripts/knockout-mapping-{version}.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/jqueryui").Include(
+                      "~/Scripts/jquery-ui-{version}.js"));
 
         }
     }

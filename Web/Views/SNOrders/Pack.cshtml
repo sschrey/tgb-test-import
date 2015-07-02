@@ -1,174 +1,173 @@
 ﻿
 @{
-    ViewBag.Title = "Pack";
-    
+    ViewBag.Title = "Pack";   
 }
-@model ShippingService.Business.EF.Facade.E1.VMPackData
+@model ShippingService.Business.EF.Facade.SNOrders.VMPack
 @using Newtonsoft.Json
 
 
 @section scripts {
     <script language="javascript" type="text/javascript">
         $(function () {
-            var orderlines = ko.mapping.fromJSON('@Html.Raw(JsonConvert.SerializeObject(this.Model.OrderLines))');
-            var cartons = ko.mapping.fromJSON('@Html.Raw(JsonConvert.SerializeObject(this.Model.Cartons))');
-            
+            var data = ko.mapping.fromJSON('@Html.Raw(JsonConvert.SerializeObject(this.Model))');
+
             var inputForm = new InputForm();
-
-            inputForm.OrderLines = ko.mapping.fromJS(orderlines);
-            inputForm.Cartons = ko.mapping.fromJS(cartons);
-            inputForm.PackedContainers = ko.mapping.fromJS([]);
-
+            inputForm.Data = data;
             ko.applyBindings(inputForm);
         });
 
     function InputForm() {
         var self = this;
-        self.OrderLines = ko.observableArray();
-        self.Cartons = ko.observableArray();
-        self.SelectedCarton = ko.observable();
-        self.Errors = ko.observableArray([]);
-        self.PackedContainers = ko.observableArray();
+        self.Data = null;
         self.PostPack = function(formelement)
         {
             $.ajax({
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
                     url: "@Url.Content("~/SNOrders/Pack")",
-                    data: ko.mapping.toJSON({ OrderLines: self.OrderLines, Carton: self.SelectedCarton, Containers: self.PackedContainers }),
+                    data: ko.mapping.toJSON(self.Data),
                     dataType: "json",
                     success: function (data) {
-                        ko.mapping.fromJS(data.OrderLines, self.OrderLines);
-                        ko.mapping.fromJS(data.Containers, self.PackedContainers);
-                        self.Errors(data.Errors);
+                        ko.mapping.fromJS(data, self.Data);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown )
+                    {
+                        alert(jqXHR.responseText);
                     }
             });
         }
         self.Save = function()
         {
-
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@Url.Content("~/SNOrders/Save")",
+                data: ko.mapping.toJSON(self.Data),
+                dataType: "json",
+                success: function (data) {
+                    ko.mapping.fromJS(data, self.Data);
+                },
+                error: function(jqXHR, textStatus, errorThrown )
+                {
+                    alert(jqXHR.responseText);
+                }
+            });
         }
     }
-
-
-
     </script>
 }
-
-
-
 <div class="page-header">
-    <h2>2. Pack order</h2>
+    <h2>2. Pack order @Model.OrderId</h2>
 </div>
-
-<div data-bind="visible: Errors().length>0">
-    <div data-bind="foreach: Errors" class="alert alert-danger" role="alert">
-        <div>
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">Error:</span>
-            <span data-bind="text: $data"></span>
+<div style="display: none" data-bind="visible: true">
+    <div data-bind="visible: Data.Errors().length>0">
+        <div data-bind="foreach: Data.Errors" class="alert alert-danger" role="alert">
+            <div>
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                <span data-bind="text: $data"></span>
+            </div>
         </div>
     </div>
-</div>
+ 
+    <div data-bind="{visible: Data.SuccessMessage() != null, text: Data.SuccessMessage}" class="alert alert-success" role="alert"></div>
 
-<form method="post" class="form-inline" data-bind="submit: PostPack">
-    <input type="hidden" name="OrderId" value="@Model.OrderId" />
-
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Order number</th>
-                <th>Case number</th>
-                <th>Part number</th>
-                <th>Part weight</th>
-                <th>Quantity</th>
-                <th>Request Quantity</th>
-                <th>
-
-                    <select data-bind="options: Cartons,
-                    optionsText: 'Name',
-                    value: SelectedCarton,
-                    optionsCaption: 'Choose carton...'" name="CartonId" class="form-control center-block"></select>
-
-                </th>
-            </tr>
-        </thead>
-        <tbody data-bind="foreach: OrderLines">
-            <tr>
-                <th scope="row">
-                    <input data-bind="value:Id" type="hidden" />
-                    <span data-bind="text: Id"></span>
-                </th>
-                <td><span data-bind="text: OrderNumber"></span></td>
-                <td><span data-bind="text: CaseNumber"></span></td>
-                <td><span data-bind="text: PartNumber"></span></td>
-                <td><span data-bind="text: PartWeight"></span></td>
-                <td><span data-bind="text: Quantity"></span></td>
-                <td class="col-sm-1">
-                    <input data-bind="value: RequestQuantity" type="text" class="form-control">
-                </td>
-                <td>
-                    <div data-bind="foreach: PackingData">
-                        <div>
-                            [<span data-bind="text: CartonName"></span>] x
-                            <span data-bind="text: Quantity"></span>
+    <form method="post" class="form-inline" data-bind="{submit: PostPack, visible: !Data.Packed()}">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Order number</th>
+                    <th>Case number</th>
+                    <th>Part number</th>
+                    <th>Part weight</th>
+                    <th>Quantity</th>
+                    <th>Request Quantity</th>
+                    <th>
+                        <select data-bind="options: Data.Cartons(),
+                        optionsText: 'Name',
+                        value: Data.SelectedCarton,
+                        optionsCaption: 'Choose carton...'" class="form-control center-block">
+                        </select>
+                    </th>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: Data.OrderLines">
+                <tr data-bind="visible: !Packed()">
+                    <th scope="row">
+                        <input data-bind="value:Id" type="hidden" />
+                        <span data-bind="text: Id"></span>
+                    </th>
+                    <td><span data-bind="text: OrderNumber"></span></td>
+                    <td><span data-bind="text: CaseNumber"></span></td>
+                    <td><span data-bind="text: PartNumber"></span></td>
+                    <td><span data-bind="text: PartWeight"></span></td>
+                    <td><span data-bind="text: Quantity"></span></td>
+                    <td class="col-sm-1">
+                        <input data-bind="value: RequestQuantity" type="text" class="form-control">
+                    </td>
+                    <td>
+                        <div data-bind="foreach: PackingData">
+                            <div>
+                                [<span data-bind="text: CartonName"></span>] x
+                                <span data-bind="text: Quantity"></span>
+                            </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-    <button type="submit" class="btn btn-default">Pack</button>
-</form>
+        <button type="submit" class="btn btn-default">Pack</button>
+    </form>
 
-<form method="post" class="form-inline" data-bind="submit: Save">
-    <h3>Boxes:</h3>
+    <form method="post" class="form-inline" data-bind="submit: Save">
+        <div data-bind="visible: Data.Containers().length > 0">
+            <h3>Packed containers</h3>
 
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Order number</th>
-                <th>Case number</th>
-                <th>Carton</th>
-                <th>Carton weight</th>
-                <th>Parts weight</th>
-                <th>Total weight</th>
-                <th>Measured weight</th>
-                <td>Parts</td>
-                <td>Part weight</td>
-                <td>Quantity</td>
-            </tr>
-        </thead>
-        <tbody data-bind="foreach: PackedContainers">
-            <tr>
-                <th data-bind="attr: { rowspan: Count }" scope="row">
-                    <span data-bind="text: Id"></span>
-                </th>
-                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: OrderNumber"></span></td>
-                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: CaseNumber"></span></td>
-                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: Carton"></span></td>
-                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: CartonWeight"></span></td>
-                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: PartsWeight"></span></td>
-                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: TotalWeight"></span></td>
-                <td class="col-sm-1" data-bind="attr: { rowspan: Count }">
-
-                    <input class="form-control" type="text" />
-
-                </td>
-            </tr>
-            <!-- ko foreach: PackedParts -->
-            <tr>
-                <td><span data-bind="text: PartNumber" /> </td>
-                <td><span data-bind="text: PartWeight" /> </td>
-                <td><span data-bind="text: Quantity" /> </td>
-            </tr>
-            <!-- /ko -->
-        </tbody>
-    </table>
-    <button type="submit" class="btn btn-default">Save</button>
-</form>
-
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Order number</th>
+                        <th>Case number</th>
+                        <th>Carton</th>
+                        <th>Carton weight</th>
+                        <th>Parts weight</th>
+                        <th>Total weight</th>
+                        <th>Weight</th>
+                        <th>Parts</th>
+                        <th>Part weight</th>
+                        <th>Quantity</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: Data.Containers">
+                    <tr>
+                        <th data-bind="attr: { rowspan: Count }" scope="row">
+                            <span data-bind="text: Id"></span>
+                        </th>
+                        <td data-bind="attr: { rowspan: Count }"><span data-bind="text: OrderNumber"></span></td>
+                        <td data-bind="attr: { rowspan: Count }"><span data-bind="text: CaseNumber"></span></td>
+                        <td data-bind="attr: { rowspan: Count }"><span data-bind="text: Carton.Name"></span></td>
+                        <td data-bind="attr: { rowspan: Count }"><span data-bind="text: Carton.Weight"></span></td>
+                        <td data-bind="attr: { rowspan: Count }"><span data-bind="text: PartsWeight"></span></td>
+                        <td data-bind="attr: { rowspan: Count }"><span data-bind="text: TotalWeight"></span></td>
+                        <td class="col-sm-1" data-bind="attr: { rowspan: Count }">
+                            <input data-bind="{visible: !$root.Data.Saved(), value: Weight}" class="form-control" type="text" />
+                            <span data-bind="{visible: $root.Data.Saved, text: Weight}"></span>
+                        </td>
+                    </tr>
+                    <!-- ko foreach: PackedParts -->
+                    <tr>
+                        <td><span data-bind="text: PartNumber" /> </td>
+                        <td><span data-bind="text: PartWeight" /> </td>
+                        <td><span data-bind="text: Quantity" /> </td>
+                    </tr>
+                    <!-- /ko -->
+                </tbody>
+            </table>
+            <button data-bind="visible: Data.Packed && !Data.Saved()" type="submit" class="btn btn-default">Save</button>
+        </div>
+    </form>
+</div>
 

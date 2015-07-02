@@ -1,4 +1,5 @@
 ﻿using ShippingService.Business.EF.Domain.E1;
+using ShippingService.Business.EF.Domain.SNOrders;
 using ShippingService.Business.EF.Facade;
 using ShippingService.Business.EF.Facade.E1;
 using ShippingService.Business.EF.Facade.SNOrders;
@@ -27,112 +28,66 @@ namespace Web.Controllers
             else
                 facade = FacadeFactory.GetInstance().GetFacade<E1Facade>();
 
-            if(!string.IsNullOrWhiteSpace(orderid))
-            {
-                float orderidasfloat;
-                if(float.TryParse(orderid, out orderidasfloat))
-                {
-                    VMPackData data = new VMPackData();
-                    data.OrderLines = new List<VMOrderLine>();
-                    var orderlines = facade.GetOrderLines(orderidasfloat);
-                    foreach(var orderline in orderlines)
-                    {
-                        data.OrderLines.Add(new VMOrderLine()
-                        {
-                            CaseNumber = orderline.CaseNumber,
-                            Id = orderline.Id.ToString(),
-                            OrderNumber = orderline.OrderNumber.ToString(),
-                            PackingData = new List<VMPackingData>(),
-                            PartNumber = orderline.PartNumber,
-                            PartWeight = orderline.PartWeight.ToString(),
-                            Quantity = orderline.Quantity,
-                            RequestQuantity = orderline.Quantity.ToString()
-                        });
-                    }
+            var orderfacade = FacadeFactory.GetInstance().GetFacade<SNOrderFacade>();
 
-                    
-                    data.Cartons = facade.GetCartons();
-                    data.OrderId = orderid;
+            VMPack data = orderfacade.Barcodescan(orderid, facade);
 
-                    return View("Pack", data);
-                }
-            }
-            return View("Index");
+            if(data == null)
+                return View("Index");
+            else
+               return View("Pack", data);
         }
 
-        public ActionResult Pack(List<VMOrderLine> orderlines, E1Carton carton, List<VMPackedContainer> containers)
+        public ActionResult Pack(VMPack data)
         {
-            Validation val = new Validation();
-            VMPackedContainer container = null;
+            var facade = FacadeFactory.GetInstance().GetFacade<SNOrderFacade>();
+            data = facade.Pack(data);
 
-            if (containers == null)
-                containers = new List<VMPackedContainer>();
-
-            if(carton == null || carton.Id == null)
-            {
-                val.AddBrokenRule("Please choose a carton");
-            }
-            
-            if(val.IsValid)
-            {
-                foreach(var orderline in orderlines)
-                {
-                    int quantity = 0;
-                    if (int.TryParse(orderline.RequestQuantity, out quantity))
-                    {
-                        if (quantity > 0)
-                        {
-                            var packedQuantity = orderline.PackingData.Sum(p => p.Quantity);
-                            if(packedQuantity + quantity > orderline.Quantity)
-                            {
-                                val.AddBrokenRule("You requested too much for line " + orderline.Id);
-                            }
-                            else
-                            { 
-                                orderline.PackingData.Add(new VMPackingData()
-                                {
-                                    CartonId = carton.Id,
-                                    CartonName = carton.Name,
-                                    Quantity = quantity
-                                });
-
-                                if(container == null)
-                                {
-                                    container = new VMPackedContainer();
-                                    container.OrderNumber = orderline.OrderNumber;
-                                    container.Carton = carton.Name;
-                                    container.CartonWeight = carton.Weight.ToString();
-                                    container.CaseNumber = orderline.CaseNumber;
-                                    container.Id = (containers.Count() + 1).ToString();
-                                }
-                                container.PackedParts.Add(new VMPackedParts()
-                                {
-                                    PartNumber = orderline.PartNumber,
-                                    PartWeight = orderline.PartWeight,
-                                    Quantity = quantity.ToString()
-                                });
-                                container.Count++;
-                            }
-                       }
-                        orderline.RequestQuantity = (orderline.Quantity - orderline.PackingData.Sum(p => p.Quantity)).ToString();
-                    }
-                }
-            }
-
-            if(container != null)
-            {
-                containers.Add(container);
-            }
-
-            var returnObject = new
-            {
-                OrderLines = orderlines,
-                Errors = val.BrokenRules,
-                Containers = containers
-            };
-
-            return Json(returnObject);
+            return Json(data);
         }
+
+        public ActionResult Save(VMPack data)
+        {
+            var facade = FacadeFactory.GetInstance().GetFacade<SNOrderFacade>();
+            Validation val = facade.Save(data);
+
+            return Json(data);
+        }
+        public ActionResult Search()
+        {
+            return View(new VMSearch());
+        }
+
+        [HttpPost]
+        public ActionResult Search(VMSearch data)
+        {
+            var facade = FacadeFactory.GetInstance().GetFacade<SNOrderFacade>();
+
+            var pcs = facade.GetAll<SNPackedContainer>();
+
+            DateTime from;
+            if(DateTime.TryParse(data.From, out from))
+            {
+                pcs = pcs.Where(pc => pc.CreatedOn > from);
+            }
+
+            DateTime to;
+            if (DateTime.TryParse(data.To, out to))
+            {
+                to = to.AddDays(1);
+                pcs = pcs.Where(pc => pc.CreatedOn < to);
+            }
+
+            var containers = pcs.ToList();
+            data.Containers = new List<VMPackedContainer>();
+            foreach (var container in containers)
+            {
+                data.Containers.Add(new VMPackedContainer(container));
+            }
+
+            return Json(data);
+        }
+
 
         public bool IsTestData
         {
