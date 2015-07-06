@@ -32,7 +32,7 @@ namespace Web.Controllers
 
             VMPack data = orderfacade.Barcodescan(orderid, facade);
 
-            if(data == null)
+            if(data.OrderLines.Count==0)
                 return View("Index");
             else
                return View("Pack", data);

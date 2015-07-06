@@ -22,10 +22,10 @@ namespace ShippingService.Business.EF.Facade.E1
             ('84530' + SUBSTRING(CONVERT(CHAR(10),CONVERT(INT,A.CDCROS)),5,3)) AS CaseNumber, 
             B.IMDSC1 as PartNumber,
             A.CDTQTY/100  as Quantity,
-            PartWeight = isnull(C.umconv/10000000.00,0.00)
+            PartWeight = isnull(umconv/10000.00,0.00)
             from PS_PROD.PRODDTA.f4620 a				
             LEFT JOIN PS_PROD.PRODDTA.F4101 B 
-            LEFT join PS_PROD.PRODDTA.f41002 C on b.imitm=c.umitm and b.imuom1=c.umum and rtrim(ltrim(c.umrum)) = 'gm'
+            LEFT join PS_PROD.PRODDTA.f41002 C on b.imitm=c.umitm and b.imuom1=c.umum and rtrim(ltrim(c.umrum)) = 'kg'
             ON A.CDITM = B.IMITM 
             where A.CDDOCO = @p0
             and CDCROS>0
