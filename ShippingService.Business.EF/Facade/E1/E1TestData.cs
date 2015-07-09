@@ -36,7 +36,7 @@ namespace ShippingService.Business.EF.Facade.E1
             {
                 new E1OrderLine()
                 {
-                        Id = 3449025,
+                        Id = "3449025",
                         OrderNumber = 2081900,
                         CaseNumber = "84530944",
                         PartNumber = "PZ471P1129PA",
@@ -45,7 +45,7 @@ namespace ShippingService.Business.EF.Facade.E1
                 },
                 new E1OrderLine()
                 {
-                        Id = 3449024,
+                        Id = "3449024",
                         OrderNumber = 2081900,
                         CaseNumber = "84530944",
                         PartNumber = "PZ471Y0501PA",
@@ -54,7 +54,7 @@ namespace ShippingService.Business.EF.Facade.E1
                 },
                 new E1OrderLine()
                 {
-                        Id = 3449045,
+                        Id = "3449045",
                         OrderNumber = 2081900,
                         CaseNumber = "84530967",
                         PartNumber = "PZ485P0513NL",

@@ -78,7 +78,7 @@ namespace ShippingService.Business.EF.Test
           {
               List<E1OrderLine> orderlines = new List<E1OrderLine>()
               {
-                  new E1OrderLine(){ Id = 1234000, CaseNumber = "C1234", OrderNumber = 1234, PartNumber = "PN1234", PartWeight = 12, Quantity = 1 }
+                  new E1OrderLine(){ Id = "1234000", CaseNumber = "C1234", OrderNumber = 1234, PartNumber = "PN1234", PartWeight = 12, Quantity = 1 }
               };
               return orderlines;
           }

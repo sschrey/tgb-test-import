@@ -16,10 +16,10 @@ namespace Web.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            return View(new VMBarcodeScan());
         }
 
-        public ActionResult BarcodeScan(string orderid)
+        public ActionResult BarcodeScan(VMBarcodeScan scan)
         {
             IE1Facade facade = null;
 
@@ -30,12 +30,12 @@ namespace Web.Controllers
 
             var orderfacade = FacadeFactory.GetInstance().GetFacade<SNOrderFacade>();
 
-            VMPack data = orderfacade.Barcodescan(orderid, facade);
+            VMPack packdata = orderfacade.Barcodescan(scan, facade);
 
-            if(data.OrderLines.Count==0)
-                return View("Index");
+            if (packdata == null)
+                return View("Index", scan);
             else
-               return View("Pack", data);
+                return View("Pack", packdata);
         }
 
         public ActionResult Pack(VMPack data)
@@ -49,7 +49,7 @@ namespace Web.Controllers
         public ActionResult Save(VMPack data)
         {
             var facade = FacadeFactory.GetInstance().GetFacade<SNOrderFacade>();
-            Validation val = facade.Save(data);
+            Validation val = facade.Save(data, this.User.Identity.Name);
 
             return Json(data);
         }

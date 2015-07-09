@@ -124,7 +124,7 @@ namespace ShippingService.Business.EF.Facade.SNOrders
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public Validation Save(VMPack data)
+        public Validation Save(VMPack data, string user)
         {
             Validation val = new Validation();
 
@@ -153,10 +153,23 @@ namespace ShippingService.Business.EF.Facade.SNOrders
                         double weightplus = container.TotalWeight * (1+difference);
                         double weightmin = container.TotalWeight * (1 - difference);
 
+                        SNPackLogItem logitem = new SNPackLogItem();
+                        logitem.CaseNumber = container.CaseNumber;
+                        logitem.OrderId = container.OrderNumber;
+                        logitem.EnteredWeight = weightAsDouble;
+                        logitem.EstimatedWeight = container.TotalWeight;
+                        logitem.User = user;
+                        logitem.WasCorrect = true;
+
                         if (weightAsDouble < weightmin || weightAsDouble > weightplus)
                         {
+                            logitem.WasCorrect = false;
                             val.AddBrokenRule("There is more than 5% difference between the estimated weight and the entered weight for container " + container.Id);
                         }
+                        Add(logitem);
+                        var logitemsave = Save();
+                        val.Add(logitemsave);
+
                     }
                 }
             }
@@ -164,10 +177,7 @@ namespace ShippingService.Business.EF.Facade.SNOrders
             //db check existing
             if (val.IsValid)
             {
-                string orderid = data.OrderId.ToString();
-                var checkorderline = GetAll<SNPackedContainer>().FirstOrDefault(ol => ol.OrderId == orderid);
-
-                if (checkorderline != null)
+                if (OrderPacked(data.OrderId.ToString()))
                     val.AddBrokenRule("This order is already saved");
             }
                     
@@ -215,35 +225,67 @@ namespace ShippingService.Business.EF.Facade.SNOrders
             return val;
         }
 
-        public VMPack Barcodescan(string orderid, IE1Facade facade)
+        public bool OrderPacked(string orderid)
         {
-            VMPack data = new VMPack();
-            if (!string.IsNullOrWhiteSpace(orderid))
+            var checkorderline = GetAll<SNPackedContainer>().FirstOrDefault(ol => ol.OrderId == orderid);
+            return checkorderline != null;
+        }
+
+        public VMPack Barcodescan(VMBarcodeScan scan, IE1Facade facade)
+        {
+            List<VMOrderLine> orderlines = new List<VMOrderLine>();
+            List<VME1Carton> cartons = new List<VME1Carton>();
+            VMPack pack = null;
+            float orderidasfloat = 0;
+
+            if (!string.IsNullOrWhiteSpace(scan.OrderId))
             {
-                orderid = orderid.Replace("-", "").Replace(" ", "").Replace("SN", "").Replace("00002", "");
-                float orderidasfloat;
+                var orderid = scan.OrderId.Replace("-", "").Replace(" ", "").Replace("SN", "").Replace("00002", "");
+                
                 if (float.TryParse(orderid, out orderidasfloat))
                 {
-                    var orderlines = facade.GetOrderLines(orderidasfloat);
-                    foreach (var orderline in orderlines)
+                    if(OrderPacked(orderid))
                     {
-                        data.OrderLines.Add(new VMOrderLine(orderline));
-                        if (orderline.PartWeight == 0)
+                        scan.Errors.Add("Order " + scan.OrderId + " is already saved");
+                    }
+
+                    if(scan.Errors.Count==0)
+                    { 
+                        var e1orderlines = facade.GetOrderLines(orderidasfloat);
+                        if (e1orderlines.Count == 0)
+                            scan.Errors.Add("No order found for order " + scan.OrderId);
+                        foreach (var e1orderline in e1orderlines)
                         {
-                            data.Errors.Add("Part " + orderline.PartNumber + " has no weight, please correct first");
+                            orderlines.Add(new VMOrderLine(e1orderline));
+                            if (e1orderline.PartWeight == 0)
+                            {
+                                scan.Errors.Add("Part " + e1orderline.PartNumber + " has no weight, please correct first");
+                            }
                         }
                     }
 
-                    data.Cartons = new List<VME1Carton>();
-                    var cartons = facade.GetCartons();
-                    foreach (var carton in cartons)
+                    if(scan.Errors.Count==0)
                     {
-                        data.Cartons.Add(new VME1Carton(carton));
+                        var e1cartons = facade.GetCartons();
+                        foreach (var e1carton in e1cartons)
+                        {
+                            cartons.Add(new VME1Carton(e1carton));
+                        }
                     }
-                    data.OrderId = orderidasfloat;
                 }
+                else
+                    scan.Errors.Add("Could not parse order " + scan.OrderId);
             }
-            return data;
+
+            if (scan.Errors.Count == 0 && orderlines.Count > 0 && cartons.Count > 0)
+            {
+                pack = new VMPack();
+                pack.OrderId = orderidasfloat;
+                pack.Cartons = cartons;
+                pack.OrderLines = orderlines;
+                return pack;
+            }
+            return pack;
         }
     }
 }

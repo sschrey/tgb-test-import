@@ -81,6 +81,8 @@
     <Compile Include="Facade\SNOrders\PackingLine.cs" />
     <Compile Include="Facade\SNOrders\PackingList.cs" />
     <Compile Include="Facade\SNOrders\SNOrderFacade.cs" />
+    <Compile Include="Domain\SNOrders\SNPackLogItem.cs" />
+    <Compile Include="Facade\SNOrders\VMBarcodeScan.cs" />
     <Compile Include="Facade\SNOrders\VME1Carton.cs" />
     <Compile Include="Facade\SNOrders\VMOrderLine.cs" />
     <Compile Include="Facade\SNOrders\VMPack.cs" />

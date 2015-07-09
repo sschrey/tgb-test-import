@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShippingService.Business.EF.Domain.E1
 {
-    public class E1OrderLine: EntityWithTypedId<double>
+    public class E1OrderLine: EntityWithTypedId<string>
     {
         public double OrderNumber { get; set; }
         public string CaseNumber { get; set; }

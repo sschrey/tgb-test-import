@@ -18,7 +18,16 @@ namespace ShippingService.Business.EF.Facade.E1
 
         public List<E1OrderLine> GetOrderLines(float orderid)
         {
-            var sqlQuery = @"select A.CDUKID as Id, A.CDDOCO as OrderNumber, 
+            var sqlQuery = @"
+            select 
+            cast(cast(max(query.OrderNumber) as int) as varchar) + '-' + cast(row_number() OVER (order by partnumber) as varchar) as Id,
+            max(query.OrderNumber) as ordernumber,
+            max(query.casenumber) as casenumber, 
+            partnumber, 
+            sum(query.quantity) as quantity, 
+            max(query.partweight) as partweight 
+            from
+            (select A.CDUKID as Id, A.CDDOCO as OrderNumber, 
             ('84530' + SUBSTRING(CONVERT(CHAR(10),CONVERT(INT,A.CDCROS)),5,3)) AS CaseNumber, 
             B.IMDSC1 as PartNumber,
             A.CDTQTY/100  as Quantity,
@@ -28,8 +37,9 @@ namespace ShippingService.Business.EF.Facade.E1
             LEFT join PS_PROD.PRODDTA.f41002 C on b.imitm=c.umitm and b.imuom1=c.umum and rtrim(ltrim(c.umrum)) = 'kg'
             ON A.CDITM = B.IMITM 
             where A.CDDOCO = @p0
-            and CDCROS>0
-            order by A.CDUKID";
+            and CDCROS>0) as query
+            group by partnumber
+            order by PartNumber";
 
             var orders = GetByQuery<E1OrderLine>(sqlQuery, orderid);
 
