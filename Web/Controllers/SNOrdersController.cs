@@ -59,12 +59,20 @@ namespace Web.Controllers
         }
 
         [HttpPost]
+        public ActionResult Unpack(VMUnpack data)
+        {
+            var facade = FacadeFactory.GetInstance().GetFacade<SNOrderFacade>();
+            facade.Unpack(data);
+            return Json(data);
+        }
+
+        [HttpPost]
         public ActionResult Search(VMSearch data)
         {
             var facade = FacadeFactory.GetInstance().GetFacade<SNOrderFacade>();
 
             var pcs = facade.GetAll<SNPackedContainer>();
-
+            
             DateTime from;
             if(DateTime.TryParse(data.From, out from))
             {
@@ -78,7 +86,9 @@ namespace Web.Controllers
                 pcs = pcs.Where(pc => pc.CreatedOn < to);
             }
 
-            var containers = pcs.ToList();
+            var containers = pcs
+                .OrderBy(pc => pc.OrderId).ThenBy(pc => pc.CaseNumber).ToList();
+                
             data.Containers = new List<VMPackedContainer>();
             foreach (var container in containers)
             {

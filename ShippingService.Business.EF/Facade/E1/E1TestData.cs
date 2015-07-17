@@ -36,30 +36,33 @@ namespace ShippingService.Business.EF.Facade.E1
             {
                 new E1OrderLine()
                 {
-                        Id = "3449025",
+                        Id = "2081900-1000",
                         OrderNumber = 2081900,
                         CaseNumber = "84530944",
                         PartNumber = "PZ471P1129PA",
                         Quantity = 1,
-                        PartWeight = 250
+                        PartWeight = 250,
+                        LineNumber = 1000
                 },
                 new E1OrderLine()
                 {
-                        Id = "3449024",
+                        Id = "2081900-2000",
                         OrderNumber = 2081900,
                         CaseNumber = "84530944",
                         PartNumber = "PZ471Y0501PA",
                         Quantity = 14,
-                        PartWeight = 500
+                        PartWeight = 500,
+                        LineNumber = 2000
                 },
                 new E1OrderLine()
                 {
-                        Id = "3449045",
+                        Id = "2081900-3000",
                         OrderNumber = 2081900,
                         CaseNumber = "84530967",
                         PartNumber = "PZ485P0513NL",
                         Quantity = 5,
-                        PartWeight = 750
+                        PartWeight = 750,
+                        LineNumber = 3000
                 }
             };
            

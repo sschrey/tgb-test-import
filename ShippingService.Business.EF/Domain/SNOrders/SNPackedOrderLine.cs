@@ -16,6 +16,10 @@ namespace ShippingService.Business.EF.Domain.SNOrders
             this.CreatedOn = DateTime.Now;
         }
         [Required]
+        public string OrderId { get; set; }
+        [Required]
+        public string LineNumber { get; set; }
+        [Required]
         public string Partnumber { get; set; }
         [Required]
         public double PartWeight { get; set; }

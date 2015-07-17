@@ -35,6 +35,7 @@
         var self = this;
         self.Data = null;
         self.Searching = ko.observable(false);
+        self.Errors = ko.observableArray([]);
         self.Search = function(formelement)
         {
             self.Searching(true);
@@ -54,6 +55,27 @@
                     }
             });
         }
+        self.Unpack = function(formelement)
+        {
+            var unpackid = $(formelement).find("#id").val();
+            $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "@Url.Content("~/SNOrders/Unpack")",
+                    data: ko.toJSON({id: unpackid}),
+                dataType: "json",
+                success: function (data) {
+                    if(data.Errors.length > 0)
+                        self.Errors(data.Errors);
+                    else
+                        self.Search();
+                },
+                error: function(jqXHR, textStatus, errorThrown )
+                {
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
     }
     </script>
 }
@@ -61,6 +83,16 @@
     <h2>Search</h2>
 </div>
 <div style="display: none" data-bind="visible: true">
+    <div data-bind="visible: Errors().length>0">
+        <div data-bind="foreach: Errors" class="alert alert-danger" role="alert">
+            <div>
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                <span data-bind="text: $data"></span>
+            </div>
+        </div>
+    </div>
+
     <form class="form-horizontal" data-bind="{submit: Search}">
         <div class="form-group">
             <label for="inputEmail3" class="col-sm-2 control-label">Date from</label>
@@ -87,22 +119,29 @@
     <table data-bind="visible: Data.Containers().length > 0 && !Searching()" class="table table-bordered">
         <thead>
             <tr>
-                <th>Order number</th>
-                <th>Case number</th>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Case</th>
                 <th>Created on</th>
                 <th>Carton</th>
                 <th>Carton weight</th>
                 <th>Parts weight</th>
                 <th>Total weight</th>
                 <th>Weight</th>
-                <th>Parts</th>
+                <th>Part</th>
+                <th>Line</th>
                 <th>Part weight</th>
                 <th>Quantity</th>
             </tr>
         </thead>
         <tbody data-bind="foreach: Data.Containers">
             <tr>
-
+                <td data-bind="attr: { rowspan: Count }">
+                    <form class="form-horizontal" data-bind="{submit: $root.Unpack}">
+                        <button type="submit" class="btn btn-default">Unpack</button>
+                        <input id="id" type="hidden" data-bind="value: Id" />
+                    </form>
+                </td>
                 <td data-bind="attr: { rowspan: Count }"><span data-bind="text: OrderNumber"></span></td>
                 <td data-bind="attr: { rowspan: Count }"><span data-bind="text: CaseNumber"></span></td>
                 <td data-bind="attr: { rowspan: Count }"><span data-bind="text: CreatedOn"></span></td>
@@ -118,6 +157,7 @@
             <!-- ko foreach: PackedParts -->
             <tr>
                 <td><span data-bind="text: PartNumber" /> </td>
+                <td><span data-bind="text: LineNumber" /> </td>
                 <td><span data-bind="text: PartWeight" /> </td>
                 <td><span data-bind="text: Quantity" /> </td>
             </tr>

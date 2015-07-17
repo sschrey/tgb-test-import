@@ -89,6 +89,7 @@ namespace ShippingService.Business.EF.Facade.SNOrders
                                     container.PackedParts.Add(new VMPackedParts()
                                     {
                                         OrderLineId = orderline.Id,
+                                        LineNumber = orderline.LineNumber.ToString(),
                                         PartNumber = orderline.PartNumber,
                                         PartWeight = orderline.PartWeight,
                                         Quantity = quantity
@@ -177,8 +178,7 @@ namespace ShippingService.Business.EF.Facade.SNOrders
             //db check existing
             if (val.IsValid)
             {
-                if (OrderPacked(data.OrderId.ToString()))
-                    val.AddBrokenRule("This order is already saved");
+                val.Add(OrderLinePacked(data.OrderId.ToString(), data.OrderLines));
             }
                     
             if(val.IsValid)
@@ -203,6 +203,8 @@ namespace ShippingService.Business.EF.Facade.SNOrders
                         SNPackedOrderLine dbpackedorderline = new SNPackedOrderLine(orderline.OrderLineId);
                         dbpackedorderline.PackedContainer = dbcontainer;
                         dbpackedorderline.Partnumber = orderline.PartNumber;
+                        dbpackedorderline.LineNumber = orderline.LineNumber;
+                        dbpackedorderline.OrderId = data.OrderId.ToString();
                         dbpackedorderline.PartWeight = orderline.PartWeight;
                         dbpackedorderline.Quantity = orderline.Quantity;
                         dbpackedorderline.CreatedOn = createdOn;
@@ -225,10 +227,35 @@ namespace ShippingService.Business.EF.Facade.SNOrders
             return val;
         }
 
-        public bool OrderPacked(string orderid)
+        public void Unpack(VMUnpack data)
         {
-            var checkorderline = GetAll<SNPackedContainer>().FirstOrDefault(ol => ol.OrderId == orderid);
-            return checkorderline != null;
+            Validation val = new Validation();
+            if(string.IsNullOrEmpty(data.Id))
+                val.AddBrokenRule("No Id received");
+
+            if(val.IsValid)
+            {
+                //get the container
+                var container = GetById<SNPackedContainer>(data.Id);
+                Delete(container);
+                val = Save();
+            }
+
+            data.Errors = val.BrokenRules;
+        }
+
+        private Validation OrderLinePacked(string orderid, List<VMOrderLine> orderlines)
+        {
+            Validation val = new Validation();
+            var dborderlines = GetAll<SNPackedOrderLine>().Where(ol => ol.OrderId == orderid).ToList();
+            foreach(var orderline in orderlines)
+            {
+                if(dborderlines.Any(dborderline => dborderline.LineNumber == orderline.LineNumber))
+                {
+                    val.AddBrokenRule("Order " + orderid + " with line number " + orderline.LineNumber + " is already saved");
+                }
+            }
+            return val;
         }
 
         public VMPack Barcodescan(VMBarcodeScan scan, IE1Facade facade)
@@ -244,11 +271,6 @@ namespace ShippingService.Business.EF.Facade.SNOrders
                 
                 if (float.TryParse(orderid, out orderidasfloat))
                 {
-                    if(OrderPacked(orderid))
-                    {
-                        scan.Errors.Add("Order " + scan.OrderId + " is already saved");
-                    }
-
                     if(scan.Errors.Count==0)
                     { 
                         var e1orderlines = facade.GetOrderLines(orderidasfloat);

@@ -24,12 +24,13 @@ namespace ShippingService.Business.EF.Facade.SNOrders
             this.PartsWeight = dbcontainer.PartsWeight;
             this.TotalWeight = dbcontainer.TotalWeight;
             this.Weight = dbcontainer.Weight;
-            foreach(var dbpart in dbcontainer.OrderLines)
+            foreach (var dbpart in dbcontainer.OrderLines)
             {
                 this.PackedParts.Add(new VMPackedParts()
                 {
                     OrderLineId = dbpart.Id,
                     PartNumber = dbpart.Partnumber,
+                    LineNumber = dbpart.LineNumber,
                     PartWeight = dbpart.PartWeight,
                     Quantity = dbpart.Quantity
                 });

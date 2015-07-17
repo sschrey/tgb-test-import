@@ -90,6 +90,7 @@
     <Compile Include="Facade\SNOrders\VMPackedParts.cs" />
     <Compile Include="Facade\SNOrders\VMPackingData.cs" />
     <Compile Include="Facade\SNOrders\VMSearch.cs" />
+    <Compile Include="Facade\SNOrders\VMUnpack.cs" />
     <Compile Include="Facade\TestingFactory.cs" />
     <Compile Include="Facade\Validation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

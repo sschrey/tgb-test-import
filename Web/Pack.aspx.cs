@@ -164,8 +164,9 @@ namespace Web
                 if (estimatedWeight > 0)
                 {
                     //5% difference is allowed
-                    int estimatedWeightplus = estimatedWeight + estimatedWeight / 5;
-                    int estimatedWeightmin = estimatedWeight - estimatedWeight / 5;
+                    double difference = 0.05;
+                    double estimatedWeightplus = estimatedWeight * (1 + difference);
+                    double estimatedWeightmin = estimatedWeight * (1 - difference);
 
                     if (weight < estimatedWeightmin || weight > estimatedWeightplus)
                     {
