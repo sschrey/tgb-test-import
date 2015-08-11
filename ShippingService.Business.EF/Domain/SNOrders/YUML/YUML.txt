@@ -1,0 +1,3 @@
+﻿[PackedOrderLine|OrderLineId;CaseNumber;Partnumber;PartWeight;Quantity]
+[PackedContainer|ContainerId;Weight]
+[PackedOrderLine]*-1[PackedContainer]

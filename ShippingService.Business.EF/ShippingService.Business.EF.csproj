@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{43FC1B5A-40F2-4BFF-96B4-F610854D4D3B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ShippingService.Business.EF</RootNamespace>
+    <AssemblyName>ShippingService.Business.EF</AssemblyName>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\packages\Castle.Windsor.3.3.0\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor.Lifestyles">
+      <HintPath>..\Lib\Castle.Windsor.Lifestyles.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.2.1506.2016\lib\net40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Domain\E1\E1Carton.cs" />
+    <Compile Include="Domain\E1\E1OrderLine.cs" />
+    <Compile Include="Domain\Entity.cs" />
+    <Compile Include="Domain\SNOrders\SNPackedContainer.cs" />
+    <Compile Include="Domain\SNOrders\SNPackedOrderLine.cs" />
+    <Compile Include="Facade\E1Data.cs" />
+    <Compile Include="Facade\BaseFacade.cs" />
+    <Compile Include="Facade\ContextConfiguration.cs" />
+    <Compile Include="Facade\E1\E1Facade.cs" />
+    <Compile Include="Facade\E1\IE1Facade.cs" />
+    <Compile Include="Facade\E1\E1TestData.cs" />
+    <Compile Include="Facade\E1\E1TestFacade.cs" />
+    <Compile Include="Facade\FacadeFactory.cs" />
+    <Compile Include="Facade\ShippingServiceData.cs" />
+    <Compile Include="Facade\SNOrders\PackingLine.cs" />
+    <Compile Include="Facade\SNOrders\PackingList.cs" />
+    <Compile Include="Facade\SNOrders\SNOrderFacade.cs" />
+    <Compile Include="Domain\SNOrders\SNPackLogItem.cs" />
+    <Compile Include="Facade\SNOrders\VMBarcodeScan.cs" />
+    <Compile Include="Facade\SNOrders\VME1Carton.cs" />
+    <Compile Include="Facade\SNOrders\VMOrderLine.cs" />
+    <Compile Include="Facade\SNOrders\VMPack.cs" />
+    <Compile Include="Facade\SNOrders\VMPackedContainer.cs" />
+    <Compile Include="Facade\SNOrders\VMPackedParts.cs" />
+    <Compile Include="Facade\SNOrders\VMPackingData.cs" />
+    <Compile Include="Facade\SNOrders\VMSearch.cs" />
+    <Compile Include="Facade\SNOrders\VMUnpack.cs" />
+    <Compile Include="Facade\TestingFactory.cs" />
+    <Compile Include="Facade\Validation.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Domain\SNOrders\YUML\YUML.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,167 @@
+﻿
+@{
+    ViewBag.Title = "Search";
+}
+@model ShippingService.Business.EF.Facade.SNOrders.VMSearch
+@using Newtonsoft.Json
+
+@section scripts {
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            $("#from").datepicker({
+
+                dateFormat: "yy-mm-dd",
+                onClose: function (selectedDate) {
+                    $("#to").datepicker("option", "minDate", selectedDate);
+                }
+            });
+            $("#to").datepicker({
+
+                dateFormat: "yy-mm-dd",
+                onClose: function (selectedDate) {
+                    $("#from>").datepicker("option", "maxDate", selectedDate);
+                }
+            });
+           
+
+            var data = ko.mapping.fromJSON('@Html.Raw(JsonConvert.SerializeObject(this.Model))');
+
+            var inputForm = new InputForm();
+            inputForm.Data = data;
+            ko.applyBindings(inputForm);
+        });
+
+    function InputForm() {
+        var self = this;
+        self.Data = null;
+        self.Searching = ko.observable(false);
+        self.Errors = ko.observableArray([]);
+        self.Search = function(formelement)
+        {
+            self.Searching(true);
+            $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "@Url.Content("~/SNOrders/Search")",
+                    data: ko.mapping.toJSON(self.Data),
+                    dataType: "json",
+                    success: function (data) {
+                        ko.mapping.fromJS(data, self.Data);
+                        self.Searching(false);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown )
+                    {
+                        alert(jqXHR.responseText);
+                    }
+            });
+        }
+        self.Unpack = function(formelement)
+        {
+            var unpackid = $(formelement).find("#id").val();
+            $.ajax({
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    url: "@Url.Content("~/SNOrders/Unpack")",
+                    data: ko.toJSON({id: unpackid}),
+                dataType: "json",
+                success: function (data) {
+                    if(data.Errors.length > 0)
+                        self.Errors(data.Errors);
+                    else
+                        self.Search();
+                },
+                error: function(jqXHR, textStatus, errorThrown )
+                {
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+    }
+    </script>
+}
+<div class="page-header">
+    <h2>Search</h2>
+</div>
+<div style="display: none" data-bind="visible: true">
+    <div data-bind="visible: Errors().length>0">
+        <div data-bind="foreach: Errors" class="alert alert-danger" role="alert">
+            <div>
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                <span data-bind="text: $data"></span>
+            </div>
+        </div>
+    </div>
+
+    <form class="form-horizontal" data-bind="{submit: Search}">
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">Date from</label>
+            <div class="col-sm-10">
+                <input type="text" data-bind="value: Data.From" class="form-control" id="from">
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">Date to</label>
+            <div class="col-sm-10">
+                <input type="text" data-bind="value: Data.To" class="form-control" id="to">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Search</button>
+            </div>
+        </div>
+    </form>
+
+    <img data-bind="visible: Searching" src="@Url.Content("~/Images/indicator.gif") " />
+    <table data-bind="visible: Data.Containers().length > 0 && !Searching()" class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Action</th>
+                <th>Order</th>
+                <th>Case</th>
+                <th>Created on</th>
+                <th>Carton</th>
+                <th>Carton weight</th>
+                <th>Parts weight</th>
+                <th>Total weight</th>
+                <th>Weight</th>
+                <th>Part</th>
+                <th>Line</th>
+                <th>Part weight</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: Data.Containers">
+            <tr>
+                <td data-bind="attr: { rowspan: Count }">
+                    <form class="form-horizontal" data-bind="{submit: $root.Unpack}">
+                        <button type="submit" class="btn btn-default">Unpack</button>
+                        <input id="id" type="hidden" data-bind="value: Id" />
+                    </form>
+                </td>
+                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: OrderNumber"></span></td>
+                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: CaseNumber"></span></td>
+                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: CreatedOn"></span></td>
+                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: Carton.Name"></span></td>
+                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: Carton.Weight"></span></td>
+                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: PartsWeight"></span></td>
+                <td data-bind="attr: { rowspan: Count }"><span data-bind="text: TotalWeight"></span></td>
+
+                <td class="col-sm-1" data-bind="attr: { rowspan: Count }">
+                    <span data-bind="{ text: Weight}"></span>
+                </td>
+            </tr>
+            <!-- ko foreach: PackedParts -->
+            <tr>
+                <td><span data-bind="text: PartNumber" /> </td>
+                <td><span data-bind="text: LineNumber" /> </td>
+                <td><span data-bind="text: PartWeight" /> </td>
+                <td><span data-bind="text: Quantity" /> </td>
+            </tr>
+            <!-- /ko -->
+        </tbody>
+    </table>
+</div>
