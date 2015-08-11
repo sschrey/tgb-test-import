@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingService.Business", "ShippingService.Business\ShippingService.Business.csproj", "{B7A5BD42-ABDC-4B10-9534-2646D8AB2D99}"
 EndProject
@@ -25,6 +25,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{AA8FE97E-6F7E-4483-B288-96E018BA8583}"
 	ProjectSection(SolutionItems) = preProject
 		Lib\AjaxControlToolkit.dll = Lib\AjaxControlToolkit.dll
+		Lib\Castle.Windsor.Lifestyles.dll = Lib\Castle.Windsor.Lifestyles.dll
 		Lib\Common.Logging.dll = Lib\Common.Logging.dll
 		Lib\log4net.dll = Lib\log4net.dll
 		Lib\nunit.framework.dll = Lib\nunit.framework.dll
@@ -40,45 +41,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingService.Business.EF.Test", "ShippingService.Business.EF.Test\ShippingService.Business.EF.Test.csproj", "{60DCCBE9-31BC-496B-96A6-4CEDB03D156C}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 12
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://mis-tfs2010:8080/tfs/tweddle%20belgium
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = ShippingService.Business\\ShippingService.Business.csproj
-		SccProjectName1 = ShippingService.Business
-		SccLocalPath1 = ShippingService.Business
-		SccProjectUniqueName2 = Tweddle.Commons\\Tweddle.Commons.csproj
-		SccProjectName2 = Tweddle.Commons
-		SccLocalPath2 = Tweddle.Commons
-		SccProjectUniqueName3 = Web\\Web.csproj
-		SccProjectName3 = Web
-		SccLocalPath3 = Web
-		SccProjectUniqueName4 = Tweddle.Commons.Vies\\Tweddle.Commons.Vies.csproj
-		SccProjectName4 = Tweddle.Commons.Vies
-		SccLocalPath4 = Tweddle.Commons.Vies
-		SccProjectUniqueName5 = ShippingService.Shared\\ShippingService.Shared.csproj
-		SccProjectName5 = ShippingService.Shared
-		SccLocalPath5 = ShippingService.Shared
-		SccProjectUniqueName6 = RemoteServices\\RemoteServices.csproj
-		SccProjectName6 = RemoteServices
-		SccLocalPath6 = RemoteServices
-		SccProjectUniqueName7 = RemoteServices.Client\\RemoteServices.Client.csproj
-		SccProjectName7 = RemoteServices.Client
-		SccLocalPath7 = RemoteServices.Client
-		SccProjectUniqueName8 = ShippingService.Test\\ShippingService.Test.csproj
-		SccProjectName8 = ShippingService.Test
-		SccLocalPath8 = ShippingService.Test
-		SccProjectUniqueName9 = RAWPrinter\\RAWPrinter.csproj
-		SccProjectName9 = RAWPrinter
-		SccLocalPath9 = RAWPrinter
-		SccProjectUniqueName10 = ShippingService.Business.EF\\ShippingService.Business.EF.csproj
-		SccProjectName10 = ShippingService.Business.EF
-		SccLocalPath10 = ShippingService.Business.EF
-		SccProjectUniqueName11 = ShippingService.Business.EF.Test\\ShippingService.Business.EF.Test.csproj
-		SccProjectName11 = ShippingService.Business.EF.Test
-		SccLocalPath11 = ShippingService.Business.EF.Test
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -134,5 +96,44 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		VisualSVNWorkingCopyRoot = 
+	EndGlobalSection
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 12
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://mis-tfs2010:8080/tfs/tweddle%20belgium
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = ShippingService.Business\\ShippingService.Business.csproj
+		SccProjectName1 = ShippingService.Business
+		SccLocalPath1 = ShippingService.Business
+		SccProjectUniqueName2 = Tweddle.Commons\\Tweddle.Commons.csproj
+		SccProjectName2 = Tweddle.Commons
+		SccLocalPath2 = Tweddle.Commons
+		SccProjectUniqueName3 = Web\\Web.csproj
+		SccProjectName3 = Web
+		SccLocalPath3 = Web
+		SccProjectUniqueName4 = Tweddle.Commons.Vies\\Tweddle.Commons.Vies.csproj
+		SccProjectName4 = Tweddle.Commons.Vies
+		SccLocalPath4 = Tweddle.Commons.Vies
+		SccProjectUniqueName5 = ShippingService.Shared\\ShippingService.Shared.csproj
+		SccProjectName5 = ShippingService.Shared
+		SccLocalPath5 = ShippingService.Shared
+		SccProjectUniqueName6 = RemoteServices\\RemoteServices.csproj
+		SccProjectName6 = RemoteServices
+		SccLocalPath6 = RemoteServices
+		SccProjectUniqueName7 = RemoteServices.Client\\RemoteServices.Client.csproj
+		SccProjectName7 = RemoteServices.Client
+		SccLocalPath7 = RemoteServices.Client
+		SccProjectUniqueName8 = ShippingService.Test\\ShippingService.Test.csproj
+		SccProjectName8 = ShippingService.Test
+		SccLocalPath8 = ShippingService.Test
+		SccProjectUniqueName9 = RAWPrinter\\RAWPrinter.csproj
+		SccProjectName9 = RAWPrinter
+		SccLocalPath9 = RAWPrinter
+		SccProjectUniqueName10 = ShippingService.Business.EF\\ShippingService.Business.EF.csproj
+		SccProjectName10 = ShippingService.Business.EF
+		SccLocalPath10 = ShippingService.Business.EF
+		SccProjectUniqueName11 = ShippingService.Business.EF.Test\\ShippingService.Business.EF.Test.csproj
+		SccProjectName11 = ShippingService.Business.EF.Test
+		SccLocalPath11 = ShippingService.Business.EF.Test
 	EndGlobalSection
 EndGlobal
