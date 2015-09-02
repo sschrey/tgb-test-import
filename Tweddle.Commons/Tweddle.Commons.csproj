@@ -59,8 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\Entity.cs" />
+    <Compile Include="CommandObj.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\XMLNodeExtensions.cs" />
+    <Compile Include="Extensions\XMLSerialization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RAWPrinter\RAWPrinterHelper.cs" />
   </ItemGroup>

@@ -7,6 +7,7 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @RenderSection("style", required: false)
    
 </head>
 <body>
@@ -25,6 +26,7 @@
                     
                     <li>@Html.ActionLink("Barcode entry", "Index", "SNOrders")</li>
                     <li>@Html.ActionLink("Search", "Search", "SNOrders")</li>
+                    <li>@Html.ActionLink("TNT Check Price", "CheckPrice", "TNT")</li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="navbar-text">@User.Identity.Name</li>
