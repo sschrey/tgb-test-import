@@ -38,6 +38,7 @@ namespace Web.Controllers
             string deliveryTown,
             string productType,
             string productId,
+            int lineOfBusiness,
             string accountNumber,
             double weightInKG,
             double heightInM,
@@ -69,6 +70,7 @@ namespace Web.Controllers
                 deliveryTown: deliveryTown,
                 productType: productType,
                 productId: productId,
+                lineOfBusiness: lineOfBusiness,
                 accountNumber: accountNumber,
                 pieceLines: new List<TNTPieceLine>() { line }
                 );

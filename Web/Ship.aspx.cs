@@ -135,17 +135,22 @@ namespace Web
 
         protected void btnPrint_Click(object sender, EventArgs e)
         {
+            bool ok = true;
             string printer = ddlPrinters.SelectedValue;
             if (string.IsNullOrEmpty(printer)) return;
             foreach (ListItem item in bullFiles.Items)
             {
                 if (string.IsNullOrEmpty(item.Text)) continue;
                 //PrintManager.Print(item.Text, printer);
-                if(RAWPrinterHelper.SendFileToPrinter(printer, item.Text))
-                {
-                    Response.Redirect("barcode-entry.aspx");
-                }
+                bool print = RAWPrinterHelper.SendFileToPrinter(printer, item.Text);
+                if (ok)
+                    print = ok;
             };
+
+            if(ok)
+            {
+                Response.Redirect("barcode-entry.aspx");
+            }
         }
 
         protected void btnPrintReturnLabel_Click(object sender, EventArgs e)

@@ -26,6 +26,7 @@ namespace ShippingService.Business.EF.Facade.Carriers.TNT.Label
             string deliveryTown,
             string productType,
             string productId,
+            int lineOfBusiness,
             string accountNumber,
             List<TNTPieceLine> pieceLines
             )
@@ -62,7 +63,7 @@ namespace ShippingService.Business.EF.Facade.Carriers.TNT.Label
             consignment.product = product;
             product.type = productType == "N" ? productTypeEnum.N : productTypeEnum.D;
             product.id = productId;
-            product.lineOfBusiness = 2;
+            product.lineOfBusiness = lineOfBusiness;
 
             var account = new accountType();
             consignment.account = account;

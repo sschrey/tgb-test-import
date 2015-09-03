@@ -6,12 +6,15 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
+<div class="page-header">
+    <h2>Pack</h2>
+</div>
 
-<input type="button" value="All 0" accesskey="0" style="float: right" onclick="Zeroize()" />
+<input type="button" value="All 0" class="btn btn-default" accesskey="0" style="float: right" onclick="Zeroize()" />
 <div style="clear:both"/>
 
 <asp:Panel ID="pnlOrders" runat="server">
-    <table class="ListOrders" width="800" id="OrderLines">
+    <table class="table table-bordered" id="OrderLines">
         <thead>
             <tr>
                 <th>Line</th>
@@ -21,7 +24,7 @@
                 <th>Packs</th>
                 <th>
                 
-                <asp:DropDownList ID="ddlContainers" runat="server" DataTextField="Name" DataValueField="Id" />
+                <asp:DropDownList class="form-control" ID="ddlContainers" runat="server" DataTextField="Name" DataValueField="Id" />
                 
                </th>
                 
@@ -72,13 +75,13 @@
     </table>
 </asp:Panel>
 
-<asp:Button runat="server" ID="btnPack" OnClick="btnPack_Click" Text="PACK" />
+<asp:Button class="btn btn-default" runat="server" ID="btnPack" OnClick="btnPack_Click" Text="PACK" />
 
 <asp:Panel Visible="false" ID="pnlPacks" runat="server">
 
     <asp:Repeater runat="server" ID="rptPacks">
         <HeaderTemplate>
-            <table class="ListOrders">
+            <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th>
@@ -131,13 +134,13 @@
             </table>
         </FooterTemplate>
     </asp:Repeater>
-    <asp:Button runat="server" ID="btnSave" OnClick="btnSave_Click" Text="SAVE"
+    <asp:Button CssClass="btn btn-default" runat="server" ID="btnSave" OnClick="btnSave_Click" Text="SAVE"
         OnClientClick="if (!Page_ClientValidate()){ return false; } this.disabled = true; this.value = 'Saving...';" 
    UseSubmitBehavior="false" />
 </asp:Panel>
 
 
-<asp:Button Visible="false" runat="server" ID="btnShip" OnClick="btnShip_Click" Text="SHIP" />
+<asp:Button Visible="false" class="btn btn-default" runat="server" ID="btnShip" OnClick="btnShip_Click" Text="SHIP" />
 
 <ajaxToolkit:ModalPopupExtender ID="mpPopup" runat="server"
                                 PopupControlID="pnlPopup"
@@ -151,8 +154,8 @@
     <asp:HiddenField ID="action" runat="server" />
     <asp:Label EnableViewState="false" CssClass="modelPopupTitle" ID="lblPopupTitle" runat="server"
                Text="" /><br /><br />
-    <asp:Button ID="btnConfirm" runat="server" Text="Confirm" OnClick="btnConfirm_Click" />
-    <asp:Button ID="btnCancelPopup" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
+    <asp:Button  CssClass="btn btn-default" ID="btnConfirm" runat="server" Text="Confirm" OnClick="btnConfirm_Click" />
+    <asp:Button CssClass="btn btn-default" ID="btnCancelPopup" runat="server" Text="Cancel" OnClick="btnCancel_Click" />
 </asp:Panel> 
 
 <script type="text/javascript">

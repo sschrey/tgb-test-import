@@ -11,36 +11,13 @@
    
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Home", "Index", "SNOrders", null, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    
-                    <li>@Html.ActionLink("Barcode entry", "Index", "SNOrders")</li>
-                    <li>@Html.ActionLink("Search", "Search", "SNOrders")</li>
-                    <li>@Html.ActionLink("TNT Check Price", "CheckPrice", "TNT")</li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li class="navbar-text">@User.Identity.Name</li>
-                </ul>
-            </div>
-        </div>
-    </div>
+
+    
+    @{ Html.RenderPartial("~/_navbar.ascx"); }
 
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - SN Orders</p>
-        </footer>
+        @{ Html.RenderPartial("~/_footer.ascx"); }
     </div>
 
     @Scripts.Render("~/bundles/jquery")

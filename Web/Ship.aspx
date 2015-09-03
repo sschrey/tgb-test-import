@@ -18,29 +18,31 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
    
+    <div class="page-header">
+        <h2>Ship</h2>
+    </div>
+
     <div class="Feedback">
     <asp:Label ID="lblFeedBack" runat="server" EnableViewState="false" />
     </div>
     <asp:Panel ID="pnlOrder" runat="server">
-    
-    <div style="margin-left: 10px;">
-    <table>
-        <tr>
-            <td align="right">Choose carrier:</td>
-            <td><asp:DropDownList runat="server" ID="ddlCarrier" DataTextField="Name" DataValueField="Id" /></td>
-        </tr>
-        <tr>
-            <td align="right">Choose carrier mode:</td>
-            <td><asp:DropDownList runat="server" ID="ddlCarrierMode" DataTextField="Name" DataValueField="Id" /></td>
-        </tr>
-    
-    </table>
-    </div>
-    
-    
-    
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">Choose carrier</label>
+                <div class="col-sm-10">
+                <asp:DropDownList CssClass="form-control" runat="server" ID="ddlCarrier" DataTextField="Name" DataValueField="Id" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">Choose carrier mode</label>
+                <div class="col-sm-10">
+                <asp:DropDownList CssClass="form-control" runat="server" ID="ddlCarrierMode" DataTextField="Name" DataValueField="Id" />
+                </div>
+            </div>
+        </div>
                             
-    <table class="ListOrders" width="800" id="OrderLines">
+    <table class="table table-bordered"" id="OrderLines">
     <thead>
         <tr>
             <th>Line</th>
@@ -84,7 +86,7 @@
         </ItemTemplate>
     </asp:Repeater>
     </table>
-    <asp:Button runat="server" ID="btnSave" Text="SHIP" OnClick="btnSave_Click"
+    <asp:Button CssClass="btn btn-default" runat="server" ID="btnSave" Text="SHIP" OnClick="btnSave_Click"
                     AccessKey="S" Style="clear: left"  />
                 
     </asp:Panel>   
@@ -92,14 +94,14 @@
         <asp:BulletedList runat="server" ID="bullFiles" DisplayMode="HyperLink" />
         <p>
             PRINT TO:</p>
-        <asp:DropDownList runat="server" ID="ddlPrinters" />
-        <asp:Button runat="server" ID="btnPrint" Text="Print" OnClick="btnPrint_Click" 
+        <asp:DropDownList CssClass="form-control" runat="server" ID="ddlPrinters" />
+        <asp:Button CssClass="btn btn-default" runat="server" ID="btnPrint" Text="Print" OnClick="btnPrint_Click" 
             OnClientClick="if (!Page_ClientValidate()){ return false; } this.disabled = true; this.value = 'Printing...';" 
             UseSubmitBehavior="false" />
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlReturnLabel" Visible="false">
         <div style="margin-top: 10px;">
-            <asp:Button ID="btnPrintReturnLabel" runat="server" OnClick="btnPrintReturnLabel_Click" Text="Create a return label" />
+            <asp:Button CssClass="btn btn-default" ID="btnPrintReturnLabel" runat="server" OnClick="btnPrintReturnLabel_Click" Text="Create a return label" />
         </div>
     </asp:Panel>
 </asp:Content>

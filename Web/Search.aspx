@@ -14,42 +14,54 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
+<div class="page-header">
+    <h2>Search</h2>
+</div>
+
 <div style="margin-top: 10px; margin-bottom: 10px">
 <asp:Label ID="lblFeedBack" runat="server" />
 </div>
 
-<asp:Panel DefaultButton="btnSearch" ID="pnlSearchCriteria" runat="server">
-    <table>
-        <tr>
-            <td align="right">Order id:</td>
-            <td>00002-SU-<asp:TextBox ID="tbOrderId" runat="server" Width="140" /></td>
-        </tr>
-        <tr>
-            <td align="right">Tracking number:</td>
-            <td><asp:TextBox ID="tbTrackingNumber" runat="server" Width="200" /> </td>
-        </tr>
-        <tr>
-            <td valign="top" align="right">Shipped date:</td>
-            <td>
-                <div>
-                <asp:TextBox ID="tbShippedDateFrom" runat="server" Width="200" />
-                </div>
-                <div>
-                <asp:TextBox ID="tbShippedDateTo" runat="server" Width="200" /> 
-                </div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top" align="right">Carrier:</td>
-            <td><asp:DropDownList ID="ddlCarrier" DataTextField="Name" DataValueField="Id" runat="server" /> </td>
-        </tr>
-        <tr>
-            <td>
-            </td>
-            <td><asp:Button ID="btnSearch" runat="server" Text="Search" 
-        onclick="btnSearch_Click" /></td>
-        </tr>
-    </table>
+<asp:Panel CssClass="form-horizontal" DefaultButton="btnSearch" ID="pnlSearchCriteria" runat="server">
+
+
+     <div class="form-group">
+         <label for="inputEmail3" class="col-sm-2 control-label">Order id</label>
+         <div class="col-sm-10">
+           <asp:TextBox CssClass="form-control" id="tbOrderId" runat="server"/>
+         </div>
+     </div>
+    <div class="form-group">
+         <label for="inputEmail3" class="col-sm-2 control-label">Tracking number</label>
+         <div class="col-sm-10">
+            <asp:TextBox CssClass="form-control" ID="tbTrackingNumber" runat="server" />
+         </div>
+    </div>
+    <div class="form-group">
+         <label for="inputEmail3" class="col-sm-2 control-label">Shipped date</label>
+       
+        <div class="col-sm-10">
+            <asp:TextBox CssClass="form-control" ID="tbShippedDateFrom" runat="server"  /> 
+         </div>
+    </div>
+    <div class="form-group">
+         <label for="inputEmail3" class="col-sm-2 control-label"></label>
+         <div class="col-sm-10">
+            <asp:TextBox CssClass="form-control" ID="tbShippedDateTo" runat="server" /> 
+         </div>
+    </div>
+    <div class="form-group">
+         <label for="inputEmail3" class="col-sm-2 control-label">Carrier</label>
+         <div class="col-sm-10">
+            <asp:DropDownList CssClass="form-control" ID="ddlCarrier" DataTextField="Name" DataValueField="Id" runat="server" /> 
+         </div>
+    </div>
+    <div class="form-group">
+         <div class="col-sm-offset-2 col-sm-10">
+             <asp:Button CssClass="btn btn-default" ID="btnSearch" runat="server" Text="Search" 
+        onclick="btnSearch_Click" />
+         </div>
+    </div>
 </asp:Panel>
 
 <div style="display:none;" id="dialog-modal" title="">
@@ -99,7 +111,7 @@
     <asp:Repeater   ID="repeatOrders" runat="server"
     onitemcommand="repeatOrders_ItemCommand">            
             <HeaderTemplate>
-                <table class="ListOrders">
+                <table class="table table-bordered">
                     <thead>
                         <tr>
                             <th>Action</th>

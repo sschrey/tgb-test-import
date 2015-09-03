@@ -186,6 +186,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="_footer.ascx" />
+    <Content Include="_navbar.ascx" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -274,6 +276,20 @@
     </Compile>
     <Compile Include="Site.Master.designer.cs">
       <DependentUpon>Site.Master</DependentUpon>
+    </Compile>
+    <Compile Include="_footer.ascx.cs">
+      <DependentUpon>_footer.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="_footer.ascx.designer.cs">
+      <DependentUpon>_footer.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="_navbar.ascx.cs">
+      <DependentUpon>_navbar.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="_navbar.ascx.designer.cs">
+      <DependentUpon>_navbar.ascx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
