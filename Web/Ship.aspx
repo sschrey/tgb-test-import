@@ -90,7 +90,7 @@
                     AccessKey="S" Style="clear: left"  />
                 
     </asp:Panel>   
-    <asp:Panel runat="server" ID="pnlPrint" Visible="true" BorderColor="#ccc" BorderWidth="1">
+    <asp:Panel runat="server" ID="pnlPrint" Visible="false" BorderColor="#ccc" BorderWidth="1">
         <div style="padding: 10px;">
             <asp:BulletedList runat="server" ID="bullFiles" DisplayMode="HyperLink" />
             <h4>Print</h4>
