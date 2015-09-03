@@ -1,0 +1,192 @@
+﻿
+@{
+    ViewBag.Title = "CheckPrice";
+}
+
+<h2>CheckPrice</h2>
+
+@section style
+{
+    <style type="text/css" >
+    .large
+    {
+        max-width: 100%;
+    }
+    </style>
+}
+
+@section scripts {
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            var inputForm = new InputForm();
+            ko.applyBindings(inputForm);
+        });
+
+        function InputForm() {
+        var self = this;
+        self.xml = ko.observable("");
+        self.pricerequest = ko.observable();
+        self.pricerequestAsJson = ko.observable({});
+        self.searching = ko.observable(false);
+        self.CreatePriceRequest = function (formelement)
+        {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Content("~/TNT/CreatePriceRequest")",
+                data: $(formelement).serialize(),
+                success: function (data) {
+                    self.xml(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown )
+                {
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+
+        self.SubmitRequest = function (formelement)
+        {
+            self.searching(true);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Content("~/TNT/SubmitRequest")",
+                data: $(formelement).serialize(),
+                success: function (data) {
+                    self.pricerequest(data);
+                    self.pricerequestAsJson(ko.mapping.toJSON(self.pricerequest()));
+                    self.searching(false);
+                },
+                error: function(jqXHR, textStatus, errorThrown )
+                {
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+    }
+    </script>
+}
+
+<div style="display: none" data-bind="visible: true">
+    <form data-bind="{submit: CreatePriceRequest}" method="post">
+        <div class="row">
+            <div class="col-md-6">
+
+
+                <input name="rateId" type="hidden" class="form-control" id="rateId" placeholder="rateId" value="current">
+                <div class="form-group">
+                    <label for="senderPostCode">senderPostCode</label>
+                    <input name="senderPostCode" type="text" class="form-control" id="senderPostCode" placeholder="senderPostCode" value="2830">
+                </div>
+                <div class="form-group">
+                    <label for="senderTown">senderTown</label>
+                    <input name="senderTown" type="text" class="form-control" id="senderTown" placeholder="senderTown" value="Willebroek">
+                </div>
+                <div class="form-group">
+                    <label for="deliveryCountry">deliveryCountry</label>
+                    <input name="deliveryCountry" type="text" class="form-control" id="deliveryCountry" placeholder="deliveryCountry" value="BE">
+                </div>
+                <div class="form-group">
+                    <label for="deliveryPostCode">deliveryPostCode</label>
+                    <input name="deliveryPostCode" type="text" class="form-control" id="deliveryPostCode" placeholder="deliveryPostCode" value="2650">
+                </div>
+                <div class="form-group">
+                    <label for="deliveryTown">deliveryTown</label>
+                    <input name="deliveryTown" type="text" class="form-control" id="deliveryTown" placeholder="deliveryTown" value="Edegem">
+                </div>
+                <div class="form-group">
+                    <label for="accountNumber">accountNumber</label>
+                    <input name="accountNumber" type="text" class="form-control" id="accountNumber" placeholder="accountNumber" value="66104">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="weightInKG">weightInKG</label>
+                    <input name="weightInKG" type="text" class="form-control" id="weightInKG" placeholder="weightInKG" value="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="volumeInM3">volumeInM3</label>
+                    <input name="volumeInM3" type="text" class="form-control" id="volumeInM3" placeholder="volumeInM3" value="0.1">
+                </div>
+                <div class="form-group">
+                    <label for="numberOfPieces">numberOfPieces</label>
+                    <input name="numberOfPieces" type="text" class="form-control" id="numberOfPieces" placeholder="numberOfPieces" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="productType">productId</label>
+                    <input name="productId" type="text" class="form-control" id="productId" placeholder="productId" value="15N">
+                </div>
+                <div class="form-group">
+                    <label for="productType">productType</label>
+                    <input name="productType" type="text" class="form-control" id="productType" placeholder="productType" value="N">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default">Convert to XML</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form data-bind="{submit: SubmitRequest}" method="post">
+        <p>
+            <div>
+                <textarea data-bind="value: xml" name="xml" class="form-control large" rows="10"></textarea>
+            </div>
+        </p>
+        <button type="submit" data-bind="visible: xml().length>0" class="btn btn-default">Send to TNT</button>
+    </form>
+    <img data-bind="visible: searching" src="@Url.Content("~/Images/indicator.gif") " />
+    <div>
+        <div data-bind="with: pricerequest">
+            <hr />
+            <div data-bind="with: errors">
+                <div data-bind="foreach: brokenRule">
+                    <div class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
+                        <span data-bind="text: description"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div data-bind="foreach: priceResponse">
+                <div data-bind="with: ratedServices">
+                    <div data-bind="foreach: ratedService">
+                       
+                        <table>
+                            <tr>
+                                <td align="right">product</td>
+                                <td>
+                                    <div data-bind="with: product">
+                                        [<span data-bind="text: id"></span>]
+                                        <span data-bind="text: productDesc"></span>
+                                        <span data-bind="with: options">
+                                            <span data-bind="foreach: option">
+                                                [<span data-bind="text: optionCode"></span>]
+                                                <span data-bind="text: optionDesc"></span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="right">Total price</td>
+                                <td><div data-bind="text: totalPrice"></div></td>
+                            </tr>
+                            <tr>
+                                <td align="right">Total price excl vat</td>
+                                <td><div data-bind="text: totalPriceExclVat"></div></td>
+                            </tr>
+                            <tr>
+                                <td align="right">VAT amount</td>
+                                <td><div data-bind="text: vatAmount"></div></td>
+                            </tr>
+                        </table>
+                        <hr />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <textarea data-bind="{value: pricerequestAsJson, visible: pricerequestAsJson().length>0}" class="form-control large" rows="10"></textarea>
+    </div>
+</div>
+

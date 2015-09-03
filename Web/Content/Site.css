@@ -46,3 +46,87 @@ input[type="checkbox"].input-validation-error {
   margin-left: auto;
   margin-right: auto;
 }
+
+table.ListOrders td 
+{
+    background-color: #fff;
+	color: #3D3D3D;
+	padding: 4px;
+	vertical-align: top;
+}
+
+table.ListOrders
+{
+   margin:10px 0pt 15px;  
+   background-color: #CDCDCD;
+   width: 100%;
+}
+
+table.ListOrders tr th
+{
+    background-color: #e2e2e2;
+    color: #565252;
+	
+	padding: 4px;
+	font-weight: normal;
+}
+
+.Feedback
+{
+    color: Green;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.modalBackground {
+	background-color:Gray;
+	filter:alpha(opacity=70);
+	opacity:0.7;
+}
+
+.modalPopup {
+	background-color:#ffffff;
+	border-width:3px;
+	border-style:solid;
+	border-color:Gray;
+	padding:20px;
+	width:280px;
+	text-align:center;
+}
+
+.modalPopupLarge {
+	background-color:#ffffff;
+	border-width:3px;
+	border-style:solid;
+	border-color:Gray;
+	padding:20px;
+	width:700px;
+	text-align:center;
+}
+
+.modelPopupTitle
+{
+	color:Black;
+	margin-bottom: 5px;
+	font-weight:bold;
+}
+
+.modalPopupTopPane
+{
+	position: relative; 
+	width: 280px;
+}
+
+.modalPopupLargeTopPane
+{
+	position: relative; 
+	width: 700px;
+}
+
+.modalPopupTopPaneButton
+{
+	float: right; 
+	cursor: pointer;
+	width:auto; 
+	overflow:visible;
+}

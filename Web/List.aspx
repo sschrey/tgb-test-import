@@ -3,15 +3,20 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
+<div class="page-header">
+    <h2>List</h2>
+</div>
+
 <div style="margin-top: 10px; margin-bottom: 10px">
 <asp:Label ID="lblFeedBack" runat="server" />
 </div>
+
 
 <asp:Panel ID="pnlListOrders" runat="server">
     <asp:Repeater  ID="repeatOrders" runat="server"
             onitemcommand="repeatOrders_ItemCommand">
             <HeaderTemplate>
-                <table class="ListOrders">
+                <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th>Action</th>
@@ -35,9 +40,9 @@
             <ItemTemplate>
                 <tr>
                     <td rowspan='<%# Eval("Lines.Count") %>'>
-                        <asp:Button Visible='<%# (int)Eval("Status") == (int)ShippingService.Business.Domain.OrderStatus.Unpacked %>' ID="btnPack" runat="server" CommandName="PACK" CommandArgument='<%# Eval("Id") %>' Text="Pack" />
-                        <asp:Button Visible='<%# (int)Eval("Status") == (int)ShippingService.Business.Domain.OrderStatus.Packed %>' ID="btnShip" runat="server" CommandName="SHIP" CommandArgument='<%# Eval("Id") %>' Text="Ship" />
-                        <asp:Button Visible='<%# (int)Eval("Status") == (int)ShippingService.Business.Domain.OrderStatus.Packed %>' ID="btnUnPack" runat="server" CommandName="UNPACK" CommandArgument='<%# Eval("Id") %>' Text="UnPack" />
+                        <asp:Button CssClass="btn btn-default" Visible='<%# (int)Eval("Status") == (int)ShippingService.Business.Domain.OrderStatus.Unpacked %>' ID="btnPack" runat="server" CommandName="PACK" CommandArgument='<%# Eval("Id") %>' Text="Pack" />
+                        <asp:Button CssClass="btn btn-default" Visible='<%# (int)Eval("Status") == (int)ShippingService.Business.Domain.OrderStatus.Packed %>' ID="btnShip" runat="server" CommandName="SHIP" CommandArgument='<%# Eval("Id") %>' Text="Ship" />
+                        <asp:Button CssClass="btn btn-default" Visible='<%# (int)Eval("Status") == (int)ShippingService.Business.Domain.OrderStatus.Packed %>' ID="btnUnPack" runat="server" CommandName="UNPACK" CommandArgument='<%# Eval("Id") %>' Text="UnPack" />
                     </td>
                     <td rowspan='<%# Eval("Lines.Count") %>'>
                         <%# Eval("Id") %>

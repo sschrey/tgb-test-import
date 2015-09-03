@@ -25,6 +25,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{AA8FE97E-6F7E-4483-B288-96E018BA8583}"
 	ProjectSection(SolutionItems) = preProject
 		Lib\AjaxControlToolkit.dll = Lib\AjaxControlToolkit.dll
+		Lib\BarcodeLib.dll = Lib\BarcodeLib.dll
 		Lib\Castle.Windsor.Lifestyles.dll = Lib\Castle.Windsor.Lifestyles.dll
 		Lib\Common.Logging.dll = Lib\Common.Logging.dll
 		Lib\log4net.dll = Lib\log4net.dll

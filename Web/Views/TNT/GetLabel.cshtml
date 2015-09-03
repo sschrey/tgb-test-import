@@ -1,0 +1,213 @@
+﻿
+@{
+    ViewBag.Title = "GetLabel";
+}
+
+<h2>GetLabel</h2>
+
+@section style
+{
+    <style type="text/css">
+        .large {
+            max-width: 100%;
+        }
+    </style>
+}
+
+@section scripts {
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            var inputForm = new InputForm();
+            ko.applyBindings(inputForm);
+        });
+
+        function InputForm() {
+        var self = this;
+        self.xml = ko.observable("");
+        self.labelrequest = ko.observable();
+        self.labelresponse = ko.observable({});
+        self.labelresponseAsJson = ko.observable({});
+        self.searching = ko.observable(false);
+        self.creating = ko.observable(false);
+        self.labelLink = ko.observable("");
+        self.CreateLabelRequest = function (formelement)
+        {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Content("~/TNT/CreateLabelRequest")",
+                data: $(formelement).serialize(),
+                success: function (data) {
+                    self.xml(data);
+                },
+                error: function(jqXHR, textStatus, errorThrown )
+                {
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+
+        self.SubmitRequest = function (formelement)
+        {
+            self.searching(true);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Content("~/TNT/SendLabelRequest")",
+                data: $(formelement).serialize(),
+                success: function (data) {
+                    self.labelresponse(data);
+                    self.searching(false);
+                },
+                error: function(jqXHR, textStatus, errorThrown )
+                {
+                    alert(jqXHR.responseText);
+                }
+            });
+        }
+
+        self.CreateLabel = function(formelement)
+        {
+            self.creating(true);
+            $.ajax({
+                type: "POST",
+                url: "@Url.Content("~/TNT/CreateLabelAsPDF")",
+                data: $(formelement).serialize(),
+            success: function (data) {
+                if(data.BrokenRules.length > 0)  
+                {
+                    alert(data.BrokenRules);
+                }
+                else
+                {
+                    self.labelLink(data.Link);
+                }
+                self.creating(false);
+            },
+            error: function(jqXHR, textStatus, errorThrown )
+            {
+                alert(jqXHR.responseText);
+            }
+        });
+        }
+    }
+    </script>
+}
+
+
+<div style="display: none" data-bind="visible: true">
+    <form data-bind="{submit: CreateLabelRequest}" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="consignmentnumber">consignmentnumber</label>
+                    <input name="consignmentnumber" type="text" class="form-control" id="consignmentnumber" placeholder="consignmentnumber" value="123456782">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentReference">consignmentReference</label>
+                    <input name="consignmentReference" type="text" class="form-control" id="consignmentReference" placeholder="consignmentReference" value="consignmentReference">
+                </div>
+                <div class="form-group">
+                    <label for="senderName">senderName</label>
+                    <input name="senderName" type="text" class="form-control" id="senderName" placeholder="senderName" value="tweddle">
+                </div>
+                <div class="form-group">
+                    <label for="senderAddressLine1">senderAddressLine1</label>
+                    <input name="senderAddressLine1" type="text" class="form-control" id="senderAddressLine1" placeholder="senderAddressLine1" value="Brownfieldlaan 15-3">
+                </div>
+                <div class="form-group">
+                    <label for="senderPostcode">senderPostcode</label>
+                    <input name="senderPostcode" type="text" class="form-control" id="senderPostcode" placeholder="senderPostcode" value="2830">
+                </div>
+                <div class="form-group">
+                    <label for="senderTown">senderTown</label>
+                    <input name="senderTown" type="text" class="form-control" id="senderTown" placeholder="senderTown" value="Willebroek">
+                </div>
+                <div class="form-group">
+                    <label for="deliveryName">deliveryName</label>
+                    <input name="deliveryName" type="text" class="form-control" id="deliveryName" placeholder="deliveryName" value="Stefan Schrey">
+                </div>
+                <div class="form-group">
+                    <label for="deliveryAddressLine1">deliveryAddressLine1</label>
+                    <input name="deliveryAddressLine1" type="text" class="form-control" id="deliveryAddressLine1" placeholder="deliveryAddressLine1" value="Prins boudewijnlaan 381">
+                </div>
+                <div class="form-group">
+                    <label for="deliveryCountry">deliveryCountry</label>
+                    <input name="deliveryCountry" type="text" class="form-control" id="deliveryCountry" placeholder="deliveryCountry" value="BE">
+                </div>
+                <div class="form-group">
+                    <label for="deliveryPostCode">deliveryPostCode</label>
+                    <input name="deliveryPostCode" type="text" class="form-control" id="deliveryPostCode" placeholder="deliveryPostCode" value="2650">
+                </div>
+                <div class="form-group">
+                    <label for="deliveryTown">deliveryTown</label>
+                    <input name="deliveryTown" type="text" class="form-control" id="deliveryTown" placeholder="deliveryTown" value="Edegem">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="productType">productType</label>
+                    <input name="productType" type="text" class="form-control" id="productType" placeholder="productType" value="N">
+                </div>
+                <div class="form-group">
+                    <label for="productId">productId</label>
+                    <input name="productId" type="text" class="form-control" id="productId" placeholder="productId" value="EX">
+                </div>
+                <div class="form-group">
+                    <label for="lineOfBusiness">lineOfBusiness</label>
+                    <input name="lineOfBusiness" type="text" class="form-control" id="lineOfBusiness" placeholder="lineOfBusiness" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="accountNumber">accountNumber</label>
+                    <input name="accountNumber" type="text" class="form-control" id="accountNumber" placeholder="accountNumber" value="66104">
+                </div>
+                <h2>Piece line</h2>
+                <div class="form-group">
+                    <label for="WidthInM">WidthInM</label>
+                    <input name="WidthInM" type="text" class="form-control" id="WidthInM" placeholder="WidthInM" value="1.11">
+                </div>
+                <div class="form-group">
+                    <label for="HeightInM">HeightInM</label>
+                    <input name="HeightInM" type="text" class="form-control" id="HeightInM" placeholder="HeightInM" value="1.11">
+                </div>
+                <div class="form-group">
+                    <label for="WeightInKG">WeightInKG</label>
+                    <input name="WeightInKG" type="text" class="form-control" id="WeightInKG" placeholder="WeightInKG" value="1.11">
+                </div>
+                <div class="form-group">
+                    <label for="LengthInM">LengthInM</label>
+                    <input name="LengthInM" type="text" class="form-control" id="LengthInM" placeholder="LengthInM" value="1.11">
+                </div>
+                <div class="form-group">
+                    <label for="GoodsDescription">GoodsDescription</label>
+                    <input name="GoodsDescription" type="text" class="form-control" id="GoodsDescription" placeholder="GoodsDescription" value="description">
+                </div>
+                <h2>Piece:</h2>
+                <div class="form-group">
+                    <label for="Reference">Reference</label>
+                    <input name="Reference" type="text" class="form-control" id="reference" placeholder="Reference" value="Reference">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default">Convert to XML</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form data-bind="{submit: SubmitRequest}" method="post">
+        <p>
+            <div>
+                <textarea data-bind="value: xml" name="xml" class="form-control large" rows="10"></textarea>
+            </div>
+        </p>
+        <button type="submit" data-bind="visible: xml().length>0" class="btn btn-default">Send to TNT</button>
+    </form>
+    <img data-bind="visible: searching" src="@Url.Content("~/Images/indicator.gif") " />
+    <form data-bind="{submit: CreateLabel}" method="post">
+        <p>
+            <div>
+                <textarea name="xml" data-bind="{value: labelresponse, visible: labelresponse().length>0}" class="form-control large" rows="10"></textarea>
+            </div>
+        </p>
+        <button type="submit" data-bind="visible: labelresponse().length>0" class="btn btn-default">Create label as PDF</button>
+        <img data-bind="visible: creating" src="@Url.Content("~/Images/indicator.gif") " />
+        <a target="_blank" data-bind="{attr: { href: labelLink }, visible: labelLink().length>0}">Open PDF</a>
+    </form>
+</div>

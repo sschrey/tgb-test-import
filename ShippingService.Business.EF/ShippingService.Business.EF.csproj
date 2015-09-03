@@ -56,6 +56,8 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -69,6 +71,23 @@
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\SNOrders\SNPackedContainer.cs" />
     <Compile Include="Domain\SNOrders\SNPackedOrderLine.cs" />
+    <Compile Include="Facade\Carriers\TNT\Label\TNTPiece.cs" />
+    <Compile Include="Facade\Carriers\TNT\Label\TNTPieceLine.cs" />
+    <Compile Include="Facade\Carriers\TNT\Label\response\labelresponse.cs">
+      <DependentUpon>labelresponse.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Facade\Carriers\TNT\Label\request\labelrequest.cs">
+      <DependentUpon>labelrequest.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Facade\Carriers\TNT\Label\TNTLabelRequest.cs" />
+    <Compile Include="Facade\Carriers\TNT\Price\PriceRequest.cs">
+      <DependentUpon>PriceRequest.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Facade\Carriers\TNT\Price\PriceResponse.cs">
+      <DependentUpon>PriceResponse.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Facade\Carriers\TNT\Price\TNTPriceChecker.cs" />
+    <Compile Include="Facade\Carriers\TNT\Price\TNTPriceService.cs" />
     <Compile Include="Facade\E1Data.cs" />
     <Compile Include="Facade\BaseFacade.cs" />
     <Compile Include="Facade\ContextConfiguration.cs" />
@@ -100,7 +119,37 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Facade\Carriers\TNT\Label\ExpressLabel%2520Integration%2520Guide.pdf" />
+    <None Include="Facade\Carriers\TNT\Label\ExpressLabel_TechnicalV2_0.pdf" />
+    <None Include="Facade\Carriers\TNT\Label\response\commonDefinitions.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Facade\Carriers\TNT\Label\request\commonDefinitions.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Facade\Carriers\TNT\Label\request\labelrequest.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Facade\Carriers\TNT\Price\commonDefinitions.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Facade\Carriers\TNT\Label\response\labelresponse.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Facade\Carriers\TNT\Price\PriceServiceDocumentation.pdf" />
+    <None Include="Facade\Carriers\TNT\Price\PriceRequest.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Facade\Carriers\TNT\Price\PriceResponse.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tweddle.Commons\Tweddle.Commons.csproj">
+      <Project>{4b30fac0-3044-46c8-8fd3-fc0eed06c846}</Project>
+      <Name>Tweddle.Commons</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

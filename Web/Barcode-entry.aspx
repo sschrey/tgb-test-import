@@ -2,28 +2,28 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <div class="page-header">
+        <h2>Scan SU Order</h2>
+    </div>
 
-
-
-
-<div style="width: 1000px">
-    <img style="vertical-align:middle" src="Images/barcode-scanner.jpg"  />
-    <div style="display: inline-block; vertical-align: middle;">
-        <div>1. Scan the order number on the pick slip:</div>
-        <input type="text" id="tbPickSlipLabel" />
-        <br /><br />
-        <div>2. Scan the order number on the box:</div>
-        <input type="text" id="tbBoxLabel" />
-        <div style="display: inline-block">
-            <div id="loading" style="display: none">
-              <div><img src="images/indicator.gif" /></div>
+    <div class="form-inline">
+        <div class="form-group">
+            <img src="Images/barcode-scanner.jpg" />
+        </div>
+        <div class="form-group">
+            <div class="form-horizontal">
+            <input type="text" class="form-control" id="tbPickSlipLabel" placeholder="Scan box" />
+            <input type="text" class="form-control" id="tbBoxLabel" placeholder="Scan pick slip"  /> 
             </div>
         </div>
-
     </div>
-</div>
+     <div style="display: inline-block">
+        <div id="loading" style="display: none">
+            <div><img src="images/indicator.gif" /></div>
+        </div>
+    </div>
 
-<script language="javascript" type="text/javascript">
+<script type="text/javascript">
     $(function () {
         $("#tbPickSlipLabel").focus();
         
