@@ -9,6 +9,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <head runat="server">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title></title>
     <link href="~/Content/site.css" rel="stylesheet" type="text/css" />
 
@@ -25,11 +26,10 @@
 <body>
     <form id="form1" runat="server">
     <asp:ScriptManager ID="scriptMan" runat="server" EnablePartialRendering="true" EnableScriptGlobalization="true" />
-
-
     <uc1:_navbar runat="server" id="_navbar" />
+    
 
-    <div class="container body-content">
+    <div class="container body-content">        <asp:ValidationSummary ID="valSummary" runat="server" />
         <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
         
         </asp:ContentPlaceHolder>

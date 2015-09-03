@@ -90,18 +90,26 @@
                     AccessKey="S" Style="clear: left"  />
                 
     </asp:Panel>   
-    <asp:Panel runat="server" ID="pnlPrint" Visible="false" BorderColor="#ccc" BorderWidth="1">
-        <asp:BulletedList runat="server" ID="bullFiles" DisplayMode="HyperLink" />
-        <p>
-            PRINT TO:</p>
-        <asp:DropDownList CssClass="form-control" runat="server" ID="ddlPrinters" />
-        <asp:Button CssClass="btn btn-default" runat="server" ID="btnPrint" Text="Print" OnClick="btnPrint_Click" 
-            OnClientClick="if (!Page_ClientValidate()){ return false; } this.disabled = true; this.value = 'Printing...';" 
-            UseSubmitBehavior="false" />
+    <asp:Panel runat="server" ID="pnlPrint" Visible="true" BorderColor="#ccc" BorderWidth="1">
+        <div style="padding: 10px;">
+            <asp:BulletedList runat="server" ID="bullFiles" DisplayMode="HyperLink" />
+            <h4>Print</h4>
+            <div class="form-inline">
+                <div class="form-group">
+                    <asp:DropDownList CssClass="form-control" runat="server" ID="ddlPrinters" />
+                 </div>
+                <div class="form-group">
+                    <asp:Button CssClass="btn btn-default" runat="server" ID="btnPrint" Text="Print" OnClick="btnPrint_Click" 
+                    OnClientClick="this.disabled = true; this.value = 'Printing...';" 
+                    UseSubmitBehavior="false" />  
+                </div>
+           </div>
+        </div>
     </asp:Panel>
     <asp:Panel runat="server" ID="pnlReturnLabel" Visible="false">
-        <div style="margin-top: 10px;">
+        <div class="pull-right" style="margin-top: 10px;">
             <asp:Button CssClass="btn btn-default" ID="btnPrintReturnLabel" runat="server" OnClick="btnPrintReturnLabel_Click" Text="Create a return label" />
         </div>
+        <div class="clearfix"></div>
     </asp:Panel>
 </asp:Content>
