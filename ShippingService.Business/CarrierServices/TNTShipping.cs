@@ -37,6 +37,29 @@ namespace ShippingService.Business.CarrierServices
             throw new NotImplementedException();
         }
 
+
+        public string GetRecord()
+        {
+            if (Order == null)
+            {
+                return "No order found";
+            }
+            if(Order.Lines == null || Order.Lines.Count==0)
+            {
+                return "No orderlines found";
+            }
+            if (Order.Lines[0].Packs == null || Order.Lines[0].Packs.Count == 0)
+            {
+                return "No packs found in order line 1";
+            }
+
+            _consignmentNumber = Order.Lines[0].Packs[0].PackedContainer.TrackingNumber;
+            _consignmentRef = Order.ReferenceNumber;
+            var s = CreateRecords();
+
+            return s;
+        }
+
         public bool Execute()
         {
             string path = ConfigurationManager.AppSettings["TNTDirectory"];

@@ -1,0 +1,124 @@
+﻿
+@{
+    ViewBag.Title = "Daily";
+}
+@model Web.Controllers.VMTNTDailyModel
+@using Newtonsoft.Json
+
+@section scripts {
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            $("#currentdate").datepicker({
+
+                dateFormat: "yy-mm-dd"                
+            });
+            var data = ko.mapping.fromJSON('@Html.Raw(JsonConvert.SerializeObject(this.Model))');
+
+            var inputForm = new InputForm();
+            inputForm.Data = data;
+            ko.applyBindings(inputForm);
+           
+        });
+
+    function InputForm() {
+        var self = this;
+        self.Data = null;
+        self.SendOrders = function()
+        {
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@Url.Content("~/TNT/SendOrders")",
+                data: ko.mapping.toJSON(self.Data),
+            dataType: "json",
+            success: function (data) {
+                alert(data);
+            },
+            error: function(jqXHR, textStatus, errorThrown )
+            {
+                alert(jqXHR.responseText);
+            }
+        });
+        }
+        self.Search = function (formelement)
+        {
+            self.Searching(true);
+            self.Data.Orders([]);
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@Url.Content("~/TNT/Daily")",
+                data: ko.mapping.toJSON(self.Data),
+            dataType: "json",
+            success: function (data) {
+                ko.mapping.fromJS(data, self.Data);
+                self.Searching(false);
+            },
+            error: function(jqXHR, textStatus, errorThrown )
+            {
+                alert(jqXHR.responseText);
+            }
+            });
+        }
+        self.Searching = ko.observable(false);
+        self.SelectedCarrier = ko.observable();
+    };
+    </script>
+}
+<h2>Daily orders</h2>
+
+<div style="display: none" data-bind="visible: true">
+
+    <form class="form-horizontal" data-bind="{submit: Search}">
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">Date</label>
+            <div class="col-sm-10">
+                <input type="text" id="currentdate" data-bind="value: Data.CurrentDate" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-2 control-label">Carrier</label>
+            <div class="col-sm-10">
+                <select data-bind="options: Data.Carriers(),
+                        optionsText: 'Name',
+                        optionsValue:'Id',
+                        value: Data.SelectedCarrier" class="form-control"></select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button type="submit" class="btn btn-default">Search</button>
+            </div>
+        </div>
+
+
+        <img data-bind="visible: Searching" src="@Url.Content("~/Images/indicator.gif") " />
+        <table data-bind="visible: Data.Orders().length > 0 && !Searching()" class="table table-bordered">
+            <thead>
+                <tr>
+                    <td>Order id</td>
+                    <td>Part number</td>
+                    <td>#</td>
+                    <td>Container</td>
+                    <td>Tracking number</td>
+                </tr>
+            </thead>
+            <tbody data-bind="foreach: Data.Orders">
+                <tr>
+                    <td data-bind="attr: { rowspan: Count }"><span data-bind="text: OrderId"></span></td>
+
+                </tr>
+                <!-- ko foreach: OrderLines -->
+                <tr>
+                    <td><span data-bind="text: PartNumber"></span> </td>
+                    <td><span data-bind="text: Quantity"></span> </td>
+                    <td><span data-bind="text: ContainerName"></span> </td>
+                    <td><span data-bind="text: TrackingNumber"></span> </td>
+                </tr>
+                <!-- /ko -->
+            </tbody>
+        </table>
+        <button  class="btn btn-default" data-bind="{visible: Data.Orders().length > 0 && !Searching(), click: SendOrders}">Send orders</button>
+    </form>
+</div>

@@ -39,6 +39,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="<%= ResolveUrl("~/TNT/CheckPrice") %>">Check Price</a></li>
                         <li><a href="<%= ResolveUrl("~/TNT/GetLabel") %>">Label</a></li>
+                          <li><a href="<%= ResolveUrl("~/TNT/Daily") %>">Daily orders</a></li>
                     </ul>
                 </li>
             </ul>

@@ -1,4 +1,5 @@
-﻿using ShippingService.Business.EF.Facade.Carriers.TNT.Label;
+﻿using ShippingService.Business.Domain;
+using ShippingService.Business.EF.Facade.Carriers.TNT.Label;
 using ShippingService.Business.EF.Facade.Carriers.TNT.Price;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,59 @@ namespace Web.Controllers
         {
             return View();
         }
+
+        public ActionResult Daily()
+        {
+            var oc = new OrderCriteria();
+
+            oc.Carrier = "87433";
+            oc.ShippedDateFrom = DateTime.Now;
+            oc.ShippedDateTo = DateTime.Now;
+
+            VMTNTDailyModel model = new VMTNTDailyModel();
+
+            var orders = ApplicationContextHolder.Instance.Facade.GetOrders(oc);
+            foreach(var order in orders)
+            {
+                model.Orders.Add(new VMOrder(order));
+            }
+
+            model.Carriers = ApplicationContextHolder.Instance.Facade.GetCarriers();
+            model.SelectedCarrier = oc.Carrier;
+
+            model.CurrentDate = DateTime.Now.ToString("yyyy-MM-dd");
+
+            return View(model);
+
+        }
+
+        [HttpPost]
+        public ActionResult Daily(VMTNTDailyModel model)
+        {
+            var oc = new OrderCriteria();
+
+            oc.Carrier = model.SelectedCarrier;
+            oc.ShippedDateFrom = DateTime.Parse(model.CurrentDate);
+            oc.ShippedDateTo = DateTime.Parse(model.CurrentDate);
+
+            var orders = ApplicationContextHolder.Instance.Facade.GetOrders(oc);
+            foreach (var order in orders)
+            {
+                model.Orders.Add(new VMOrder(order));
+            }
+
+            return Json(model);
+        }
+
+        [HttpPost]
+        public string SendOrders(VMTNTDailyModel model)
+        {
+            var orders = model.Orders;
+
+            return orders.Count + " have been sent";
+        }
+
+
 
 
         [HttpPost]

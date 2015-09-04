@@ -218,6 +218,7 @@
     <Content Include="Views\SNOrders\Search.cshtml" />
     <Content Include="Views\TNT\CheckPrice.cshtml" />
     <Content Include="Views\TNT\GetLabel.cshtml" />
+    <Content Include="Views\TNT\Daily.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationContextHolder.cs" />
@@ -234,7 +235,10 @@
     <Compile Include="BusinessValidationError.cs" />
     <Compile Include="Controllers\SNOrdersController.cs" />
     <Compile Include="Controllers\TNTController.cs" />
+    <Compile Include="Controllers\VMOrderLine.cs" />
+    <Compile Include="Controllers\VMTNTDailyModel.cs" />
     <Compile Include="Controllers\TNTLabelGenerator.cs" />
+    <Compile Include="Controllers\VMOrder.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
