@@ -12,8 +12,18 @@
         </div>
         <div class="form-group">
             <div class="form-horizontal">
-            <input type="text" class="form-control" id="tbPickSlipLabel" placeholder="Scan box" />
-            <input type="text" class="form-control" id="tbBoxLabel" placeholder="Scan pick slip"  /> 
+                <div class="form-group" style="width:100%; margin-bottom: 15px;">
+                    <label class="col-sm-4 control-label">1. Scan order number on the pick slip:</label>
+                    <div class="col-sm-8">
+                    <input type="text" class="form-control" id="tbPickSlipLabel" />
+                    </div>
+                </div>
+                <div class="form-group" style="width:100%">
+                    <label class="col-sm-4 control-label">2. Scan order number on the box:</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="tbBoxLabel"/> 
+                    </div>
+                </div>
             </div>
         </div>
     </div>

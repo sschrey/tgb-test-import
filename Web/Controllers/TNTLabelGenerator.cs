@@ -35,6 +35,14 @@ namespace Web.Controllers
             if (!File.Exists(pdfFilePath))
             {
                 val.AddBrokenRule(executableFilePath + " " + args + " failed to create pdf");
+                foreach(var error in result.Errors)
+                {
+                    val.AddBrokenRule(error);
+                }
+                foreach (var output in result.Output)
+                {
+                    val.AddBrokenRule(output);
+                }
             }
 
             return val;
