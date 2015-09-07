@@ -120,7 +120,7 @@ namespace ShippingService.Business
 
         public IList<ERPOrder> GetERPOrders(string orderIds)
         {
-            IList<Order> orders = GetOrders(new Domain.OrderCriteria() { Ids = orderIds.Split(';') });
+            IList<Order> orders = GetOrders(new Domain.OrderCriteria() { CustomerPOs = orderIds.Split(';') });
 
             return Mapping.MappableEntity<Order, ERPOrder>.Map(orders);
         }

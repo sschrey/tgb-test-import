@@ -1,10 +1,12 @@
-﻿using ShippingService.Business.Domain;
+﻿using ShippingService.Business.CarrierServices;
+using ShippingService.Business.Domain;
 using ShippingService.Business.EF.Facade.Carriers.TNT.Label;
 using ShippingService.Business.EF.Facade.Carriers.TNT.Price;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Tweddle.Commons.Extensions;
@@ -70,9 +72,34 @@ namespace Web.Controllers
         [HttpPost]
         public string SendOrders(VMTNTDailyModel model)
         {
-            var orders = model.Orders;
+            var facade = ApplicationContextHolder.Instance.Facade;
+            var oc = new OrderCriteria();
 
-            return orders.Count + " have been sent";
+            List<string> ids = new List<string>();
+            foreach (var order in model.Orders)
+            {
+                ids.Add(order.OrderId);
+            }
+            oc.Ids = ids.ToArray();
+
+            var carriermodes = facade.GetCarrierModes();
+            var orders = ApplicationContextHolder.Instance.Facade.GetOrders(oc);
+            
+            foreach(var order in orders)
+            {
+                var carriermode = order.ShippedCarrierMode == null ? carriermodes.First(cm => cm.Id == order.ProposedCarrierMode) : carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierMode);
+                var shipper = new TNTShipping { Order = order, ShippingVendor = carriermode, Facade = facade };
+                var record = shipper.GetRecord();
+                var virtualPath = "~/Content/TNT/ORDERS/";
+                var ordervirtualPath = virtualPath + order.Id + ".txt";
+                StreamWriter sw = new StreamWriter(Server.MapPath(ordervirtualPath));
+                sw.Write(record);
+                sw.Close();
+                sw.Dispose();
+            }
+
+            return orders.Count() + " orders saved.";
+            
         }
 
 

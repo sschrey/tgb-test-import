@@ -383,15 +383,27 @@ namespace ShippingService.Business.Dao
                     cmd.Parameters.Add(p);
                 }
 
-                if (crit.Ids != null && crit.Ids.Count()>0)
+                if (crit.CustomerPOs != null && crit.CustomerPOs.Count()>0)
+                {
+                    var pStr = string.Empty;
+                    foreach (var pId in crit.CustomerPOs)
+                        pStr += string.Format("'{0}',", pId);
+
+                    pStr = pStr.TrimEnd(new char[] { ',' });
+                    whereClauses.Add(string.Format("a.[CustomerPONumber] in ({0})", pStr));
+                }
+
+                if (crit.Ids != null && crit.Ids.Count() > 0)
                 {
                     var pStr = string.Empty;
                     foreach (var pId in crit.Ids)
                         pStr += string.Format("'{0}',", pId);
 
                     pStr = pStr.TrimEnd(new char[] { ',' });
-                    whereClauses.Add(string.Format("a.[CustomerPONumber] in ({0})", pStr));
+                    whereClauses.Add(string.Format("a.[OrderID] in ({0})", pStr));
                 }
+
+
 
                 if (!string.IsNullOrEmpty(crit.E1Status))
                 {

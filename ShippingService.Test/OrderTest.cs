@@ -14,7 +14,7 @@ namespace ShippingService.Test
         public void CanGetOneOrder()
         {
 
-            var orders = ApplicationContextHolder.Instance.Facade.GetOrders(new Business.Domain.OrderCriteria() { Ids = new List<string>() { "ONLINESUB_2013003132" }.ToArray() });
+            var orders = ApplicationContextHolder.Instance.Facade.GetOrders(new Business.Domain.OrderCriteria() { CustomerPOs = new List<string>() { "ONLINESUB_2013003132" }.ToArray() });
             
             Assert.IsNotNull(orders.Count()>0);
         }

@@ -23,6 +23,7 @@
     function InputForm() {
         var self = this;
         self.Data = null;
+        self.fileLink = ko.observable("");
         self.SendOrders = function()
         {
             $.ajax({
@@ -120,5 +121,6 @@
             </tbody>
         </table>
         <button  class="btn btn-default" data-bind="{visible: Data.Orders().length > 0 && !Searching(), click: SendOrders}">Send orders</button>
+        <a target="_blank" data-bind="{attr: { href: fileLink }, visible: fileLink().length>0}">Open text file</a>
     </form>
 </div>

@@ -12,6 +12,7 @@ namespace ShippingService.Business.Domain
         public DateTime? ShippedDateFrom { get; set; }
         public DateTime ShippedDateTo { get; set; }
         public string E1Status { get; set; }
+        public string[] CustomerPOs { get; set; }
         public string[] Ids { get; set; }
         public string Carrier { get; set; }
     }

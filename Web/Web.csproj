@@ -330,6 +330,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\TNT\LABELS\" />
+    <Folder Include="Content\TNT\ORDERS\" />
     <Folder Include="Content\TNT\XSL\HTML\css\" />
     <Folder Include="Content\TNT\XSL\HTML\logo\" />
     <Folder Include="Models\" />
