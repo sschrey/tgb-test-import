@@ -80,6 +80,9 @@
       <DependentUpon>labelrequest.xsd</DependentUpon>
     </Compile>
     <Compile Include="Facade\Carriers\TNT\Label\TNTLabelRequest.cs" />
+    <Compile Include="Facade\Carriers\TNT\ManifestSummary\document.cs">
+      <DependentUpon>document.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Facade\Carriers\TNT\Price\PriceRequest.cs">
       <DependentUpon>PriceRequest.xsd</DependentUpon>
     </Compile>
@@ -128,6 +131,9 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Facade\Carriers\TNT\Label\request\labelrequest.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Facade\Carriers\TNT\ManifestSummary\document.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Facade\Carriers\TNT\Price\commonDefinitions.xsd">

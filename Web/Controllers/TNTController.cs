@@ -15,7 +15,7 @@ namespace Web.Controllers
 {
     public class TNTController : Controller
     {
-        
+
         public ActionResult CheckPrice()
         {
             return View();
@@ -37,7 +37,7 @@ namespace Web.Controllers
             VMTNTDailyModel model = new VMTNTDailyModel();
 
             var orders = ApplicationContextHolder.Instance.Facade.GetOrders(oc);
-            foreach(var order in orders)
+            foreach (var order in orders)
             {
                 model.Orders.Add(new VMOrder(order));
             }
@@ -84,8 +84,8 @@ namespace Web.Controllers
 
             var carriermodes = facade.GetCarrierModes();
             var orders = ApplicationContextHolder.Instance.Facade.GetOrders(oc);
-            
-            foreach(var order in orders)
+
+            foreach (var order in orders)
             {
                 var carriermode = order.ShippedCarrierMode == null ? carriermodes.First(cm => cm.Id == order.ProposedCarrierMode) : carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierMode);
                 var shipper = new TNTShipping { Order = order, ShippingVendor = carriermode, Facade = facade };
@@ -99,7 +99,7 @@ namespace Web.Controllers
             }
 
             return orders.Count() + " orders saved.";
-            
+
         }
 
 
@@ -134,16 +134,16 @@ namespace Web.Controllers
             line.LengthInM = lengthInM;
             line.WeightInKG = weightInKG;
             line.WidthInM = widthInM;
-            line.Pieces = new List<TNTPiece>() { new TNTPiece() { Reference = reference} };
+            line.Pieces = new List<TNTPiece>() { new TNTPiece() { Reference = reference } };
 
 
             return TNTLabelRequest.CreateRequest(
                 consignmentnumber: consignmentnumber,
                 consignmentReference: consignmentReference,
                 senderName: senderName,
-                senderAddressLine1:senderAddressLine1,
-                senderPostcode:senderPostcode,
-                senderTown:senderTown,
+                senderAddressLine1: senderAddressLine1,
+                senderPostcode: senderPostcode,
+                senderTown: senderTown,
                 deliveryName: deliveryName,
                 deliveryAddressLine1: deliveryAddressLine1,
                 deliveryCountry: deliveryCountry,
@@ -155,6 +155,104 @@ namespace Web.Controllers
                 accountNumber: accountNumber,
                 pieceLines: new List<TNTPieceLine>() { line }
                 );
+        }
+
+        [HttpPost]
+        public string CreateManifestSummeryRequest(string accountnumber, 
+            string accountcountry, 
+            string sendername,
+            string senderaddressline1,
+            string sendertown,
+            string senderpostcode,
+            string sendercountry,
+            string consignmentnumber,
+            string consignmentpieces,
+            string consignmentweight,
+            string consignmentshipperref,
+            string consignmentreceiver,
+            string consignmentcity,
+            string consignmentdestination,
+            string consignmentservice,
+            string grandtotalconsignments,
+            string grandtotalpieces,
+            string grandtotalweigt,
+            string printdate,
+            string printtime
+            )
+        {
+            ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.manifestsummary ms = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.manifestsummary();
+            ms.account = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.account();
+            ms.account.accountCountry = accountcountry;
+            ms.account.accountNumber = accountnumber;
+
+            ms.sender = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.sender();
+            ms.sender.addressLine1 = senderaddressline1;
+            ms.sender.country = sendercountry;
+            ms.sender.name = sendername;
+            ms.sender.postcode = senderpostcode;
+            ms.sender.town = sendertown;
+
+            var consignments = new List<ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.consignment>();
+            var consignment = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.consignment();
+            consignments.Add(consignment);
+
+            consignment.city = consignmentcity;
+            consignment.destination = consignmentdestination;
+            consignment.number = consignmentnumber;
+            consignment.pieces = consignmentpieces;
+            consignment.receiver = consignmentreceiver;
+            consignment.service = consignmentservice;
+            consignment.shipperref = consignmentshipperref;
+            consignment.weight = consignmentweight;
+
+            ms.consignment = consignments.ToArray();
+
+            ms.grandtotal = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.grandtotal();
+            ms.grandtotal.consignments = grandtotalconsignments;
+            ms.grandtotal.pieces = grandtotalpieces;
+            ms.grandtotal.weight = grandtotalweigt;
+
+            ms.printdate = printdate;
+            ms.printtime = printtime;
+
+            //encode string without the bom
+            var encoding = new UTF8Encoding(false);
+
+            string xml = ms.ToXML(new UTF8Encoding(false));
+
+            return xml;
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult CreateManifestSummeryPDF(string xml)
+        {
+            string virtualFolder = "~/Content/TNT/MANIFEST_SUMMARY/" + Guid.NewGuid().ToString();
+            string virtualOutputPDF = Path.Combine(virtualFolder, "tnt.pdf");
+
+            var tempFilePath = Server.MapPath(virtualFolder);
+
+            Directory.CreateDirectory(tempFilePath);
+
+            string xmlFilePath = Path.Combine(tempFilePath, "tnt.xml");
+            StreamWriter sw = new StreamWriter(xmlFilePath);
+            sw.WriteLine(xml);
+            sw.Close();
+            sw.Dispose();
+
+            string pdfFilePath = Path.Combine(tempFilePath, "tnt.pdf");
+
+            var responseobj = xml.ToObject<ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.manifestsummary>();
+
+            string xslFilePath = Server.MapPath("~/Content/TNT/XSL/MANIFEST_SUMMARY/pdf.xsl");
+
+            TNTLabelGenerator gen = new TNTLabelGenerator();
+            var val = gen.GeneratePDF(xslFilePath, xmlFilePath, pdfFilePath, tempFilePath + @"\\");
+
+            return Json(new
+            {
+                Link = Url.Content(virtualOutputPDF),
+                BrokenRules = val.BrokenRules
+            });
         }
 
         [HttpPost, ValidateInput(false)]
@@ -171,13 +269,13 @@ namespace Web.Controllers
         public ActionResult CreateLabelAsPDF(string xml)
         {
 
-            string virtualFolder = "~/Content/TNT/LABELS/" +  Guid.NewGuid().ToString();
+            string virtualFolder = "~/Content/TNT/LABELS/" + Guid.NewGuid().ToString();
             string virtualOutputPDF = Path.Combine(virtualFolder, "tnt.pdf");
 
             var tempFilePath = Server.MapPath(virtualFolder);
 
             Directory.CreateDirectory(tempFilePath);
-            
+
             string xmlFilePath = Path.Combine(tempFilePath, "tnt.xml");
             StreamWriter sw = new StreamWriter(xmlFilePath);
             sw.WriteLine(xml);
@@ -189,7 +287,7 @@ namespace Web.Controllers
             var responseobj = xml.ToObject<ShippingService.Business.EF.Facade.Carriers.TNT.Label.Response.labelResponse>();
 
             if (responseobj.consignment != null)
-            { 
+            {
                 //generate all barcodes:
                 foreach (var cons in responseobj.consignment)
                 {
@@ -219,7 +317,7 @@ namespace Web.Controllers
 
         }
 
-        
+
 
         [HttpPost]
         public string CreatePriceRequest(string rateId,
@@ -249,8 +347,13 @@ namespace Web.Controllers
             string response = TNTPriceChecker.Send(xml);
 
             var responseObject = response.ToObject<ShippingService.Business.EF.Facade.Carriers.TNT.Price.PriceResponse.document>();
-            
+
             return Json(responseObject);
+        }
+
+        public ActionResult ManifestSummary()
+        {
+            return View();
         }
     }
 }

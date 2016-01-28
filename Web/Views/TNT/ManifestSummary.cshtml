@@ -1,0 +1,162 @@
+﻿
+@{
+    ViewBag.Title = "ManifestSummary";
+}
+
+<h2>Manifest summary</h2>
+
+<div style="display: none" data-bind="visible: true">
+    <form data-bind="{submit: CreateRequest}" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="accountnumber">Account number</label>
+                    <input name="accountnumber" type="text" class="form-control" id="accountnumber" placeholder="accountnumber" value="0000066104">
+                </div>
+                <div class="form-group">
+                    <label for="accountcountry">Account country</label>
+                    <input name="accountcountry" type="text" class="form-control" id="accountcountry" placeholder="accountcountry" value="BE">
+                </div>
+                <div class="form-group">
+                    <label for="sendername">Sender name</label>
+                    <input name="sendername" type="text" class="form-control" id="sendername" placeholder="sendername" value="Tweddle">
+                </div>
+                <div class="form-group">
+                    <label for="senderaddressline1">Sender address line 1</label>
+                    <input name="senderaddressline1" type="text" class="form-control" id="senderaddressline1" placeholder="senderaddressline1" value="Brownfieldlaan 15-3">
+                </div>
+                <div class="form-group">
+                    <label for="sendertown">Sender town</label>
+                    <input name="sendertown" type="text" class="form-control" id="sendertown" placeholder="sendertown" value="WILLEBROEK">
+                </div>
+                <div class="form-group">
+                    <label for="senderpostcode">Sender post code</label>
+                    <input name="senderpostcode" type="text" class="form-control" id="senderpostcode" placeholder="senderpostcode" value="2830">
+                </div>
+                <div class="form-group">
+                    <label for="sendercountry">Sender country</label>
+                    <input name="sendercountry" type="text" class="form-control" id="sendercountry" placeholder="sendercountry" value="Belgium">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentnumber">consignment number</label>
+                    <input name="consignmentnumber" type="text" class="form-control" id="consignmentnumber" placeholder="consignmentnumber" value="767193453">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentpieces">consignment pieces</label>
+                    <input name="consignmentpieces" type="text" class="form-control" id="consignmentpieces" placeholder="consignmentpieces" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentweight">consignment weight</label>
+                    <input name="consignmentweight" type="text" class="form-control" id="consignmentweight" placeholder="consignmentweight" value="159.100">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentshipperref">consignment shipper ref</label>
+                    <input name="consignmentshipperref" type="text" class="form-control" id="consignmentshipperref" placeholder="consignmentshipperref" value="149171-00002-SU-2191919">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentreceiver">consignment receiver</label>
+                    <input name="consignmentreceiver" type="text" class="form-control" id="consignmentreceiver" placeholder="consignmentreceiver" value="/">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentcity">consignment city</label>
+                    <input name="consignmentcity" type="text" class="form-control" id="consignmentcity" placeholder="consignmentcity" value="Valencia">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentdestination">consignment destination</label>
+                    <input name="consignmentdestination" type="text" class="form-control" id="consignmentdestination" placeholder="consignmentdestination" value="Spain">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentservice">consignment service</label>
+                    <input name="consignmentservice" type="text" class="form-control" id="consignmentservice" placeholder="consignmentservice" value="Road Freight System">
+                </div>
+                <div class="form-group">
+                    <label for="grandtotalconsignments">grand total consignments</label>
+                    <input name="grandtotalconsignments" type="text" class="form-control" id="grandtotalconsignments" placeholder="grandtotalconsignments" value="2">
+                </div>
+                <div class="form-group">
+                    <label for="grandtotalpieces">grand total pieces</label>
+                    <input name="grandtotalpieces" type="text" class="form-control" id="grandtotalpieces" placeholder="grandtotalpieces" value="3">
+                </div>
+                <div class="form-group">
+                    <label for="grandtotalweight">grand total weight</label>
+                    <input name="grandtotalweight" type="text" class="form-control" id="grandtotalweight" placeholder="grandtotalweight" value="206.10">
+                </div>
+                <div class="form-group">
+                    <label for="printdate">print date</label>
+                    <input name="printdate" type="text" class="form-control" id="printdate" placeholder="printdate" value="@DateTime.Now.ToString("dd-MM-yyyy")">
+                </div>
+                <div class="form-group">
+                    <label for="printtime">print time</label>
+                    <input name="printtime" type="text" class="form-control" id="printtime" placeholder="printtime" value="@DateTime.Now.ToString("HH:mm")">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default">Convert to XML</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form data-bind="{submit: SubmitRequest}" method="post">
+        <p>
+            <div>
+                <textarea data-bind="value: xml" name="xml" class="form-control large" rows="10"></textarea>
+            </div>
+        </p>
+        <button type="submit" data-bind="visible: xml().length>0" class="btn btn-default">Create PDF</button>
+        <a target="_blank" data-bind="{attr: { href: pdfLink }, visible: pdfLink().length>0}">Open PDF</a>
+    </form>
+    <img data-bind="visible: searching" src="@Url.Content("~/Images/indicator.gif") " />
+
+ </div>
+            
+
+@section scripts {
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            var inputForm = new InputForm();
+            ko.applyBindings(inputForm);
+        });
+
+        function InputForm() {
+            var self = this;
+            self.xml = ko.observable("");
+            self.searching = ko.observable(false);
+            self.pdfLink = ko.observable("");
+
+            self.CreateRequest = function (formelement)
+            {
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Content("~/TNT/CreateManifestSummeryRequest")",
+                        data: $(formelement).serialize(),
+                    success: function (data) {
+                        self.xml(data);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown )
+                    {
+                        alert(jqXHR.responseText);
+                    }
+                });
+            }
+
+            self.SubmitRequest = function (formelement)
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Content("~/TNT/CreateManifestSummeryPDF")",
+                    data: $(formelement).serialize(),
+                success: function (data) {
+                    self.pdfLink(data.Link);
+                },
+                error: function(jqXHR, textStatus, errorThrown )
+                {
+                    alert(jqXHR.responseText);
+                }
+                });
+            }
+        }
+
+       
+
+        
+    </script>
+}

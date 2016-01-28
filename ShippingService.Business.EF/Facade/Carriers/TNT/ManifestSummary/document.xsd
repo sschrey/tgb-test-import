@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="manifestsummary">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="account"/>
+        <xs:element ref="sender"/>
+        <xs:element maxOccurs="unbounded" ref="consignment"/>
+        <xs:element ref="grandtotal"/>
+        <xs:element ref="printdate"/>
+        <xs:element ref="printtime"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="account">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="accountNumber"/>
+        <xs:element ref="accountCountry"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="accountNumber" type="xs:integer"/>
+  <xs:element name="accountCountry" type="xs:NCName"/>
+  <xs:element name="sender">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="addressLine1"/>
+        <xs:element ref="town"/>
+        <xs:element ref="postcode"/>
+        <xs:element ref="country"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="addressLine1" type="xs:string"/>
+  <xs:element name="town" type="xs:string"/>
+  <xs:element name="postcode" type="xs:string"/>
+  <xs:element name="country" type="xs:string"/>
+  <xs:element name="consignment">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="number"/>
+        <xs:element ref="pieces"/>
+        <xs:element ref="weight"/>
+        <xs:element ref="shipperref"/>
+        <xs:element ref="receiver"/>
+        <xs:element ref="city"/>
+        <xs:element ref="destination"/>
+        <xs:element ref="service"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="number" type="xs:integer"/>
+  <xs:element name="shipperref" type="xs:string"/>
+  <xs:element name="receiver" type="xs:string"/>
+  <xs:element name="city" type="xs:string"/>
+  <xs:element name="destination" type="xs:string"/>
+  <xs:element name="service" type="xs:string"/>
+  <xs:element name="grandtotal">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="consignments"/>
+        <xs:element ref="pieces"/>
+        <xs:element ref="weight"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="consignments" type="xs:integer"/>
+  <xs:element name="printdate" type="xs:string"/>
+  <xs:element name="printtime" type="xs:string"/>
+  <xs:element name="pieces" type="xs:integer"/>
+  <xs:element name="weight" type="xs:string"/>
+</xs:schema>
