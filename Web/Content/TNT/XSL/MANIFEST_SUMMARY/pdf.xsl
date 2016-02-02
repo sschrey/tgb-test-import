@@ -171,7 +171,7 @@
                                     <fo:table-row >
                                     
                                     <fo:table-cell border-top="1px solid black" padding-top="10px" padding-bottom="3px" font-size="10px" number-columns-spanned="8">
-                                        <fo:block font-style="italic">Account <xsl:value-of select="consignment/number"/> Totals:</fo:block>
+                                        <fo:block font-style="italic">Account <xsl:value-of select="account/accountNumber"/> Totals:</fo:block>
                                         </fo:table-cell>
                                     </fo:table-row>
                                     <fo:table-row >

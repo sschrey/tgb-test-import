@@ -1,0 +1,204 @@
+﻿
+@{
+    ViewBag.Title = "ManifestDetail";
+}
+
+<h2>Manifest summary</h2>
+
+<div style="display: none" data-bind="visible: true">
+    <form data-bind="{submit: CreateRequest}" method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="accountnumber">Account number</label>
+                    <input name="accountnumber" type="text" class="form-control" id="accountnumber" placeholder="accountnumber" value="0000066104">
+                </div>
+                <div class="form-group">
+                    <label for="accountcountry">Account country</label>
+                    <input name="accountcountry" type="text" class="form-control" id="accountcountry" placeholder="accountcountry" value="BE">
+                </div>
+                <div class="form-group">
+                    <label for="sendername">Sender name</label>
+                    <input name="sendername" type="text" class="form-control" id="sendername" placeholder="sendername" value="Tweddle">
+                </div>
+                <div class="form-group">
+                    <label for="senderaddressline1">Sender address line 1</label>
+                    <input name="senderaddressline1" type="text" class="form-control" id="senderaddressline1" placeholder="senderaddressline1" value="Brownfieldlaan 15-3">
+                </div>
+                <div class="form-group">
+                    <label for="sendertown">Sender town</label>
+                    <input name="sendertown" type="text" class="form-control" id="sendertown" placeholder="sendertown" value="WILLEBROEK">
+                </div>
+                <div class="form-group">
+                    <label for="senderpostcode">Sender post code</label>
+                    <input name="senderpostcode" type="text" class="form-control" id="senderpostcode" placeholder="senderpostcode" value="2830">
+                </div>
+                <div class="form-group">
+                    <label for="sendercountry">Sender country</label>
+                    <input name="sendercountry" type="text" class="form-control" id="sendercountry" placeholder="sendercountry" value="Belgium">
+                </div>
+                <div class="form-group">
+                    <label for="shippingoptiontitle">shipping option title</label>
+                    <input name="shippingoptiontitle" type="text" class="form-control" id="shippingoptiontitle" placeholder="shippingoptiontitle" value="DOMESTIC">
+                </div>
+
+                <div class="form-group">
+                    <label for="consignmentnumber">consignment number</label>
+                    <input name="consignmentnumber" type="text" class="form-control" id="consignmentnumber" placeholder="consignmentnumber" value="767193453">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentshipperref">consignment shipperref</label>
+                    <input name="consignmentshipperref" type="text" class="form-control" id="consignmentshipperref" placeholder="consignmentshipperref" value="149171-00002-su-2191920">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentdangerousgoods">consignment dangerous goods</label>
+                    <input name="consignmentdangerousgoods" type="text" class="form-control" id="consignmentdangerousgoods" placeholder="consignmentdangerousgoods" value="NON">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentreceivername">consignment receiver name</label>
+                    <input name="consignmentreceivername" type="text" class="form-control" id="consignmentreceivername" placeholder="consignmentreceivername" value="Lexus Ireland">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentreceiverstreet1">consignment receiver street1</label>
+                    <input name="consignmentreceiverstreet1" type="text" class="form-control" id="consignmentreceiverstreet1" placeholder="consignmentreceiverstreet1" value="Kileen Road">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentreceiverstreet2">consignment receiver street2</label>
+                    <input name="consignmentreceiverstreet2" type="text" class="form-control" id="consignmentreceiverstreet2" placeholder="consignmentreceiverstreet2" value="">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentreceivercity">consignment receiver city</label>
+                    <input name="consignmentreceivercity" type="text" class="form-control" id="consignmentreceivercity" placeholder="consignmentreceivercity" value="DUBLIN">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentreceiverpostcode">consignment receiver postcode</label>
+                    <input name="consignmentreceiverpostcode" type="text" class="form-control" id="consignmentreceiverpostcode" placeholder="consignmentreceiverpostcode" value="DU12">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentreceivercountry">consignment receiver country</label>
+                    <input name="consignmentreceivercountry" type="text" class="form-control" id="consignmentreceivercountry" placeholder="consignmentreceivercountry" value="Ireland">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentreceiverphone">consignment receiver phone</label>
+                    <input name="consignmentreceiverphone" type="text" class="form-control" id="consignmentreceiverphone" placeholder="consignmentreceiverphone" value="">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentreceivercontact">consignment receiver contact</label>
+                    <input name="consignmentreceivercontact" type="text" class="form-control" id="consignmentreceivercontact" placeholder="consignmentreceivercontact" value="Kevin O'Reilly">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentshippingservice">consignment shipping service</label>
+                    <input name="consignmentshippingservice" type="text" class="form-control" id="consignmentshippingservice" placeholder="consignmentshippingservice" value="(728) Road Freight System">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentshippingoption">consignment shipping option</label>
+                    <input name="consignmentshippingoption" type="text" class="form-control" id="consignmentshippingoption" placeholder="consignmentshippingoption" value="(SYS) System Network Delivery">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentpieces">consignment pieces</label>
+                    <input name="consignmentpieces" type="text" class="form-control" id="consignmentpieces" placeholder="consignmentpieces" value="1">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentweight">consignment weight</label>
+                    <input name="consignmentweight" type="text" class="form-control" id="consignmentweight" placeholder="consignmentweight" value="159.100">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentinsurancevalue">consignment insurance value</label>
+                    <input name="consignmentinsurancevalue" type="text" class="form-control" id="consignmentinsurancevalue" placeholder="consignmentinsurancevalue" value="100.00 EUR">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentinvoicevalue">consignment invoice value</label>
+                    <input name="consignmentinvoicevalue" type="text" class="form-control" id="consignmentinvoicevalue" placeholder="consignmentinvoicevalue" value="0 EUR">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentdescription">consignment description</label>
+                    <input name="consignmentdescription" type="text" class="form-control" id="consignmentdescription" placeholder="consignmentdescription" value="NX 300h Portfolio (Palet 120x80x15)">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentdimensions">consignment dimensions</label>
+                    <input name="consignmentdimensions" type="text" class="form-control" id="consignmentdimensions" placeholder="consignmentdimensions" value="80cm x 120cm x 150cm">
+                </div>
+                <div class="form-group">
+                    <label for="consignmentvolume">consignment volume</label>
+                    <input name="consignmentvolume" type="text" class="form-control" id="consignmentvolume" placeholder="consignmentvolume" value="1440 m³">
+                </div>
+              
+                <div class="form-group">
+                    <label for="printdate">print date</label>
+                    <input name="printdate" type="text" class="form-control" id="printdate" placeholder="printdate" value="@DateTime.Now.ToString("dd-MM-yyyy")">
+                </div>
+                <div class="form-group">
+                    <label for="printtime">print time</label>
+                    <input name="printtime" type="text" class="form-control" id="printtime" placeholder="printtime" value="@DateTime.Now.ToString("HH:mm")">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-default">Convert to XML</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <form data-bind="{submit: SubmitRequest}" method="post">
+        <p>
+            <div>
+                <textarea data-bind="value: xml" name="xml" class="form-control large" rows="10"></textarea>
+            </div>
+        </p>
+        <button type="submit" data-bind="visible: xml().length>0" class="btn btn-default">Create PDF</button>
+        <a target="_blank" data-bind="{attr: { href: pdfLink }, visible: pdfLink().length>0}">Open PDF</a>
+    </form>
+    <img data-bind="visible: searching" src="@Url.Content("~/Images/indicator.gif") " />
+
+</div>
+
+
+@section scripts {
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            var inputForm = new InputForm();
+            ko.applyBindings(inputForm);
+        });
+
+        function InputForm() {
+            var self = this;
+            self.xml = ko.observable("");
+            self.searching = ko.observable(false);
+            self.pdfLink = ko.observable("");
+
+            self.CreateRequest = function (formelement)
+            {
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Content("~/TNT/CreateManifestDetailRequest")",
+                        data: $(formelement).serialize(),
+                    success: function (data) {
+                        self.xml(data);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown )
+                    {
+                        alert(jqXHR.responseText);
+                    }
+                });
+            }
+
+            self.SubmitRequest = function (formelement)
+            {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Content("~/TNT/CreateManifestDetailPDF")",
+                    data: $(formelement).serialize(),
+                success: function (data) {
+                    self.pdfLink(data.Link);
+                },
+                error: function(jqXHR, textStatus, errorThrown )
+                {
+                    alert(jqXHR.responseText);
+                }
+                });
+            }
+        }
+
+
+
+
+    </script>
+}

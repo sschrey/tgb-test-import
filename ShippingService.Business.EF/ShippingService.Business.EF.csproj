@@ -80,6 +80,9 @@
       <DependentUpon>labelrequest.xsd</DependentUpon>
     </Compile>
     <Compile Include="Facade\Carriers\TNT\Label\TNTLabelRequest.cs" />
+    <Compile Include="Facade\Carriers\TNT\ManifestDetail\document.cs">
+      <DependentUpon>document.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Facade\Carriers\TNT\ManifestSummary\document.cs">
       <DependentUpon>document.xsd</DependentUpon>
     </Compile>
@@ -133,6 +136,9 @@
     <None Include="Facade\Carriers\TNT\Label\request\labelrequest.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Facade\Carriers\TNT\ManifestDetail\document.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Facade\Carriers\TNT\ManifestSummary\document.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -157,6 +163,7 @@
       <Name>Tweddle.Commons</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

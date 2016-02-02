@@ -223,6 +223,152 @@ namespace Web.Controllers
             return xml;
         }
 
+        [HttpPost]
+        public string CreateManifestDetailRequest(string accountnumber,
+            string accountcountry,
+            string sendername,
+            string senderaddressline1,
+            string sendertown,
+            string senderpostcode,
+            string sendercountry,
+            string shippingoptiontitle,
+            string consignmentnumber,
+            string consignmentshipperref,
+            string consignmentdangerousgoods,
+            string consignmentreceivername,
+            string consignmentreceiverstreet1,
+            string consignmentreceiverstreet2,
+            string consignmentreceivercity,
+            string consignmentreceiverpostcode,
+            string consignmentreceivercountry,
+            string consignmentreceiverphone,
+            string consignmentreceivercontact,
+            string consignmentshippingservice,
+            string consignmentshippingoption,
+            string consignmentpieces,
+            string consignmentweight,
+            string consignmentinsurancevalue,
+            string consignmentinvoicevalue,
+            string consignmentdescription,
+            string consignmentdimensions,
+            string consignmentvolume,
+            string printdate,
+            string printtime
+            )
+        {
+            ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.manifestdetail md = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.manifestdetail();
+            md.account = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.account();
+            md.account.accountCountry = accountcountry;
+            md.account.accountNumber = accountnumber;
+
+            md.sender = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.sender();
+            md.sender.addressLine1 = senderaddressline1;
+            md.sender.country = sendercountry;
+            md.sender.name = sendername;
+            md.sender.postcode = senderpostcode;
+            md.sender.town = sendertown;
+
+
+            var shippingoptions = new List<ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.shippingoption>();
+            var shippingoption = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.shippingoption();
+            shippingoptions.Add(shippingoption);
+            shippingoption.title = shippingoptiontitle;
+            
+            
+            var consignments = new List<ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.consignment>();
+            var consignment = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.consignment();
+            consignments.Add(consignment);
+
+            consignment.number = consignmentnumber;
+            consignment.barcode = consignmentnumber;
+            consignment.pieces = consignmentpieces;
+            consignment.dangerousgoods = consignmentdangerousgoods;
+            consignment.description = consignmentdescription;
+            consignment.dimensions = consignmentdimensions;
+            consignment.insurancevalue = consignmentinsurancevalue;
+            consignment.invoicevalue = consignmentinvoicevalue;
+            consignment.pieces = consignmentpieces;
+            consignment.receiver = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.receiver();
+            consignment.receiver.city = consignmentreceivercity;
+            consignment.receiver.contact = consignmentreceivercontact;
+            consignment.receiver.country = consignmentreceivercountry;
+            consignment.receiver.name = consignmentreceivername;
+            consignment.receiver.phone = consignmentreceiverphone;
+            consignment.receiver.postcode = consignmentreceiverpostcode;
+            consignment.receiver.street1 = consignmentreceiverstreet1;
+            consignment.receiver.street2 = consignmentreceiverstreet2;
+            consignment.shippingservicecode = consignmentshippingservice;
+            consignment.shippingoptioncode = consignmentshippingoption;
+            consignment.insurancevalue = consignmentinsurancevalue;
+            consignment.invoicevalue = consignmentinvoicevalue;
+            consignment.volume = consignmentvolume;
+            consignment.shipperref = consignmentshipperref;
+            consignment.weight = consignmentweight;
+
+            shippingoption.consignment = consignments.ToArray();
+            md.shippingoption = shippingoptions.ToArray();
+
+         
+            md.printdate = printdate;
+            md.printtime = printtime;
+
+            //encode string without the bom
+            var encoding = new UTF8Encoding(false);
+
+            string xml = md.ToXML(new UTF8Encoding(false));
+
+            return xml;
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult CreateManifestDetailPDF(string xml)
+        {
+            string virtualFolder = "~/Content/TNT/MANIFEST_DETAIL/" + Guid.NewGuid().ToString();
+            string virtualOutputPDF = Path.Combine(virtualFolder, "tnt.pdf");
+
+            var tempFilePath = Server.MapPath(virtualFolder);
+
+            Directory.CreateDirectory(tempFilePath);
+
+            string xmlFilePath = Path.Combine(tempFilePath, "tnt.xml");
+            StreamWriter sw = new StreamWriter(xmlFilePath);
+            sw.WriteLine(xml);
+            sw.Close();
+            sw.Dispose();
+
+            string pdfFilePath = Path.Combine(tempFilePath, "tnt.pdf");
+
+            var responseobj = xml.ToObject<ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.manifestdetail>();
+
+            if (responseobj.shippingoption != null)
+            {
+                //generate all barcodes:
+                foreach (var shippingoption in responseobj.shippingoption)
+                {
+                    foreach (var cons in shippingoption.consignment)
+                    {
+                        string barcode = cons.barcode;
+                        //barcode lib from: http://www.codeproject.com/Articles/20823/Barcode-Image-Generation-Library
+                        BarcodeLib.Barcode bc = new BarcodeLib.Barcode();
+                        bc.Encode(BarcodeLib.TYPE.CODE39, barcode, 300, 25);
+                        bc.SaveImage(Path.Combine(tempFilePath, barcode), BarcodeLib.SaveTypes.JPG);
+                    }
+                }
+            }
+
+
+            string xslFilePath = Server.MapPath("~/Content/TNT/XSL/MANIFEST_DETAIL/pdf.xsl");
+
+            TNTLabelGenerator gen = new TNTLabelGenerator();
+            var val = gen.GeneratePDF(xslFilePath, xmlFilePath, pdfFilePath, tempFilePath + @"\\");
+
+            return Json(new
+            {
+                Link = Url.Content(virtualOutputPDF),
+                BrokenRules = val.BrokenRules
+            });
+        }
+
         [HttpPost, ValidateInput(false)]
         public ActionResult CreateManifestSummeryPDF(string xml)
         {
@@ -352,6 +498,11 @@ namespace Web.Controllers
         }
 
         public ActionResult ManifestSummary()
+        {
+            return View();
+        }
+
+        public ActionResult ManifestDetail()
         {
             return View();
         }

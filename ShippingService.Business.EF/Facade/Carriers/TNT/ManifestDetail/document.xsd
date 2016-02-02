@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="manifestdetail">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="account"/>
+        <xs:element ref="sender"/>
+        <xs:element ref="printdate"/>
+        <xs:element ref="printtime"/>
+        <xs:element ref="pickupId"/>
+        <xs:element maxOccurs="unbounded" ref="shippingoption"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="account">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="accountNumber"/>
+        <xs:element ref="accountCountry"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="accountNumber" type="xs:string"/>
+  <xs:element name="accountCountry" type="xs:string"/>
+  <xs:element name="sender">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="addressLine1"/>
+        <xs:element ref="town"/>
+        <xs:element ref="postcode"/>
+        <xs:element ref="country"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="addressLine1" type="xs:string"/>
+  <xs:element name="town" type="xs:string"/>
+  <xs:element name="printdate" type="xs:string"/>
+  <xs:element name="printtime" type="xs:string"/>
+  <xs:element name="pickupId" type="xs:string"/>
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="postcode" type="xs:string"/>
+  <xs:element name="country" type="xs:string"/>
+  <xs:element name="shippingoption">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="consignment"/>
+      </xs:sequence>
+      <xs:attribute name="title" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="consignment">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="number"/>
+        <xs:element ref="barcode"/>
+        <xs:element ref="shipperref"/>
+        <xs:element ref="specialinstructions"/>
+        <xs:element ref="dangerousgoods"/>
+        <xs:element ref="receiver"/>
+        <xs:element ref="shippingservicecode"/>
+        <xs:element ref="shippingoptioncode"/>
+        <xs:element ref="pieces"/>
+        <xs:element ref="weight"/>
+        <xs:element ref="invoicevalue"/>
+        <xs:element ref="insurancevalue"/>
+        <xs:element ref="description"/>
+        <xs:element ref="dimensions"/>
+        <xs:element ref="volume"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="number" type="xs:integer"/>
+  <xs:element name="barcode" type="xs:string"/>
+  <xs:element name="shipperref" type="xs:string"/>
+  <xs:element name="specialinstructions">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="dangerousgoods" type="xs:string"/>
+  <xs:element name="receiver">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element ref="street1"/>
+        <xs:element ref="street2"/>
+        <xs:element ref="city"/>
+        <xs:element ref="postcode"/>
+        <xs:element ref="country"/>
+        <xs:element ref="phone"/>
+        <xs:element ref="contact"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="street1" type="xs:string"/>
+  <xs:element name="street2" type="xs:string"/>
+    
+  <xs:element name="city" type="xs:string"/>
+  <xs:element name="phone" type="xs:string"/>
+  <xs:element name="contact" type="xs:string"/>
+  <xs:element name="shippingservicecode" type="xs:string"/>
+  <xs:element name="shippingoptioncode" type="xs:string"/>
+  <xs:element name="pieces" type="xs:integer"/>
+  <xs:element name="weight" type="xs:string"/>
+  <xs:element name="invoicevalue" type="xs:string"/>
+  <xs:element name="insurancevalue" type="xs:string"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="dimensions" type="xs:string"/>
+  <xs:element name="volume" type="xs:string"/>
+</xs:schema>
