@@ -321,6 +321,10 @@
       <Project>{23F292A5-45DE-4DF7-A1DE-62A9D0921EDF}</Project>
       <Name>ShippingService.Shared</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tweddle.Commons.Vies\Tweddle.Commons.Vies.csproj">
+      <Project>{ff64cb9b-e081-45e3-8c8f-a12eebb0c75d}</Project>
+      <Name>Tweddle.Commons.Vies</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tweddle.Commons\Tweddle.Commons.csproj">
       <Project>{4B30FAC0-3044-46C8-8FD3-FC0EED06C846}</Project>
       <Name>Tweddle.Commons</Name>

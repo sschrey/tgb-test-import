@@ -11,6 +11,7 @@ using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using Tweddle.Commons.Extensions;
+using Tweddle.Commons.Vies;
 
 namespace Web.Controllers
 {
@@ -102,6 +103,125 @@ namespace Web.Controllers
             return orders.Count() + " orders saved.";
 
         }
+        [HttpPost]
+        public ActionResult CreateManifestDetail(VMTNTDailyModel model)
+        {
+            var facade = ApplicationContextHolder.Instance.Facade;
+            var oc = new OrderCriteria();
+
+            List<string> ids = new List<string>();
+            foreach (var order in model.Orders)
+            {
+                ids.Add(order.OrderId);
+            }
+            oc.Ids = ids.ToArray();
+
+            var carriermodes = facade.GetCarrierModes();
+            var orders = ApplicationContextHolder.Instance.Facade.GetOrders(oc);
+            string tntAccountNumber = ConfigurationManager.AppSettings["TNTAccountNumber"];
+
+
+            ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.manifestdetail md = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.manifestdetail();
+            md.account = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.account();
+            md.account.accountCountry = TGBAddress.CountryName;
+            md.account.accountNumber = tntAccountNumber;
+
+            md.sender = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.sender();
+            md.sender.addressLine1 = TGBAddress.AddressLine1;
+            md.sender.country = TGBAddress.CountryName;
+            md.sender.name = TGBAddress.CompanyName;
+            md.sender.postcode = TGBAddress.PostalCode;
+            md.sender.town = TGBAddress.City;
+            
+            Dictionary<string,IEnumerable<Order>> groupedOrders = new Dictionary<string, IEnumerable<Order>>();
+
+            groupedOrders.Add("DOMESTIC", orders.Where(o => o.MainAddress.CountryCode == "BE"));
+            groupedOrders.Add("REST OF THE WORLD", orders.Where(o => !new Vies().IsVATEligible(o.MainAddress.CountryCode)));
+            groupedOrders.Add("OTHER", orders.Where(o => o.MainAddress.CountryCode != "BE" && new Vies().IsVATEligible(o.MainAddress.CountryCode)));
+            
+            var shippingoptions = new List<ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.shippingoption>();
+
+            foreach (var item in groupedOrders)
+            {
+                if (item.Value.Count() > 0)
+                {
+                    var shippingoption = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.shippingoption();
+                    shippingoptions.Add(shippingoption);
+                    shippingoption.title = item.Key;
+                    var consignments = new List<ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.consignment>();
+                    foreach (var order in item.Value)
+                    {
+                        var carriermode = order.ShippedCarrierMode == null ? carriermodes.First(cm => cm.Id == order.ProposedCarrierMode) : carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierMode);
+                        var consignment = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.consignment();
+                        consignments.Add(consignment);
+
+                        consignment.number = order.PackedContainers[0].TrackingNumber;
+                        consignment.barcode = order.PackedContainers[0].TrackingNumber;
+                        consignment.pieces = order.PackedContainers.Count().ToString();
+                        consignment.dangerousgoods = "NON";
+
+                        List<string> descriptionofparts = new List<string>();
+                        foreach (PackedContainer pc in order.PackedContainers)
+                        {
+                            foreach (OrderLine ol in order.Lines)
+                            {
+                                foreach (PackedOrderLine pol in ol.Packs)
+                                {
+                                    if (pol.PackedContainer.Equals(pc))
+                                    {
+                                        var description = ol.PartName + "(" + pc.Container.Name + ")";
+                                        if(!descriptionofparts.Exists(d => d == description))
+                                            descriptionofparts.Add(description);
+                                    }
+                                }
+                            }
+                        }
+
+                        consignment.description = string.Join("\n", descriptionofparts);
+                        consignment.dimensions = string.Format("{0}cm x {1}cm x {2}cm", order.PackedContainers[0].Container.Depth/10, order.PackedContainers[0].Container.Width/10, order.PackedContainers[0].Container.Height/10);
+                        consignment.insurancevalue = "0.00 EUR";
+
+                        if (!new Vies().IsVATEligible(order.MainAddress.CountryCode))
+                        {
+                            consignment.invoicevalue = CentsToEuro(order.Lines.Sum(l => l.UnitPrice * l.OrderQty)) + " EUR";
+                        }
+                        else
+                            consignment.invoicevalue = "0.00 EUR";
+
+                        consignment.pieces = order.PackedContainers.Count().ToString();
+                        consignment.receiver = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.receiver();
+                        consignment.receiver.city = order.MainAddress.City;
+                        consignment.receiver.contact = order.MainAddress.AttentionName; 
+                        consignment.receiver.country = order.MainAddress.CountryCode;
+                        consignment.receiver.name = order.MainAddress.CompanyName;
+                        consignment.receiver.phone = order.MainAddress.PhoneNumber;
+                        consignment.receiver.postcode = order.MainAddress.PostalCode;
+                        consignment.receiver.street1 = order.MainAddress.AddressLine1;
+                        consignment.receiver.street2 = order.MainAddress.AddressLine2;
+                        consignment.shippingservicecode = string.Format("({0}) {1}", carriermode.Code, carriermode.Name);
+                        consignment.shippingoptioncode = "";
+                        consignment.volume = Volume(order.PackedContainers.Sum(pc => pc.Container.VolumeInM3));
+                        consignment.shipperref = order.ReferenceNumber;
+                        consignment.weight = GrToKg(order.PackedContainers.Sum(pc => pc.Weight));
+                    }
+                    shippingoption.consignment = consignments.ToArray();
+                }
+            }
+            
+            md.shippingoption = shippingoptions.ToArray();
+
+
+            md.printdate = DateTime.Now.ToString("dd-MM-yyyy");
+            md.printtime = DateTime.Now.ToString("HH:mm");
+
+            //encode string without the bom
+            var encoding = new UTF8Encoding(false);
+
+            string xml = md.ToXML(new UTF8Encoding(false));
+            return CreateManifestDetailPDF(xml);
+        }
+
+
 
         [HttpPost]
         public ActionResult CreateManifestSummary(VMTNTDailyModel model)
@@ -161,7 +281,7 @@ namespace Web.Controllers
             ms.grandtotal.weight = GrToKg(orders.Sum(o => o.PackedContainers.Sum(pc => pc.Weight)));
 
             ms.printdate = DateTime.Now.ToString("dd-MM-yyyy");
-            ms.printtime = DateTime.Now.ToString("dd-MM-yyyy");
+            ms.printtime = DateTime.Now.ToString("HH:mm");
 
             //encode string without the bom
             var encoding = new UTF8Encoding(false);
@@ -179,8 +299,15 @@ namespace Web.Controllers
 
         }
 
+        private string CentsToEuro(int cents)
+        {
+            return ((double)cents / 100).ToString();
+        }
 
-
+        private string Volume(double m3)
+        {
+            return m3.ToString("0.000");
+        }
 
 
         [HttpPost]

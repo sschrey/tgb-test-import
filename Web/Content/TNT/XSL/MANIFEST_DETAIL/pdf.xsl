@@ -264,8 +264,9 @@
                                            </fo:table-cell>
                                            <fo:table-cell number-columns-spanned="6">
                                                <fo:block>
-                                                   <xsl:value-of select="receiver/name"/>
+                                                   <xsl:value-of select="receiver/name"/>, 
                                                    <xsl:value-of select="receiver/street1"/>
+                                                   <xsl:if test="receiver/street2 != ''">, </xsl:if> 
                                                    <xsl:value-of select="receiver/street2"/>
                                                </fo:block>
                                            </fo:table-cell>
@@ -300,7 +301,7 @@
                                                    Receiver tel:
                                                </fo:block>
                                            </fo:table-cell>
-                                           <fo:table-cell number-columns-spanned="3" font-weight="bold">
+                                           <fo:table-cell number-columns-spanned="3">
                                                <fo:block>
                                                    <xsl:value-of select="receiver/phone"/>
                                                </fo:block>
@@ -410,7 +411,7 @@
                                            </fo:table-cell>
                                            <fo:table-cell>
                                                <fo:block>
-                                                   <xsl:value-of select="volume"/>    
+                                                   <xsl:value-of select="volume"/> m³    
                                                </fo:block>
                                            </fo:table-cell>
                                        </fo:table-row>

@@ -61,6 +61,24 @@
                 }
             });
         }
+        self.CreateManifestDetail = function ()
+        {
+            self.pdfLink("");
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: "@Url.Content("~/TNT/CreateManifestDetail")",
+                data: ko.mapping.toJSON(self.Data),
+            dataType: "json",
+            success: function (data) {
+                self.pdfLink(data.Link);
+            },
+            error: function(jqXHR, textStatus, errorThrown )
+            {
+                alert(jqXHR.responseText);
+            }
+        });
+    }
         self.Search = function (formelement)
         {
             self.Searching(true);
@@ -141,10 +159,9 @@
             </tbody>
         </table>
         <button  class="btn btn-default" data-bind="{visible: Data.Orders().length > 0 && !Searching(), click: SendOrders}">Send orders</button>
-        <a target="_blank" data-bind="{attr: { href: fileLink }, visible: fileLink().length>0}">Open text file</a>
-
-
         <button class="btn btn-default" data-bind="{visible: Data.Orders().length > 0 && !Searching(), click: CreateManifestSummary}">Create manifest summary</button>
+        <button class="btn btn-default" data-bind="{visible: Data.Orders().length > 0 && !Searching(), click: CreateManifestDetail}">Create manifest detail</button>
+        <a target="_blank" data-bind="{attr: { href: fileLink }, visible: fileLink().length>0}">Open text file</a>
         <a target="_blank" data-bind="{attr: { href: pdfLink }, visible: pdfLink().length>0}">Open PDF</a>
     </form>
 </div>
