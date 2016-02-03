@@ -42,5 +42,10 @@ namespace ShippingService.Business.CarrierServices
             get { return "BE"; }
         }
 
+        public static string CountryName
+        {
+            get { return "Belgium"; }
+        }
+
     }
 }

@@ -143,28 +143,60 @@
                                     <xsl:for-each select="//consignment">
                                         <fo:table-row>
                                             <fo:table-cell>
-                                                <fo:block><xsl:value-of select="number"/> </fo:block>
+                                              <fo:block-container overflow="hidden" height="10px">
+                                                <fo:block>
+                                                  <xsl:value-of select="number"/>
+                                                </fo:block>
+                                              </fo:block-container>
                                             </fo:table-cell>
                                             <fo:table-cell text-align="center">
-                                                <fo:block><xsl:value-of select="pieces"/> </fo:block>
+                                              <fo:block-container overflow="hidden" height="10px">
+                                                <fo:block>
+                                                  <xsl:value-of select="pieces"/>
+                                                </fo:block>
+                                              </fo:block-container>
                                             </fo:table-cell>
                                             <fo:table-cell padding-right="5px" text-align="right">
-                                                <fo:block><xsl:value-of select="weight"/> </fo:block>
+                                              <fo:block-container overflow="hidden" height="10px">
+                                                <fo:block>
+                                                  <xsl:value-of select="weight"/>
+                                                </fo:block>
+                                              </fo:block-container>
                                             </fo:table-cell>
                                             <fo:table-cell>
-                                                <fo:block><xsl:value-of select="shipperref"/></fo:block>
+                                              <fo:block-container overflow="hidden" height="10px">
+                                                <fo:block>
+                                                  <xsl:value-of select="shipperref"/>
+                                                </fo:block>
+                                              </fo:block-container>
                                             </fo:table-cell>
                                             <fo:table-cell>
-                                                <fo:block><xsl:value-of select="receiver"/></fo:block>
+                                              <fo:block-container overflow="hidden" height="10px">
+                                                <fo:block>
+                                                  <xsl:value-of select="receiver"/>
+                                                </fo:block>
+                                              </fo:block-container>
                                             </fo:table-cell>
                                             <fo:table-cell>
-                                                <fo:block><xsl:value-of select="city"/></fo:block>
+                                              <fo:block-container overflow="hidden" height="10px">
+                                                <fo:block>
+                                                  <xsl:value-of select="city"/>
+                                                </fo:block>
+                                              </fo:block-container>
                                             </fo:table-cell>
                                             <fo:table-cell>
-                                                <fo:block><xsl:value-of select="destination"/></fo:block>
+                                              <fo:block-container overflow="hidden" height="10px">
+                                                <fo:block>
+                                                  <xsl:value-of select="destination"/>
+                                                </fo:block>
+                                              </fo:block-container>
                                             </fo:table-cell>
                                             <fo:table-cell>
-                                                <fo:block><xsl:value-of select="service"/></fo:block>
+                                              <fo:block-container overflow="hidden" height="10px">
+                                                <fo:block>
+                                                  <xsl:value-of select="service"/>
+                                                </fo:block>
+                                              </fo:block-container>
                                             </fo:table-cell>
                                         </fo:table-row>
                                     </xsl:for-each>
@@ -181,7 +213,7 @@
                                         <fo:table-cell text-align="center">
                                             <fo:block><xsl:value-of select="grandtotal/pieces"/></fo:block>
                                         </fo:table-cell>
-                                        <fo:table-cell text-align="center">
+                                        <fo:table-cell padding-right="5px" text-align="right">
                                             <fo:block><xsl:value-of select="grandtotal/weight"/></fo:block>
                                         </fo:table-cell>
                                         <fo:table-cell>
@@ -212,7 +244,7 @@
                                         <fo:table-cell text-align="center">
                                             <fo:block><xsl:value-of select="grandtotal/pieces"/></fo:block>
                                         </fo:table-cell>
-                                        <fo:table-cell text-align="center">
+                                        <fo:table-cell padding-right="5px" text-align="right">
                                             <fo:block><xsl:value-of select="grandtotal/weight"/></fo:block>
                                         </fo:table-cell>
                                         <fo:table-cell >
@@ -237,13 +269,13 @@
                                         </fo:table-cell>
                                     </fo:table-row>
                                     <fo:table-row >
-                                        <fo:table-cell padding-bottom="10px" text-align="center">
+                                        <fo:table-cell  padding-bottom="10px" text-align="center">
                                             <fo:block><xsl:value-of select="grandtotal/consignments"/></fo:block>
                                         </fo:table-cell>
                                         <fo:table-cell text-align="center">
                                             <fo:block><xsl:value-of select="grandtotal/pieces"/></fo:block>
                                         </fo:table-cell>
-                                        <fo:table-cell text-align="center">
+                                        <fo:table-cell  padding-right="5px" text-align="right">
                                             <fo:block><xsl:value-of select="grandtotal/weight"/></fo:block>
                                         </fo:table-cell>
                                         <fo:table-cell >

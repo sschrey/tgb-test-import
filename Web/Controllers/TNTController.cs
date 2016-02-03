@@ -4,6 +4,7 @@ using ShippingService.Business.EF.Facade.Carriers.TNT.Label;
 using ShippingService.Business.EF.Facade.Carriers.TNT.Price;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -101,6 +102,83 @@ namespace Web.Controllers
             return orders.Count() + " orders saved.";
 
         }
+
+        [HttpPost]
+        public ActionResult CreateManifestSummary(VMTNTDailyModel model)
+        {
+            var facade = ApplicationContextHolder.Instance.Facade;
+            var oc = new OrderCriteria();
+
+            List<string> ids = new List<string>();
+            foreach (var order in model.Orders)
+            {
+                ids.Add(order.OrderId);
+            }
+            oc.Ids = ids.ToArray();
+
+            var carriermodes = facade.GetCarrierModes();
+            var orders = ApplicationContextHolder.Instance.Facade.GetOrders(oc);
+
+
+            string tntAccountNumber = ConfigurationManager.AppSettings["TNTAccountNumber"];
+            
+            ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.manifestsummary ms = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.manifestsummary();
+            ms.account = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.account();
+            ms.account.accountCountry = TGBAddress.CountryName;
+            ms.account.accountNumber = tntAccountNumber;
+
+            ms.sender = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.sender();
+            ms.sender.addressLine1 = TGBAddress.AddressLine1;
+            ms.sender.country = TGBAddress.CountryName;
+            ms.sender.name = TGBAddress.CompanyName;
+            ms.sender.postcode = TGBAddress.PostalCode;
+            ms.sender.town = TGBAddress.City;
+
+            var consignments = new List<ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.consignment>();
+            foreach (var order in orders)
+            {
+                var carriermode = order.ShippedCarrierMode == null ? carriermodes.First(cm => cm.Id == order.ProposedCarrierMode) : carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierMode);
+                var shipper = new TNTShipping { Order = order, ShippingVendor = carriermode, Facade = facade };
+
+                var consignment = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.consignment();
+                consignments.Add(consignment);
+
+                consignment.city = order.MainAddress.City;
+                consignment.destination = order.MainAddress.CountryCode;
+                consignment.number = order.PackedContainers[0].TrackingNumber;
+                consignment.pieces = order.PackedContainers.Count().ToString();
+                consignment.receiver = order.MainAddress.CompanyName;
+                consignment.service = carriermode.Name;
+                consignment.shipperref = order.ReferenceNumber;
+                consignment.weight = GrToKg(order.PackedContainers.Sum(pc => pc.Weight));
+
+            }
+            ms.consignment = consignments.ToArray();
+            
+            ms.grandtotal = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.grandtotal();
+            ms.grandtotal.consignments = orders.Count().ToString();
+            ms.grandtotal.pieces = orders.Sum(o => o.PackedContainers.Count()).ToString();
+            ms.grandtotal.weight = GrToKg(orders.Sum(o => o.PackedContainers.Sum(pc => pc.Weight)));
+
+            ms.printdate = DateTime.Now.ToString("dd-MM-yyyy");
+            ms.printtime = DateTime.Now.ToString("dd-MM-yyyy");
+
+            //encode string without the bom
+            var encoding = new UTF8Encoding(false);
+
+            string xml = ms.ToXML(new UTF8Encoding(false));
+
+            return CreateManifestSummeryPDF(xml);
+
+        }
+
+
+        private string GrToKg(double grams)
+        {
+            return (grams / 1000).ToString();
+
+        }
+
 
 
 
