@@ -79,6 +79,7 @@
     <Compile Include="CarrierServices\IUPS.cs" />
     <Compile Include="CarrierServices\ShippingTNTPriceInfo.cs" />
     <Compile Include="CarrierServices\TNTErrorCodes.cs" />
+    <Compile Include="CarrierServices\TNTServiceTranslator.cs" />
     <Compile Include="CarrierServices\TNTShipping.cs" />
     <Compile Include="CarrierServices\UPSBelgium.cs" />
     <Compile Include="CarrierServices\UPSRRDonnely.cs" />

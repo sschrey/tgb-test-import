@@ -198,8 +198,12 @@ namespace Web.Controllers
                         consignment.receiver.postcode = order.MainAddress.PostalCode;
                         consignment.receiver.street1 = order.MainAddress.AddressLine1;
                         consignment.receiver.street2 = order.MainAddress.AddressLine2;
-                        consignment.shippingservicecode = string.Format("({0}) {1}", carriermode.Code, carriermode.Name);
-                        consignment.shippingoptioncode = "";
+
+                        var tntst = new TNTServiceTranslator(order.MainAddress.CountryCode, carriermode);
+                        consignment.shippingservicecode = string.Format("({0}) {1}", tntst.ServiceCode, tntst.ServiceDescription);
+                        if(!string.IsNullOrEmpty(tntst.OptionCode))
+                            consignment.shippingoptioncode = string.Format("({0}) {1}", tntst.OptionCode, tntst.OptionDescription);
+
                         consignment.volume = Volume(order.PackedContainers.Sum(pc => pc.Container.VolumeInM3));
                         consignment.shipperref = order.ReferenceNumber;
                         consignment.weight = GrToKg(order.PackedContainers.Sum(pc => pc.Weight));
@@ -268,7 +272,10 @@ namespace Web.Controllers
                 consignment.number = order.PackedContainers[0].TrackingNumber;
                 consignment.pieces = order.PackedContainers.Count().ToString();
                 consignment.receiver = order.MainAddress.CompanyName;
-                consignment.service = carriermode.Name;
+
+                var tntst = new TNTServiceTranslator(order.MainAddress.CountryCode, carriermode);
+                consignment.service = tntst.ServiceDescription;
+
                 consignment.shipperref = order.ReferenceNumber;
                 consignment.weight = GrToKg(order.PackedContainers.Sum(pc => pc.Weight));
 

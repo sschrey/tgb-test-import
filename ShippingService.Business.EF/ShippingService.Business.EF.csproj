@@ -94,7 +94,6 @@
     </Compile>
     <Compile Include="Facade\Carriers\TNT\Price\TNTPriceChecker.cs" />
     <Compile Include="Facade\Carriers\TNT\Price\TNTPriceService.cs" />
-    <Compile Include="Facade\Carriers\TNT\TNTConsignment.cs" />
     <Compile Include="Facade\E1Data.cs" />
     <Compile Include="Facade\BaseFacade.cs" />
     <Compile Include="Facade\ContextConfiguration.cs" />
