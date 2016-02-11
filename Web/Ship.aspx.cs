@@ -103,11 +103,11 @@ namespace Web
                 ddlCarrierMode.SelectedValue = carrierMode;
             }
 
-            //if (GetOrder().Status == OrderStatus.Shipped)
-            //{
-            //    ddlCarrier.Enabled = false;
-            //    ddlCarrierMode.Enabled = false;
-            //}
+            if (GetOrder().Status == OrderStatus.Shipped)
+            {
+                ddlCarrier.Enabled = false;
+                ddlCarrierMode.Enabled = false;
+            }
 
             ShowReturnLabelCreator(GetOrder());
 
