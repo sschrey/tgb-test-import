@@ -14,6 +14,8 @@ namespace ShippingService.Business
         Order GetTodoOrderById(string id);
         IList<Order> GetTodoOrders();
         IList<CarrierMode> GetCarrierModes();
+        IList<CarrierMode> GetCarrierModes(string carrier, IList<CarrierMode> carriermodes = null, IList<CarrierModeFilter> carriermodefilters = null);
+        IList<CarrierModeFilter> GetCarrierModeFilters();
         CarrierMode GetCarrierModeById(string id);
         void Pack(Order o);
         void Ship(Order o, bool updateE1);

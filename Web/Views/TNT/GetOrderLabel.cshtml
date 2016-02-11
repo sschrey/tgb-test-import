@@ -1,0 +1,137 @@
+﻿
+@{
+    ViewBag.Title = "GetOrderLabel";
+}
+
+<h2>Get label from orderid</h2>
+
+
+<div style="display: none" data-bind="visible: true">
+    <div data-bind="visible: errors().length>0">
+        <div data-bind="foreach: errors" class="alert alert-danger" role="alert">
+            <div>
+                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                <span class="sr-only">Error:</span>
+                <span data-bind="text: $data"></span>
+            </div>
+        </div>
+    </div>
+
+    <form data-bind="{submit: Search}" method="post">
+        <div class="form-group">
+                <label for="orderid">Order id</label>
+                <input type="text" class="form-control" id="orderid" name="orderid" placeholder="Order id">
+        </div>
+        <button type="submit" class="btn btn-default">Search</button>
+    </form>
+    <form data-bind="{submit: SubmitRequest}" method="post">
+         <p>
+                <div data-bind="visible: xml().length>0">
+                    <textarea data-bind="value: xml" name="xml" class="form-control large" rows="10"></textarea>
+                </div>
+        </p>
+        <button type="submit" data-bind="visible: xml().length>0" class="btn btn-default">Send to TNT</button>
+    </form>
+    <img data-bind="visible: searching" src="@Url.Content("~/Images/indicator.gif") " />
+    <form data-bind="{submit: CreateLabel}" method="post">
+        <p>
+            <div>
+                <textarea name="xml" data-bind="{value: labelresponse, visible: labelresponse().length>0}" class="form-control large" rows="10"></textarea>
+            </div>
+        </p>
+        <button type="submit" data-bind="visible: labelresponse().length>0" class="btn btn-default">Create label as PDF</button>
+        <img data-bind="visible: creating" src="@Url.Content("~/Images/indicator.gif") " />
+        <a target="_blank" data-bind="{attr: { href: labelLink }, visible: labelLink().length>0}">Open PDF</a>
+    </form>
+</div>
+
+
+@section scripts {
+    <script language="javascript" type="text/javascript">
+        $(function () {
+            var inputForm = new InputForm();
+            ko.applyBindings(inputForm);
+        });
+
+        function InputForm() {
+            var self = this;
+            self.xml = ko.observable("");
+            self.labelrequest = ko.observable();
+            self.labelresponse = ko.observable({});
+            self.labelresponseAsJson = ko.observable({});
+            self.searching = ko.observable(false);
+            self.creating = ko.observable(false);
+            self.labelLink = ko.observable("");
+
+            self.errors = ko.observable([]);
+
+            self.Search = function (formelement) {
+                self.searching(true);
+                self.xml("");
+                self.labelresponse("");
+                self.labelLink("");
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Content("~/TNT/CreateLabel")",
+                    data: $(formelement).serialize(),
+                    success: function (data) {
+                        self.searching(false);
+                        if (data.errors != null && data.errors.length > 0) {
+                            self.errors(data.errors);
+                        }
+                        else {
+                            self.xml(data.xml);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert(jqXHR.responseText);
+                    }
+                });
+            }
+
+            self.SubmitRequest = function (formelement)
+            {
+                self.searching(true);
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Content("~/TNT/SendLabelRequest")",
+                    data: $(formelement).serialize(),
+                success: function (data) {
+                    self.labelresponse(data);
+                    self.searching(false);
+                },
+                error: function(jqXHR, textStatus, errorThrown )
+                {
+                    alert(jqXHR.responseText);
+                }
+                });
+            }
+
+            self.CreateLabel = function(formelement)
+            {
+                self.creating(true);
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Content("~/TNT/CreateLabelAsPDF")",
+                    data: $(formelement).serialize(),
+                success: function (data) {
+                    if(data.BrokenRules.length > 0)  
+                    {
+                        alert(data.BrokenRules);
+                    }
+                    else
+                    {
+                        self.labelLink(data.Link);
+                    }
+                    self.creating(false);
+                },
+                error: function(jqXHR, textStatus, errorThrown )
+                {
+                    alert(jqXHR.responseText);
+                }
+            });
+            }
+        }
+    </script>
+}
+            

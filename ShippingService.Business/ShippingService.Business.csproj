@@ -92,6 +92,7 @@
     <Compile Include="Domain\BarcodeScanLog.cs" />
     <Compile Include="Domain\Carrier.cs" />
     <Compile Include="Domain\CarrierMode.cs" />
+    <Compile Include="Domain\CarrierModeFilter.cs" />
     <Compile Include="Domain\Container.cs" />
     <Compile Include="Domain\E1Statusses.cs" />
     <Compile Include="Domain\Order.cs" />
@@ -132,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="sql\BarCodeLog.sql" />
+    <Content Include="sql\CarrierModeFilter.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

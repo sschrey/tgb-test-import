@@ -98,6 +98,15 @@ namespace ShippingService.Business.Dao
 
         }
 
+        public IList<CarrierModeFilter> GetCarrierModeFilter()
+        {
+            string cmdText = @"select * from dbo.CarrierModeFilter";
+
+            return AdoTemplate.QueryWithRowMapper<CarrierModeFilter>(CommandType.Text, cmdText,
+                                                  new CarrierModeFilterRowMapper<CarrierModeFilter>());
+
+        }
+
         public void Ship(Order o, bool updateE1)
         {
             if (updateE1)

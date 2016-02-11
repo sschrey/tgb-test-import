@@ -17,7 +17,10 @@ namespace Web.Controllers
 {
     public class TNTController : Controller
     {
-
+        public ActionResult GetOrderLabel()
+        {
+            return View();
+        }
         public ActionResult CheckPrice()
         {
             return View();
@@ -72,7 +75,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public string SendOrders(VMTNTDailyModel model)
+        public ActionResult SendOrders(VMTNTDailyModel model)
         {
             var facade = ApplicationContextHolder.Instance.Facade;
             var oc = new OrderCriteria();
@@ -87,22 +90,101 @@ namespace Web.Controllers
             var carriermodes = facade.GetCarrierModes();
             var orders = ApplicationContextHolder.Instance.Facade.GetOrders(oc);
 
+            StringBuilder sb = new StringBuilder();
             foreach (var order in orders)
             {
-                var carriermode = order.ShippedCarrierMode == null ? carriermodes.First(cm => cm.Id == order.ProposedCarrierMode) : carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierMode);
+                var carriermode = carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierModeOption);
                 var shipper = new TNTShipping { Order = order, ShippingVendor = carriermode, Facade = facade };
                 var record = shipper.GetRecord();
-                var virtualPath = "~/Content/TNT/ORDERS/";
-                var ordervirtualPath = virtualPath + order.Id + ".txt";
-                StreamWriter sw = new StreamWriter(Server.MapPath(ordervirtualPath));
-                sw.Write(record);
-                sw.Close();
-                sw.Dispose();
+                sb.Append(record);
             }
 
-            return orders.Count() + " orders saved.";
+            var virtualPath = "~/Content/TNT/ORDERS/" +  Guid.NewGuid().ToString();
+            var ordervirtualPath = Path.Combine(virtualPath, "NNF.txt");
 
+            Directory.CreateDirectory(Server.MapPath(virtualPath));
+            StreamWriter sw = new StreamWriter(Server.MapPath(ordervirtualPath));
+
+            sw.Write(sb.ToString());
+            sw.Close();
+            sw.Dispose();
+
+            return Json(new
+            {
+                Link = Url.Content(ordervirtualPath)
+            });
         }
+
+        
+
+        [HttpPost]
+        public ActionResult CreateLabel(string orderid)
+        {
+            var facade = ApplicationContextHolder.Instance.Facade;
+            var oc = new OrderCriteria();
+            oc.Id = orderid;
+
+            var orders = ApplicationContextHolder.Instance.Facade.GetOrders(oc);
+            string tntAccountNumber = ConfigurationManager.AppSettings["TNTAccountNumber"];
+            var carriermodes = facade.GetCarrierModes();
+
+            foreach (var order in orders)
+            {
+                List<TNTPieceLine> lines = new List<TNTPieceLine>();
+                foreach (var pc in order.PackedContainerByContainerType)
+                {
+                    TNTPieceLine line = new TNTPieceLine();
+                    lines.Add(line);
+                    line.GoodsDescription = string.Join("\n", pc.Key.Name);
+                    line.HeightInM = (double)pc.Key.Height * 0.001;
+                    line.LengthInM = (double)pc.Key.Depth * 0.001;
+                    line.WeightInKG = (double)pc.Value.Sum(pac => pac.Weight) * 0.001;
+                    line.WidthInM = (double)pc.Key.Width * 0.001;
+
+                    foreach (var package in pc.Value)
+                    {
+                        var orderLines = order.GetOrderLinesByPackedContainer(package);
+                        foreach (var ol in orderLines.Keys)
+                        {
+                            line.Pieces.Add(new TNTPiece() { Reference = ol.PartName });
+                        }
+
+                    }
+                }
+
+                TNTServiceTranslator trans = new TNTServiceTranslator(order.MainAddress.CountryCode, carriermodes.First(cm => cm.Id == order.ShippedCarrierModeOption));
+                string request = TNTLabelRequest.CreateRequest(
+                       consignmentnumber: order.PackedContainers[0].TrackingNumber,
+                       consignmentReference: order.ReferenceNumber,
+                       senderName: TGBAddress.CompanyName,
+                       senderAddressLine1: TGBAddress.AddressLine1,
+                       senderPostcode: TGBAddress.PostalCode,
+                       senderTown: TGBAddress.City,
+                       deliveryName: order.MainAddress.CompanyName,
+                       deliveryAddressLine1: order.MainAddress.AddressLine1,
+                       deliveryCountry: order.MainAddress.CountryCode,
+                       deliveryPostCode: order.MainAddress.PostalCode,
+                       deliveryTown: order.MainAddress.City,
+                       productType: trans.ProductType,
+                       productId: trans.ProductId,
+                       lineOfBusiness: trans.LineOfBusiness,
+                       accountNumber: tntAccountNumber,
+                       pieceLines: lines
+                       );
+
+                return Json(new LabelReturn() { xml = request });
+            }
+            return Json(new LabelReturn() { errors = new List<string>() { "Order not found" } });
+        }
+
+        public class LabelReturn
+        {
+            public string xml { get; set; }
+            public List<string> errors { get; set; }
+        }
+
+
+
         [HttpPost]
         public ActionResult CreateManifestDetail(VMTNTDailyModel model)
         {
@@ -151,7 +233,7 @@ namespace Web.Controllers
                     var consignments = new List<ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.consignment>();
                     foreach (var order in item.Value)
                     {
-                        var carriermode = order.ShippedCarrierMode == null ? carriermodes.First(cm => cm.Id == order.ProposedCarrierMode) : carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierMode);
+                        var carriermode = carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierModeOption);
                         var consignment = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.consignment();
                         consignments.Add(consignment);
 
@@ -261,7 +343,7 @@ namespace Web.Controllers
             var consignments = new List<ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.consignment>();
             foreach (var order in orders)
             {
-                var carriermode = order.ShippedCarrierMode == null ? carriermodes.First(cm => cm.Id == order.ProposedCarrierMode) : carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierMode);
+                var carriermode = carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierModeOption);
                 var shipper = new TNTShipping { Order = order, ShippingVendor = carriermode, Facade = facade };
 
                 var consignment = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.consignment();
@@ -671,7 +753,7 @@ namespace Web.Controllers
             {
                 Link = Url.Content(virtualOutputPDF),
                 BrokenRules = val.BrokenRules
-            });
+            }, JsonRequestBehavior.AllowGet);
 
         }
 

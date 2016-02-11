@@ -44,7 +44,21 @@ namespace ShippingService.Business
 
         public IList<Order> GetOrders(OrderCriteria crit)
         {
-            return Dao.GetOrders(crit);
+
+
+
+            var orders = Dao.GetOrders(crit);
+
+            foreach(var order in orders)
+            {
+                if(order.Status == OrderStatus.Shipped)
+                {
+                    order.ShippedCarrierMode = order.ProposedCarrier;
+                    order.ShippedCarrierModeOption = order.ProposedCarrierMode;
+                }
+            }
+
+            return orders;
         }
 
         public IList<Order> GetTodoOrders()
@@ -63,6 +77,29 @@ namespace ShippingService.Business
         public IList<CarrierMode> GetCarrierModes()
         {
             return Dao.GetCarrierModes();
+        }
+
+        public IList<CarrierModeFilter> GetCarrierModeFilters()
+        {
+            return Dao.GetCarrierModeFilter();
+        }
+
+
+        public IList<CarrierMode> GetCarrierModes(string carrier, IList<CarrierMode> carriermodes = null, IList<CarrierModeFilter> carriermodefilters = null)
+        {
+            if( carriermodes == null)
+                carriermodes = GetCarrierModes();
+            if( carriermodefilters == null)
+                carriermodefilters = Dao.GetCarrierModeFilter();
+
+            var filter = carriermodefilters.Where(cmf => cmf.Carrier == carrier).Select(cmf => cmf.CarrierMode);
+
+            if(filter.Count()>0)
+            {
+                return carriermodes.Where(cm => filter.Contains(cm.Id)).ToList();
+            }
+            return carriermodes;
+
         }
 
         [Transaction]

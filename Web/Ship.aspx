@@ -31,7 +31,17 @@
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">Choose carrier</label>
                 <div class="col-sm-10">
-                <asp:DropDownList CssClass="form-control" runat="server" ID="ddlCarrier" DataTextField="Name" DataValueField="Id" />
+                <asp:DropDownList 
+                    CssClass="form-control" 
+                    runat="server" 
+                    ID="ddlCarrier" 
+                    DataTextField="Name" 
+                    DataValueField="Id"
+                    AutoPostBack="true"
+                    OnSelectedIndexChanged="ddlCarrier_SelectedIndexChanged"
+                    
+                    
+                     />
                 </div>
             </div>
             <div class="form-group">

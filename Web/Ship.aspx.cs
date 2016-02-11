@@ -26,10 +26,26 @@ namespace Web
 
                 ddlCarrierMode.DataSource = ApplicationContextHolder.Instance.Facade.GetCarrierModes();
                 ddlCarrierMode.DataBind();
-                
+
                 LoadOrder();   
             }
             
+        }
+
+        private IList<CarrierModeFilter> GetCarrierModeFilters()
+        {
+            if(Cache["CarrierModeFilter"] == null)
+                Cache["CarrierModeFilter"] = ApplicationContextHolder.Instance.Facade.GetCarrierModeFilters();
+            return Cache["CarrierModeFilter"] as IList<CarrierModeFilter>;
+            
+        }
+
+        private IList<CarrierMode> GetCarrierModes()
+        {
+            if (Cache["CarrierModes"] == null)
+                Cache["CarrierModes"] = ApplicationContextHolder.Instance.Facade.GetCarrierModes();
+            return Cache["CarrierModes"] as IList<CarrierMode>;
+
         }
 
         private Order GetOrder(string action)
@@ -46,6 +62,19 @@ namespace Web
             return GetOrder(Request["ACTION"]);
         }
 
+
+        private void FilterCarrierModes()
+        {
+            var carrier = ddlCarrier.SelectedValue;
+            if(!string.IsNullOrEmpty(carrier))
+            {
+                var filteredCarrierModes = ApplicationContextHolder.Instance.Facade.GetCarrierModes(carrier, GetCarrierModes(), GetCarrierModeFilters());
+
+                ddlCarrierMode.DataSource = filteredCarrierModes;
+                ddlCarrierMode.DataBind();
+            }
+        }
+
         private void LoadOrder()
         {
             Page.Form.DefaultButton = btnSave.UniqueID;
@@ -54,6 +83,7 @@ namespace Web
             if (carrier != null)
             {
                 ddlCarrier.SelectedValue = carrier;
+                FilterCarrierModes();
             }
 
             string blockedCarrierCodes = ConfigurationManager.AppSettings["BlockedCarrierCodes"];
@@ -66,21 +96,18 @@ namespace Web
                     ddlCarrier.Enabled = false;
                 }
             }
-
-
             
-
             var carrierMode = GetOrder().ProposedCarrierMode;
             if (carrierMode != null)
             {
                 ddlCarrierMode.SelectedValue = carrierMode;
             }
 
-            if (GetOrder().Status == OrderStatus.Shipped)
-            {
-                ddlCarrier.Enabled = false;
-                ddlCarrierMode.Enabled = false;
-            }
+            //if (GetOrder().Status == OrderStatus.Shipped)
+            //{
+            //    ddlCarrier.Enabled = false;
+            //    ddlCarrierMode.Enabled = false;
+            //}
 
             ShowReturnLabelCreator(GetOrder());
 
@@ -213,5 +240,9 @@ namespace Web
             Page.Validators.Add(new BusinessValidationError(msg));
         }
 
+        protected void ddlCarrier_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FilterCarrierModes();
+        }
     }
 }

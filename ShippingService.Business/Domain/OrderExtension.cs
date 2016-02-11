@@ -82,16 +82,13 @@ namespace ShippingService.Business.Domain
                 {
                     if (l.Packs == null)
                         break;
-                    foreach (PackedOrderLine p in l.Packs)
-                    {
-                        if (!string.IsNullOrEmpty(p.PackedContainer.TrackingNumber))
-                        {
-                            shippedLines++;
-                        }
-                    }
+
+                    var shippedline = l.Packs.All(p => !string.IsNullOrEmpty(p.PackedContainer.TrackingNumber));
+                    if (shippedline)
+                        shippedLines++;
                 }
 
-                if (shippedLines == Lines.Count && E1Status != E1Statusses.Unshipped)
+                if (shippedLines >= Lines.Count && E1Status != E1Statusses.Unshipped)
                 {
                     status = OrderStatus.Shipped;
                 }

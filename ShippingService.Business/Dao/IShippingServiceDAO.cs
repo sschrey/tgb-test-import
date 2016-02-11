@@ -8,6 +8,7 @@ namespace ShippingService.Business.Dao
     {
         IList<Order> GetOrders(OrderCriteria crit);
         IList<Carrier> GetCarriers();
+        IList<CarrierModeFilter> GetCarrierModeFilter();
         IList<Container> GetContainers();
         IList<CarrierMode> GetCarrierModes();
         void Pack(Order o);

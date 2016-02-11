@@ -105,6 +105,21 @@ namespace ShippingService.Business.Dao
             }
         }
 
-       
+        public class CarrierModeFilterRowMapper<T> : IRowMapper<CarrierModeFilter>
+        {
+            CarrierModeFilter IRowMapper<CarrierModeFilter>.MapRow(IDataReader dr, int rowNum)
+            {
+                CarrierModeFilter c = new CarrierModeFilter();
+
+                c.Id = dr["Id"].ToString();
+                c.Carrier = dr["Carrier"].ToString();
+                c.CarrierMode = dr["CarrierMode"].ToString();
+                c.IsDefault = (bool)dr["IsDefault"];
+
+                return c;
+            }
+        }
+
+
     }
 }

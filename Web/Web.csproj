@@ -225,6 +225,7 @@
     <Content Include="Views\TNT\Daily.cshtml" />
     <Content Include="Views\TNT\ManifestSummary.cshtml" />
     <Content Include="Views\TNT\ManifestDetail.cshtml" />
+    <Content Include="Views\TNT\GetOrderLabel.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationContextHolder.cs" />

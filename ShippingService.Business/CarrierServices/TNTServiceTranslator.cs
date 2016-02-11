@@ -27,6 +27,9 @@ namespace ShippingService.Business.CarrierServices
             if (OptionCode == "SYS")
                 OptionDescription = "System Network Delivery";
 
+            LineOfBusiness = countrycode.ToUpper() == "BE" ? 1 : 2;
+            ProductId = carriermode.Code == "48N" ? "EC" : "EX";
+            ProductType = "N";
         }
 
         public string ServiceCode { get; set; }
@@ -35,5 +38,10 @@ namespace ShippingService.Business.CarrierServices
         public string OptionCode { get; set; }
         
         public string OptionDescription { get; set; }
+
+        public int LineOfBusiness { get; set; }
+        public string ProductId { get; set; }
+        public string ProductType { get; set; }
+        
     }
 }

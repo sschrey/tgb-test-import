@@ -24,28 +24,35 @@
         var self = this;
         self.Data = null;
         self.fileLink = ko.observable("");
-        self.pdfLink = ko.observable("");
+        self.Working = ko.observable(false);
+       
+
         self.SendOrders = function()
         {
+            self.Working(true);
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
                 url: "@Url.Content("~/TNT/SendOrders")",
                 data: ko.mapping.toJSON(self.Data),
-            dataType: "json",
-            success: function (data) {
-                alert(data);
-            },
-            error: function(jqXHR, textStatus, errorThrown )
-            {
-                alert(jqXHR.responseText);
-            }
-        });
+                dataType: "json",
+                success: function (data) {
+                    self.Working(false);
+                    self.fileLink(data.Link);
+                },
+                error: function(jqXHR, textStatus, errorThrown )
+                {
+                    alert(jqXHR.responseText);
+                }
+            });
         }
+
+
 
         self.CreateManifestSummary = function ()
         {
-            self.pdfLink("");
+            self.Working(true);
+            self.fileLink("");
                 $.ajax({
                     type: "POST",
                     contentType: "application/json; charset=utf-8",
@@ -53,7 +60,8 @@
                     data: ko.mapping.toJSON(self.Data),
                     dataType: "json",
                 success: function (data) {
-                    self.pdfLink(data.Link);
+                    self.fileLink(data.Link);
+                    self.Working(false);
                 },
                 error: function(jqXHR, textStatus, errorThrown )
                 {
@@ -63,7 +71,8 @@
         }
         self.CreateManifestDetail = function ()
         {
-            self.pdfLink("");
+            self.Working(true);
+            self.fileLink("");
             $.ajax({
                 type: "POST",
                 contentType: "application/json; charset=utf-8",
@@ -71,7 +80,8 @@
                 data: ko.mapping.toJSON(self.Data),
             dataType: "json",
             success: function (data) {
-                self.pdfLink(data.Link);
+                self.fileLink(data.Link);
+                self.Working(false);
             },
             error: function(jqXHR, textStatus, errorThrown )
             {
@@ -161,7 +171,7 @@
         <button  class="btn btn-default" data-bind="{visible: Data.Orders().length > 0 && !Searching(), click: SendOrders}">Send orders</button>
         <button class="btn btn-default" data-bind="{visible: Data.Orders().length > 0 && !Searching(), click: CreateManifestSummary}">Create manifest summary</button>
         <button class="btn btn-default" data-bind="{visible: Data.Orders().length > 0 && !Searching(), click: CreateManifestDetail}">Create manifest detail</button>
-        <a target="_blank" data-bind="{attr: { href: fileLink }, visible: fileLink().length>0}">Open text file</a>
-        <a target="_blank" data-bind="{attr: { href: pdfLink }, visible: pdfLink().length>0}">Open PDF</a>
+        <a target="_blank" data-bind="{attr: { href: fileLink }, visible: fileLink().length>0}">Open File</a>
+        <img data-bind="visible: Working" src="@Url.Content("~/Images/indicator.gif") " />
     </form>
 </div>
