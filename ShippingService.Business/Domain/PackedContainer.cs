@@ -23,7 +23,7 @@ namespace ShippingService.Business.Domain
         public string UPSLabel { get; set; }
         public string ReturnUPSLabel { get; set; }
         public int EstimatedWeight { get; set; }
-        public DateTime ShippedOn { get; set; }
+        public DateTime? ShippedOn { get; set; }
         public string EstimatedWeightAsString
         {
             get

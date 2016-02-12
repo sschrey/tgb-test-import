@@ -25,7 +25,7 @@ namespace Web.Controllers
                         Quantity = pack.Qty.ToString(),
                         TrackingNumber = pack.PackedContainer.TrackingNumber
                     });
-                    ShippedOn = pack.PackedContainer.ShippedOn.ToString("yyyy-MM-dd");
+                    ShippedOn = pack.PackedContainer.ShippedOn.HasValue ? pack.PackedContainer.ShippedOn.Value.ToString("yyyy-MM-dd") : string.Empty;
                 }
             }
             Count = OrderLines.Count + 1;

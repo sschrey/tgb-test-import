@@ -593,7 +593,7 @@ namespace ShippingService.Business.Dao
                             Id = dr["packagecode"].ToString(),
                             TrackingNumber = dr["TrackingNumber"].ToString(),
                             UPSLabel = dr["UPSLabel"].ToString(),
-                            ShippedOn = (DateTime)dr["ShippedOn"]
+                            ShippedOn = dr["ShippedOn"] == DBNull.Value? null : (DateTime?)dr["ShippedOn"]
                         };
                     }
                     ol.Packs.Add(packedOrderLine);
