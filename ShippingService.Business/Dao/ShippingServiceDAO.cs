@@ -155,6 +155,21 @@ namespace ShippingService.Business.Dao
             }
         }
 
+        public void UpdateShippingDate(Order o, DateTime newShippingDate)
+        {
+            foreach (PackedContainer pc in o.PackedContainers)
+            {
+                string cmdText = @"update packedcontainer set ShippedOn = @ShippedOn WHERE PackageCode = @PackageCode";
+                IDbParameters insertParams = CreateDbParameters();
+                
+                insertParams.AddWithValue("PackageCode", pc.Id);
+                insertParams.AddWithValue("ShippedOn", DateTime.Now);
+
+                AdoTemplate.ExecuteNonQuery(CommandType.Text, cmdText, insertParams);
+
+            }
+        }
+
         public void SaveReturnLabel(Order o)
         {
             foreach (PackedContainer pc in o.PackedContainers)
@@ -577,7 +592,8 @@ namespace ShippingService.Business.Dao
                             Weight = (int)dr["weight"],
                             Id = dr["packagecode"].ToString(),
                             TrackingNumber = dr["TrackingNumber"].ToString(),
-                            UPSLabel = dr["UPSLabel"].ToString()
+                            UPSLabel = dr["UPSLabel"].ToString(),
+                            ShippedOn = (DateTime)dr["ShippedOn"]
                         };
                     }
                     ol.Packs.Add(packedOrderLine);

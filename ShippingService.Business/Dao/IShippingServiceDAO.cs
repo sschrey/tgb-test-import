@@ -14,6 +14,7 @@ namespace ShippingService.Business.Dao
         void Pack(Order o);
         void Ship(Order o, bool updateE1);
         void ReShip(Order o);
+        void UpdateShippingDate(Order o, DateTime newShippingDate);
         int GetNextTNTConsignmentNoteNumber();
         void SaveReturnLabel(Order o);
         void LogBarcodeScan(BarcodeScanLog log);

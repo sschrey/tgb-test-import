@@ -37,10 +37,8 @@
                         TNT <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="<%= ResolveUrl("~/TNT/CheckPrice") %>">Check Price</a></li>
                         <li><a href="<%= ResolveUrl("~/TNT/GetOrderLabel") %>">Label</a></li>
-                          <li><a href="<%= ResolveUrl("~/TNT/Daily") %>">Daily orders</a></li>
-                         <li><a href="<%= ResolveUrl("~/TNT/ManifestSummary") %>">Manifest summary</a></li>
+                        <li><a href="<%= ResolveUrl("~/TNT/Daily") %>">Daily orders</a></li>
                     </ul>
                 </li>
             </ul>

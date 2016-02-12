@@ -13,6 +13,7 @@ namespace Web.Controllers
         public string ContainerName { get; set; }
 
         public string TrackingNumber { get; set; }
+       
 
     }
 }

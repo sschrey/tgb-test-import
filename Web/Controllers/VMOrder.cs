@@ -8,9 +8,10 @@ namespace Web.Controllers
 {
     public class VMOrder
     {
-        public VMOrder() { }
-        public VMOrder(Order order)
+        public VMOrder() { Include = true; }
+        public VMOrder(Order order): base()
         {
+            Include = true;
             OrderLines = new List<VMOrderLine>();
             OrderId = order.Id;
             foreach (var line in order.Lines)
@@ -24,6 +25,7 @@ namespace Web.Controllers
                         Quantity = pack.Qty.ToString(),
                         TrackingNumber = pack.PackedContainer.TrackingNumber
                     });
+                    ShippedOn = pack.PackedContainer.ShippedOn.ToString("yyyy-MM-dd");
                 }
             }
             Count = OrderLines.Count + 1;
@@ -32,5 +34,7 @@ namespace Web.Controllers
         public string OrderId { get; set; }
 
         public List<VMOrderLine> OrderLines { get; set; }
+        public string ShippedOn { get; set; }
+        public bool Include { get; set; }
     }
 }

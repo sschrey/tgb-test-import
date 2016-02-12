@@ -73,11 +73,9 @@ namespace Web.Controllers
 
             return Json(model);
         }
-
-        [HttpPost]
-        public ActionResult SendOrders(VMTNTDailyModel model)
+        
+        public IList<Order> PreProcessOrders(VMTNTDailyModel model)
         {
-            var facade = ApplicationContextHolder.Instance.Facade;
             var oc = new OrderCriteria();
 
             List<string> ids = new List<string>();
@@ -86,10 +84,40 @@ namespace Web.Controllers
                 ids.Add(order.OrderId);
             }
             oc.Ids = ids.ToArray();
-
-            var carriermodes = facade.GetCarrierModes();
             var orders = ApplicationContextHolder.Instance.Facade.GetOrders(oc);
 
+
+            var includedOrderIds = model.Orders.Where(o => o.Include).Select(o => o.OrderId).ToList();
+            var notincludedOrderIds = model.Orders.Where(o => !o.Include).Select(o => o.OrderId).ToList();
+
+            var includedOrders = orders.Where(o => includedOrderIds.Contains(o.Id)).ToList();
+            var notIncludedOrders = orders.Where(o => notincludedOrderIds.Contains(o.Id)).ToList();
+
+            foreach(var notIncludedOrder in notIncludedOrders)
+            {
+                var shippingdate = model.Orders.First(o => o.OrderId == notIncludedOrder.Id).ShippedOn;
+                if(!string.IsNullOrEmpty(shippingdate))
+                {
+                    DateTime shippingDateParsed = DateTime.Parse(shippingdate);
+                    //update shipping date here..
+                }
+                else
+                {
+                    throw new ApplicationException("Shipping date can not be empty");
+                }
+            }
+
+            return includedOrders;
+        }
+
+
+        [HttpPost]
+        public ActionResult SendOrders(VMTNTDailyModel model)
+        {
+            var facade = ApplicationContextHolder.Instance.Facade;
+            var orders = PreProcessOrders(model);
+            var carriermodes = facade.GetCarrierModes();
+            
             StringBuilder sb = new StringBuilder();
             foreach (var order in orders)
             {
@@ -189,17 +217,9 @@ namespace Web.Controllers
         public ActionResult CreateManifestDetail(VMTNTDailyModel model)
         {
             var facade = ApplicationContextHolder.Instance.Facade;
-            var oc = new OrderCriteria();
-
-            List<string> ids = new List<string>();
-            foreach (var order in model.Orders)
-            {
-                ids.Add(order.OrderId);
-            }
-            oc.Ids = ids.ToArray();
+            var orders = PreProcessOrders(model);
 
             var carriermodes = facade.GetCarrierModes();
-            var orders = ApplicationContextHolder.Instance.Facade.GetOrders(oc);
             string tntAccountNumber = ConfigurationManager.AppSettings["TNTAccountNumber"];
 
 
@@ -313,17 +333,9 @@ namespace Web.Controllers
         public ActionResult CreateManifestSummary(VMTNTDailyModel model)
         {
             var facade = ApplicationContextHolder.Instance.Facade;
-            var oc = new OrderCriteria();
-
-            List<string> ids = new List<string>();
-            foreach (var order in model.Orders)
-            {
-                ids.Add(order.OrderId);
-            }
-            oc.Ids = ids.ToArray();
+            var orders = PreProcessOrders(model);
 
             var carriermodes = facade.GetCarrierModes();
-            var orders = ApplicationContextHolder.Instance.Facade.GetOrders(oc);
 
 
             string tntAccountNumber = ConfigurationManager.AppSettings["TNTAccountNumber"];

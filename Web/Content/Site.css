@@ -130,3 +130,7 @@ table.ListOrders tr th
 	overflow:visible;
 }
 
+.datePicker
+{
+    width: 100px;
+}

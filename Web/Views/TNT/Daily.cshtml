@@ -12,10 +12,17 @@
 
                 dateFormat: "yy-mm-dd"                
             });
+
+           
+           
+
             var data = ko.mapping.fromJSON('@Html.Raw(JsonConvert.SerializeObject(this.Model))');
 
             var inputForm = new InputForm();
             inputForm.Data = data;
+
+
+
             ko.applyBindings(inputForm);
            
         });
@@ -25,7 +32,6 @@
         self.Data = null;
         self.fileLink = ko.observable("");
         self.Working = ko.observable(false);
-       
 
         self.SendOrders = function()
         {
@@ -102,6 +108,9 @@
             success: function (data) {
                 ko.mapping.fromJS(data, self.Data);
                 self.Searching(false);
+                $(".datePicker").datepicker({
+                    dateFormat: "yy-mm-dd"
+                });
             },
             error: function(jqXHR, textStatus, errorThrown )
             {
@@ -147,6 +156,8 @@
             <thead>
                 <tr>
                     <td>Order id</td>
+                    <td>Include</td>
+                    <td>Shipped on</td>
                     <td>Part number</td>
                     <td>#</td>
                     <td>Container</td>
@@ -156,7 +167,8 @@
             <tbody data-bind="foreach: Data.Orders">
                 <tr>
                     <td data-bind="attr: { rowspan: Count }"><span data-bind="text: OrderId"></span></td>
-
+                    <td data-bind="attr: { rowspan: Count }"><input type="checkbox" data-bind="checked: Include"></td>
+                    <td data-bind="attr: { rowspan: Count }"><input type="text" width="20" data-bind="value: ShippedOn, enable: !Include()" class="datePicker"></td>
                 </tr>
                 <!-- ko foreach: OrderLines -->
                 <tr>
