@@ -403,29 +403,27 @@
 	                         border-right-style="solid"> 
 	     <fo:block font-size="8px">Sender Address</fo:block>
 	     
-	     <fo:block start-indent="20px"
+	     	<fo:block start-indent="10x"
 	               font-size="8px"> 
 	        <xsl:value-of select="../consignmentLabelData/sender/name" />
 	        
 	     </fo:block> 
-	     <fo:block start-indent="20px"
+	     	<fo:block start-indent="10px"
 	               font-size="8px"> 
 	        <xsl:value-of select="../consignmentLabelData/sender/addressLine1" />
 	        
 	     </fo:block> 
-	     <fo:block start-indent="20px"
+	     	<fo:block start-indent="10px"
 	               font-size="8px"> 
 	        <xsl:value-of select="../consignmentLabelData/sender/addressLine2" />
 	        
 	     </fo:block> 
-	     <fo:block start-indent="20px"
-	               font-size="8px"> 
-	        <xsl:value-of select="../consignmentLabelData/sender/town" /><xsl:text>  </xsl:text>
-	        
-	        <xsl:value-of select="../consignmentLabelData/sender/postcode" />
-	        
+	     	<fo:block start-indent="10px"
+	               font-size="8px">
+	     		<xsl:value-of select="../consignmentLabelData/sender/postcode" /><xsl:text>  </xsl:text>
+	        	<xsl:value-of select="../consignmentLabelData/sender/town" />
 	     </fo:block> 
-	     <fo:block start-indent="20px"
+	     	<fo:block start-indent="10px"
 	               font-size="8px"> 
 	        <xsl:value-of select="../consignmentLabelData/sender/country" />
 	        
@@ -445,34 +443,38 @@
 	                         border-left-style="solid"
 	                         border-right-style="solid">
 	     <fo:block font-size="8px">Delivery Address</fo:block>
-	     
-	     <fo:block start-indent="20px"
-	               font-size="8px"> 
-	        <xsl:value-of select="../consignmentLabelData/delivery/name" />
+	     	<fo:block-container overflow="hidden" height="9px">
+	     		<fo:block  start-indent="10px"
+	               	font-size="8px"> 
+			        <xsl:value-of select="../consignmentLabelData/delivery/name" />
+				</fo:block> 
+			</fo:block-container> 	
+	     	<fo:block-container overflow="hidden" height="10px">
+	     		<fo:block start-indent="10px" font-size="8px"> 
+	        			<xsl:value-of select="../consignmentLabelData/delivery/addressLine1" />
 	        
-	     </fo:block> 
-	     <fo:block start-indent="20px"
-	               font-size="8px"> 
-	        <xsl:value-of select="../consignmentLabelData/delivery/addressLine1" />
+	     		</fo:block>
+	     	</fo:block-container>
+	     	<xsl:if test="../consignmentLabelData/delivery/addressLine2">
+		     	<fo:block-container overflow="hidden" height="9px">
+		     		<fo:block start-indent="10px" font-size="8px"> 
+		        		<xsl:value-of select="../consignmentLabelData/delivery/addressLine2" />
+		     		</fo:block>
+		     	</fo:block-container>
+	     	</xsl:if>
+	     	<fo:block-container overflow="hidden" height="9px">
+	     		<fo:block start-indent="10px"
+		               font-size="8px">
+		     	<xsl:value-of select="../consignmentLabelData/delivery/postcode" /><xsl:text>  </xsl:text>
+		        <xsl:value-of select="../consignmentLabelData/delivery/town" />
+		     </fo:block> 
+	     	</fo:block-container>
+	     	<fo:block-container overflow="hidden" height="9px">
+	     		<fo:block start-indent="10px" font-size="8px"> 
+	        	<xsl:value-of select="../consignmentLabelData/delivery/country" />
 	        
-	     </fo:block> 
-	     <fo:block start-indent="20px"
-	               font-size="8px"> 
-	        <xsl:value-of select="../consignmentLabelData/delivery/addressLine2" />
-	        
-	     </fo:block> 
-	     <fo:block start-indent="20px"
-	               font-size="8px"> 
-	        <xsl:value-of select="../consignmentLabelData/delivery/town" /><xsl:text>  </xsl:text>
-	        
-	        <xsl:value-of select="../consignmentLabelData/delivery/postcode" />
-	        
-	     </fo:block> 
-	     <fo:block start-indent="20px"
-	               font-size="8px"> 
-	        <xsl:value-of select="../consignmentLabelData/delivery/country" />
-	        
-	     </fo:block> 
+	     		</fo:block>
+	     	</fo:block-container>
 	     </fo:block-container> 
 	
 	     <!-- Route-->

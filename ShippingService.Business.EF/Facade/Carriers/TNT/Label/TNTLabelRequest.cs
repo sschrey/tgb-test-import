@@ -91,7 +91,7 @@ namespace ShippingService.Business.EF.Facade.Carriers.TNT.Label
                 {
                     var piece = new pieceType();
                     pieces.Add(piece);
-                    piece.sequenceNumbers = (tntpieceLine.Pieces.IndexOf(tntpiece) + 1).ToString();
+                    piece.sequenceNumbers = (pieceLines.IndexOf(tntpieceLine) + 1).ToString();
                     piece.pieceReference = tntpiece.Reference;
                 }
                 pieceLine.pieces = pieces.ToArray();

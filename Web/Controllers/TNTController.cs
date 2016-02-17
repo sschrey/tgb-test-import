@@ -159,25 +159,19 @@ namespace Web.Controllers
             foreach (var order in orders)
             {
                 List<TNTPieceLine> lines = new List<TNTPieceLine>();
-                foreach (var pc in order.PackedContainerByContainerType)
+                int pccounter = 0;
+                foreach (var pc in order.PackedContainers)
                 {
+                    pccounter++;
                     TNTPieceLine line = new TNTPieceLine();
                     lines.Add(line);
-                    line.GoodsDescription = string.Join("\n", pc.Key.Name);
-                    line.HeightInM = (double)pc.Key.Height * 0.001;
-                    line.LengthInM = (double)pc.Key.Depth * 0.001;
-                    line.WeightInKG = (double)pc.Value.Sum(pac => pac.Weight) * 0.001;
-                    line.WidthInM = (double)pc.Key.Width * 0.001;
+                    line.GoodsDescription = string.Join("\n", "box" + pccounter);
+                    line.HeightInM = (double)pc.Container.Height * 0.001;
+                    line.LengthInM = (double)pc.Container.Depth * 0.001;
+                    line.WeightInKG = (double)pc.Weight * 0.001;
+                    line.WidthInM = (double)pc.Container.Width * 0.001;
 
-                    foreach (var package in pc.Value)
-                    {
-                        var orderLines = order.GetOrderLinesByPackedContainer(package);
-                        foreach (var ol in orderLines.Keys)
-                        {
-                            line.Pieces.Add(new TNTPiece() { Reference = ol.PartName });
-                        }
-
-                    }
+                    line.Pieces.Add(new TNTPiece() { Reference = order.ReferenceNumber });
                 }
 
                 TNTServiceTranslator trans = new TNTServiceTranslator(order.MainAddress.CountryCode, carriermodes.First(cm => cm.Id == order.ShippedCarrierModeOption));

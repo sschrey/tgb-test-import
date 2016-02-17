@@ -169,10 +169,15 @@
     <Content Include="Content\jquery-ui-1.11.4.theme.css" />
     <Content Include="Content\jquery-ui.1.11.4.theme.min.css" />
     <Content Include="Content\Site.css" />
+    <Content Include="Content\TNT\XSL\HTML\css\label-rendering-exception-style.css" />
+    <Content Include="Content\TNT\XSL\HTML\css\label-rendering-style-fr.css" />
+    <Content Include="Content\TNT\XSL\HTML\css\label-rendering-style-it.css" />
+    <Content Include="Content\TNT\XSL\HTML\css\label-rendering-style.css" />
     <Content Include="Content\TNT\XSL\HTML\HTMLFrenchDomesticRoutingLabelRenderer.xsl" />
     <Content Include="Content\TNT\XSL\HTML\HTMLItalianDomesticRoutingLabelRenderer.xsl" />
     <Content Include="Content\TNT\XSL\HTML\HTMLRestOfWorldRoutingLabelRenderer.xsl" />
     <Content Include="Content\TNT\XSL\HTML\HTMLRoutingLabelRenderer.xsl" />
+    <Content Include="Content\TNT\XSL\HTML\logo\logo.jpg" />
     <Content Include="Content\TNT\XSL\HTML\logo_orig.jpg" />
     <Content Include="Content\TNT\XSL\MANIFEST_DETAIL\logo.jpg" />
     <Content Include="Content\TNT\XSL\MANIFEST_DETAIL\pdf.xsl" />
@@ -342,8 +347,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Content\TNT\LABELS\" />
     <Folder Include="Content\TNT\ORDERS\" />
-    <Folder Include="Content\TNT\XSL\HTML\css\" />
-    <Folder Include="Content\TNT\XSL\HTML\logo\" />
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
