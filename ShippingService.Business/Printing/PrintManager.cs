@@ -6,6 +6,7 @@ using System.Drawing.Printing;
 using System.Linq;
 using System.Web;
 using System.IO;
+using System.Diagnostics;
 
 namespace ShippingService.Business.Printing
 {
@@ -54,6 +55,45 @@ namespace ShippingService.Business.Printing
         public static IEnumerable<string> InstalledPrinters()
         {
             return PrinterSettings.InstalledPrinters.OfType<string>();
+        }
+
+        /// <summary>
+        /// Prints the PDF.
+        /// </summary>
+        /// <param name="ghostScriptPath">The ghost script path. Eg "C:\Program Files\gs\gs8.71\bin\gswin32c.exe"</param>
+        /// <param name="numberOfCopies">The number of copies.</param>
+        /// <param name="printerName">Name of the printer. Eg \\server_name\printer_name</param>
+        /// <param name="pdfFileName">Name of the PDF file.</param>
+        /// <returns></returns>
+        public static PrintPDFResults PrintPDF(string ghostScriptPath, int numberOfCopies, string printerName, string pdfFileName)
+        {
+            PrintPDFResults results = new PrintPDFResults();
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.Arguments = " -dPrinted -dBATCH -dNOPAUSE -dNOSAFER -q -dNumCopies=" + Convert.ToString(numberOfCopies) + " -sDEVICE=ljet4 -sOutputFile=\"\\\\spool\\" + printerName + "\" \"" + pdfFileName + "\" ";
+            startInfo.FileName = ghostScriptPath;
+            startInfo.UseShellExecute = false;
+
+            startInfo.RedirectStandardError = true;
+            startInfo.RedirectStandardOutput = true;
+
+            Process process = Process.Start(startInfo);
+
+            Console.WriteLine(process.StandardError.ReadToEnd() + process.StandardOutput.ReadToEnd());
+
+            process.WaitForExit(30000);
+            if (process.HasExited == false) process.Kill();
+
+            results.ExitCode = process.ExitCode;
+            results.Results = process.StandardError.ReadToEnd() + process.StandardOutput.ReadToEnd();
+
+            return results;
+        }
+
+        public class PrintPDFResults
+        {
+            public int ExitCode { get; set; }
+            public string Results { get; set; }
+
         }
     }
 }

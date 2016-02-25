@@ -1,7 +1,9 @@
 ﻿
 @{
     ViewBag.Title = "GetOrderLabel";
+    
 }
+@model IEnumerable<string>
 
 <h2>Get label from orderid</h2>
 
@@ -42,6 +44,21 @@
         <button type="submit" data-bind="visible: labelresponse().length>0" class="btn btn-default">Create label as PDF</button>
         <img data-bind="visible: creating" src="@Url.Content("~/Images/indicator.gif") " />
         <a target="_blank" data-bind="{attr: { href: labelLink }, visible: labelLink().length>0}">Open PDF</a>
+    </form>
+
+    <form data-bind="{submit: PrintLabel, visible: labelLink().length>0}" method="post">
+        <p>
+            <div>
+                <textarea name="xml" data-bind="{value: labelresponse, visible: labelresponse().length>0}" class="form-control large" rows="10"></textarea>
+            </div>
+        </p>
+        <select name="printerName" >
+            @foreach (var printer in Model)
+            {
+                <option value="@printer">@printer</option>
+            }
+        </select>
+        <button type="submit" data-bind="visible: labelresponse().length>0" class="btn btn-default">Print</button>
     </form>
 </div>
 
@@ -129,7 +146,28 @@
                 {
                     alert(jqXHR.responseText);
                 }
-            });
+                });
+            }
+
+            self.PrintLabel = function(formelement)
+            {
+                    self.creating(true);
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.Content("~/TNT/PrintLabel")",
+                        data: $(formelement).serialize(),
+                    success: function (data) {
+                        if(data.BrokenRules.length > 0)  
+                        {
+                            alert(data.BrokenRules);
+                        }
+                        self.creating(false);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown )
+                    {
+                        alert(jqXHR.responseText);
+                    }
+                });
             }
         }
     </script>

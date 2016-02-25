@@ -2,6 +2,7 @@
 using ShippingService.Business.Domain;
 using ShippingService.Business.EF.Facade.Carriers.TNT.Label;
 using ShippingService.Business.EF.Facade.Carriers.TNT.Price;
+using ShippingService.Business.Printing;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -19,8 +20,13 @@ namespace Web.Controllers
     {
         public ActionResult GetOrderLabel()
         {
-            return View();
+
+            var allprinters = PrintManager.InstalledPrinters();
+
+            return View(allprinters);
         }
+
+
         public ActionResult CheckPrice()
         {
             return View();
@@ -761,6 +767,59 @@ namespace Web.Controllers
                 BrokenRules = val.BrokenRules
             }, JsonRequestBehavior.AllowGet);
 
+        }
+
+        [HttpPost, ValidateInput(false)]
+        public ActionResult PrintLabel(string xml, string printername)
+        {
+            string virtualFolder = "~/Content/TNT/LABELS/" + Guid.NewGuid().ToString();
+            string virtualOutputPNG = Path.Combine(virtualFolder, "tnt.png");
+
+            var tempFilePath = Server.MapPath(virtualFolder);
+
+            Directory.CreateDirectory(tempFilePath);
+
+            string xmlFilePath = Path.Combine(tempFilePath, "tnt.xml");
+            StreamWriter sw = new StreamWriter(xmlFilePath);
+            sw.WriteLine(xml);
+            sw.Close();
+            sw.Dispose();
+
+            string pngFilePath = Path.Combine(tempFilePath, "tnt.png");
+
+            var responseobj = xml.ToObject<ShippingService.Business.EF.Facade.Carriers.TNT.Label.Response.labelResponse>();
+
+            if (responseobj.consignment != null)
+            {
+                //generate all barcodes:
+                foreach (var cons in responseobj.consignment)
+                {
+                    foreach (var piece in cons.pieceLabelData)
+                    {
+                        string barcode = piece.barcode.Value;
+
+                        //barcode lib from: http://www.codeproject.com/Articles/20823/Barcode-Image-Generation-Library
+                        BarcodeLib.Barcode bc = new BarcodeLib.Barcode();
+                        bc.Encode(BarcodeLib.TYPE.CODE128C, barcode, 418, 140);
+                        bc.SaveImage(Path.Combine(tempFilePath, barcode), BarcodeLib.SaveTypes.JPG);
+
+                    }
+                }
+            }
+
+            string xslFilePath = Server.MapPath("~/Content/TNT/XSL/PDF/PDFRoutingLabelRenderer.xsl");
+
+            TNTLabelGenerator gen = new TNTLabelGenerator();
+            //var val = gen.GeneratePNG(xslFilePath, xmlFilePath, pngFilePath, tempFilePath + @"\\");
+            var val = gen.PrintPDF(xslFilePath, xmlFilePath, printername, tempFilePath +@"\\");
+
+            //PrintManager.Print(pngFilePath, printername);
+
+            return Json(new
+            {
+                Link = Url.Content(virtualOutputPNG),
+                BrokenRules = val.BrokenRules
+            }, JsonRequestBehavior.AllowGet);
         }
 
 

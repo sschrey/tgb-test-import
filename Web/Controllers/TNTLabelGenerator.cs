@@ -48,6 +48,47 @@ namespace Web.Controllers
             return val;
         }
 
-        
+        public Validation GeneratePNG(string xslFilePath, string xmlFilePath, string pngFilePath, string barcodefilePath)
+        {
+            Validation val = new Validation();
+            string myparams = string.Format("-param {0} {1}", "barcode_url", barcodefilePath);
+            string workingdir = Path.GetDirectoryName(xslFilePath);
+
+            CommandObj co = new CommandObj();
+            string args = string.Format("-xsl {0} -xml {1} -png {2} {3}", xslFilePath, xmlFilePath, pngFilePath, myparams);
+
+            var result = co.Run(executableFilePath, args, null, workingdir, 0, System.Diagnostics.ProcessPriorityClass.BelowNormal);
+
+            if (!File.Exists(pngFilePath))
+            {
+                val.AddBrokenRule(executableFilePath + " " + args + " failed to create pdf");
+                foreach (var error in result.Errors)
+                {
+                    val.AddBrokenRule(error);
+                }
+                foreach (var output in result.Output)
+                {
+                    val.AddBrokenRule(output);
+                }
+            }
+
+            return val;
+        }
+
+        public Validation PrintPDF(string xslFilePath, string xmlFilePath, string printername, string barcodefilePath)
+        {
+            Validation val = new Validation();
+            string myparams = string.Format("-param {0} {1}", "barcode_url", barcodefilePath);
+            string workingdir = Path.GetDirectoryName(xslFilePath);
+
+            CommandObj co = new CommandObj();
+            string args = string.Format("-xsl {0} -xml {1} -print {3}", xslFilePath, xmlFilePath, printername, myparams);
+
+            var result = co.Run(executableFilePath, args, null, workingdir, 0, System.Diagnostics.ProcessPriorityClass.BelowNormal);
+
+            return val;
+        }
+
+
     }
 }
