@@ -30,6 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{AA8FE97E-6F7
 		Lib\Common.Logging.dll = Lib\Common.Logging.dll
 		Lib\log4net.dll = Lib\log4net.dll
 		Lib\nunit.framework.dll = Lib\nunit.framework.dll
+		Lib\Seagull.BarTender.Print.dll = Lib\Seagull.BarTender.Print.dll
 		Lib\Spring.Aop.dll = Lib\Spring.Aop.dll
 		Lib\Spring.Core.dll = Lib\Spring.Core.dll
 		Lib\Spring.Data.dll = Lib\Spring.Data.dll

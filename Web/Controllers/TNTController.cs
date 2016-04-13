@@ -1,4 +1,5 @@
-﻿using ShippingService.Business.CarrierServices;
+﻿using Seagull.BarTender.Print;
+using ShippingService.Business.CarrierServices;
 using ShippingService.Business.Domain;
 using ShippingService.Business.EF.Facade.Carriers.TNT.Label;
 using ShippingService.Business.EF.Facade.Carriers.TNT.Price;
@@ -79,7 +80,7 @@ namespace Web.Controllers
 
             return Json(model);
         }
-        
+
         public IList<Order> PreProcessOrders(VMTNTDailyModel model)
         {
             var oc = new OrderCriteria();
@@ -99,10 +100,10 @@ namespace Web.Controllers
             var includedOrders = orders.Where(o => includedOrderIds.Contains(o.Id)).ToList();
             var notIncludedOrders = orders.Where(o => notincludedOrderIds.Contains(o.Id)).ToList();
 
-            foreach(var notIncludedOrder in notIncludedOrders)
+            foreach (var notIncludedOrder in notIncludedOrders)
             {
                 var shippingdate = model.Orders.First(o => o.OrderId == notIncludedOrder.Id).ShippedOn;
-                if(!string.IsNullOrEmpty(shippingdate))
+                if (!string.IsNullOrEmpty(shippingdate))
                 {
                     DateTime shippingDateParsed = DateTime.Parse(shippingdate);
                     //update shipping date here..
@@ -123,7 +124,7 @@ namespace Web.Controllers
             var facade = ApplicationContextHolder.Instance.Facade;
             var orders = PreProcessOrders(model);
             var carriermodes = facade.GetCarrierModes();
-            
+
             StringBuilder sb = new StringBuilder();
             foreach (var order in orders)
             {
@@ -133,7 +134,7 @@ namespace Web.Controllers
                 sb.Append(record);
             }
 
-            var virtualPath = "~/Content/TNT/ORDERS/" +  Guid.NewGuid().ToString();
+            var virtualPath = "~/Content/TNT/ORDERS/" + Guid.NewGuid().ToString();
             var ordervirtualPath = Path.Combine(virtualPath, "NNF.txt");
 
             Directory.CreateDirectory(Server.MapPath(virtualPath));
@@ -149,7 +150,7 @@ namespace Web.Controllers
             });
         }
 
-        
+
 
         [HttpPost]
         public ActionResult CreateLabel(string orderid)
@@ -234,13 +235,13 @@ namespace Web.Controllers
             md.sender.name = TGBAddress.CompanyName;
             md.sender.postcode = TGBAddress.PostalCode;
             md.sender.town = TGBAddress.City;
-            
-            Dictionary<string,IEnumerable<Order>> groupedOrders = new Dictionary<string, IEnumerable<Order>>();
+
+            Dictionary<string, IEnumerable<Order>> groupedOrders = new Dictionary<string, IEnumerable<Order>>();
 
             groupedOrders.Add("DOMESTIC", orders.Where(o => o.MainAddress.CountryCode == "BE"));
             groupedOrders.Add("REST OF THE WORLD", orders.Where(o => !new Vies().IsVATEligible(o.MainAddress.CountryCode)));
             groupedOrders.Add("OTHER", orders.Where(o => o.MainAddress.CountryCode != "BE" && new Vies().IsVATEligible(o.MainAddress.CountryCode)));
-            
+
             var shippingoptions = new List<ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.shippingoption>();
 
             foreach (var item in groupedOrders)
@@ -272,7 +273,7 @@ namespace Web.Controllers
                                     if (pol.PackedContainer.Equals(pc))
                                     {
                                         var description = ol.PartName + "(" + pc.Container.Name + ")";
-                                        if(!descriptionofparts.Exists(d => d == description))
+                                        if (!descriptionofparts.Exists(d => d == description))
                                             descriptionofparts.Add(description);
                                     }
                                 }
@@ -280,7 +281,7 @@ namespace Web.Controllers
                         }
 
                         consignment.description = string.Join("\n", descriptionofparts);
-                        consignment.dimensions = string.Format("{0}cm x {1}cm x {2}cm", order.PackedContainers[0].Container.Depth/10, order.PackedContainers[0].Container.Width/10, order.PackedContainers[0].Container.Height/10);
+                        consignment.dimensions = string.Format("{0}cm x {1}cm x {2}cm", order.PackedContainers[0].Container.Depth / 10, order.PackedContainers[0].Container.Width / 10, order.PackedContainers[0].Container.Height / 10);
                         consignment.insurancevalue = "0.00 EUR";
 
                         if (!new Vies().IsVATEligible(order.MainAddress.CountryCode))
@@ -293,7 +294,7 @@ namespace Web.Controllers
                         consignment.pieces = order.PackedContainers.Count().ToString();
                         consignment.receiver = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.receiver();
                         consignment.receiver.city = order.MainAddress.City;
-                        consignment.receiver.contact = order.MainAddress.AttentionName; 
+                        consignment.receiver.contact = order.MainAddress.AttentionName;
                         consignment.receiver.country = order.MainAddress.CountryCode;
                         consignment.receiver.name = order.MainAddress.CompanyName;
                         consignment.receiver.phone = order.MainAddress.PhoneNumber;
@@ -303,7 +304,7 @@ namespace Web.Controllers
 
                         var tntst = new TNTServiceTranslator(order.MainAddress.CountryCode, carriermode);
                         consignment.shippingservicecode = string.Format("({0}) {1}", tntst.ServiceCode, tntst.ServiceDescription);
-                        if(!string.IsNullOrEmpty(tntst.OptionCode))
+                        if (!string.IsNullOrEmpty(tntst.OptionCode))
                             consignment.shippingoptioncode = string.Format("({0}) {1}", tntst.OptionCode, tntst.OptionDescription);
 
                         consignment.volume = Volume(order.PackedContainers.Sum(pc => pc.Container.VolumeInM3));
@@ -313,7 +314,7 @@ namespace Web.Controllers
                     shippingoption.consignment = consignments.ToArray();
                 }
             }
-            
+
             md.shippingoption = shippingoptions.ToArray();
 
 
@@ -339,7 +340,7 @@ namespace Web.Controllers
 
 
             string tntAccountNumber = ConfigurationManager.AppSettings["TNTAccountNumber"];
-            
+
             ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.manifestsummary ms = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.manifestsummary();
             ms.account = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.account();
             ms.account.accountCountry = TGBAddress.CountryName;
@@ -375,7 +376,7 @@ namespace Web.Controllers
 
             }
             ms.consignment = consignments.ToArray();
-            
+
             ms.grandtotal = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestSummary.grandtotal();
             ms.grandtotal.consignments = orders.Count().ToString();
             ms.grandtotal.pieces = orders.Sum(o => o.PackedContainers.Count()).ToString();
@@ -464,8 +465,8 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public string CreateManifestSummeryRequest(string accountnumber, 
-            string accountcountry, 
+        public string CreateManifestSummeryRequest(string accountnumber,
+            string accountcountry,
             string sendername,
             string senderaddressline1,
             string sendertown,
@@ -579,8 +580,8 @@ namespace Web.Controllers
             var shippingoption = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.shippingoption();
             shippingoptions.Add(shippingoption);
             shippingoption.title = shippingoptiontitle;
-            
-            
+
+
             var consignments = new List<ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.consignment>();
             var consignment = new ShippingService.Business.EF.Facade.Carriers.TNT.ManifestDetail.consignment();
             consignments.Add(consignment);
@@ -614,7 +615,7 @@ namespace Web.Controllers
             shippingoption.consignment = consignments.ToArray();
             md.shippingoption = shippingoptions.ToArray();
 
-         
+
             md.printdate = printdate;
             md.printtime = printtime;
 
@@ -769,6 +770,126 @@ namespace Web.Controllers
 
         }
 
+        
+        [HttpPost, ValidateInput(false)]
+        public ActionResult PrintLabel(string xml, string printername)
+        {
+
+            string id = Guid.NewGuid().ToString();
+            string virtualFolder = "~/Content/TNT/LABELS/" + id;
+            var tempFilePath = Server.MapPath(virtualFolder);
+
+
+            string btwfile = "~/Content/TNT/BTW/label.btw";
+            string btwfilePath = Server.MapPath(btwfile);
+
+            if(!System.IO.File.Exists(btwfilePath))
+            {
+                throw new ApplicationException("Could not find the label template at " + btwfilePath);
+            }
+
+
+            Directory.CreateDirectory(tempFilePath);
+
+            string xmlFilePath = Path.Combine(tempFilePath, "tnt.xml");
+            StreamWriter sw = new StreamWriter(xmlFilePath);
+            sw.WriteLine(xml);
+            sw.Close();
+            sw.Dispose();
+            
+            var responseobj = xml.ToObject<ShippingService.Business.EF.Facade.Carriers.TNT.Label.Response.labelResponse>();
+
+            var engine = new Engine(true);
+            var format = engine.Documents.Open(btwfilePath);
+            format.PrintSetup.PrinterName = printername;
+
+            if (responseobj.consignment == null)
+            {
+                throw new ApplicationException("no consignment found");
+            }
+
+            foreach (var consignment in responseobj.consignment)
+            {
+
+                var consignmentLabelData = consignment.consignmentLabelData;
+
+                format.SubStrings["marketDisplay"].Value = consignmentLabelData.marketDisplay.Value;
+                format.SubStrings["transportDisplay"].Value = consignmentLabelData.transportDisplay.Value;
+
+
+                var ishazardous = consignmentLabelData.option != null && consignmentLabelData.option.FirstOrDefault(o => o.id == "HZ") != null;
+                if (!ishazardous)
+                    format.SubStrings["hazardous"].Value = string.Empty;
+
+                format.SubStrings["xrayDisplay"].Value = consignmentLabelData.xrayDisplay.Value;
+                format.SubStrings["freeCirculationDisplay"].Value = consignmentLabelData.freeCirculationDisplay.Value;
+                format.SubStrings["sortSplitText"].Value = consignmentLabelData.sortSplitText;
+                format.SubStrings["consignmentNumber"].Value = consignmentLabelData.consignmentNumber;
+                format.SubStrings["service"].Value = consignmentLabelData.product.Value;
+
+
+                string option = string.Empty;
+                if(consignmentLabelData.option != null && consignmentLabelData.option.Count() > 1)
+                {
+                    foreach(var optionitem in consignmentLabelData.option)
+                    {
+                        option += optionitem.id + " ";
+                    }
+                }
+                else if(consignmentLabelData.option != null && consignmentLabelData.option.Count() == 1 )
+                {
+                    format.SubStrings["option"].Value = consignmentLabelData.option[0].Value;
+                }
+                format.SubStrings["option"].Value = option;
+                format.SubStrings["accountNumber"].Value = consignmentLabelData.account.accountNumber;
+                format.SubStrings["originDepotCode"].Value = consignmentLabelData.originDepot.depotCode;
+                format.SubStrings["collectionDate"].Value = consignmentLabelData.collectionDate.ToString("dd MMM yyyy");
+                format.SubStrings["deliveryAddress"].Value = consignmentLabelData.delivery.name;
+                format.SubStrings["deliveryAddress"].Value += Environment.NewLine + consignmentLabelData.delivery.addressLine1;
+                if (!string.IsNullOrEmpty(consignmentLabelData.delivery.addressLine2))
+                    format.SubStrings["deliveryAddress"].Value += Environment.NewLine + consignmentLabelData.delivery.addressLine2;
+                if (!string.IsNullOrEmpty(consignmentLabelData.delivery.addressLine3))
+                    format.SubStrings["deliveryAddress"].Value += Environment.NewLine + consignmentLabelData.delivery.addressLine3;
+                format.SubStrings["deliveryAddress"].Value += Environment.NewLine + consignmentLabelData.delivery.postcode + " " + consignmentLabelData.delivery.town;
+                format.SubStrings["deliveryAddress"].Value += Environment.NewLine + consignmentLabelData.delivery.country;
+                var routing = string.Empty;
+                foreach (var transitdepot in consignmentLabelData.transitDepots)
+                {
+                    if(transitdepot is ShippingService.Business.EF.Facade.Carriers.TNT.Label.Response.sortDepotType)
+                    {
+                        routing += ((ShippingService.Business.EF.Facade.Carriers.TNT.Label.Response.sortDepotType)transitdepot).depotCode + "-" + ((ShippingService.Business.EF.Facade.Carriers.TNT.Label.Response.sortDepotType)transitdepot).sortCellIndicator.Value + Environment.NewLine;
+                        format.SubStrings["sortDepotCode"].Value = ((ShippingService.Business.EF.Facade.Carriers.TNT.Label.Response.sortDepotType)transitdepot).depotCode;
+                    }
+                    if (transitdepot is ShippingService.Business.EF.Facade.Carriers.TNT.Label.Response.actionDepotType)
+                    {
+                        routing += ((ShippingService.Business.EF.Facade.Carriers.TNT.Label.Response.actionDepotType)transitdepot).depotCode + "-" + ((ShippingService.Business.EF.Facade.Carriers.TNT.Label.Response.actionDepotType)transitdepot).actionDayOfWeek + Environment.NewLine;
+                    }
+                    if (transitdepot is ShippingService.Business.EF.Facade.Carriers.TNT.Label.Response.depotType)
+                    {
+                        //this type has the name transitDepot
+                        routing += ((ShippingService.Business.EF.Facade.Carriers.TNT.Label.Response.depotType)transitdepot).depotCode + Environment.NewLine;
+                    }
+                }
+                format.SubStrings["routing"].Value = routing;
+
+                format.SubStrings["postcode"].Value = consignmentLabelData.clusterCode;
+                format.SubStrings["destDepotCode"].Value = consignmentLabelData.destinationDepot.depotCode + "-" + consignmentLabelData.destinationDepot.dueDayOfMonth;
+
+                foreach (var pieceLabelData in consignment.pieceLabelData)
+                {
+                    format.SubStrings["pieceData"].Value = pieceLabelData.pieceNumber + " of " + consignmentLabelData.totalNumberOfPieces;
+                    format.SubStrings["weight"].Value = pieceLabelData.weightDisplay.Value;
+                    format.SubStrings["customerReference"].Value = pieceLabelData.pieceReference;
+                    format.SubStrings["barcode"].Value = pieceLabelData.barcode.Value;
+
+                    var result = format.Print();
+                }
+            }
+
+            return new EmptyResult();
+        }
+        
+        /*
         [HttpPost, ValidateInput(false)]
         public ActionResult PrintLabel(string xml, string printername)
         {
@@ -811,7 +932,7 @@ namespace Web.Controllers
 
             TNTLabelGenerator gen = new TNTLabelGenerator();
             //var val = gen.GeneratePNG(xslFilePath, xmlFilePath, pngFilePath, tempFilePath + @"\\");
-            var val = gen.PrintPDF(xslFilePath, xmlFilePath, printername, tempFilePath +@"\\");
+            var val = gen.PrintPDF(xslFilePath, xmlFilePath, printername, tempFilePath + @"\\");
 
             //PrintManager.Print(pngFilePath, printername);
 
@@ -821,7 +942,7 @@ namespace Web.Controllers
                 BrokenRules = val.BrokenRules
             }, JsonRequestBehavior.AllowGet);
         }
-
+        */
 
 
         [HttpPost]
@@ -864,6 +985,36 @@ namespace Web.Controllers
         public ActionResult ManifestDetail()
         {
             return View();
+        }
+
+        public ActionResult TestPrint()
+        {
+
+
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            foreach (var printer in new Printers())
+            {
+                items.Add(new SelectListItem() { Text = printer.PrinterName, Value = printer.PrinterName });
+            }
+
+            return View(items);
+        }
+
+        public ActionResult Print(string printer)
+        {
+            var engine = new Engine(true);
+            var format = engine.Documents.Open(@"c:\temp\tnt.btw");
+            format.PrintSetup.PrinterName = printer;
+            format.SubStrings["barcode"].Value = "1100767195166010754025046520";
+            Messages messages;
+           
+
+
+            format.Print("My job name", 10000, out messages);
+
+
+            return new EmptyResult();
         }
     }
 }

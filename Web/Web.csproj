@@ -73,6 +73,10 @@
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.5.0.6\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Seagull.BarTender.Print, Version=11.0.2.1, Culture=neutral, PublicKeyToken=109ff779a1b4cbc7, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Seagull.BarTender.Print.dll</HintPath>
+    </Reference>
     <Reference Include="Spring.Aop">
       <HintPath>..\Lib\Spring.Aop.dll</HintPath>
     </Reference>
@@ -198,6 +202,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="_footer.ascx" />
     <Content Include="_navbar.ascx" />
+    <Content Include="Content\TNT\BTW\label.btw" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -232,6 +237,7 @@
     <Content Include="Views\TNT\ManifestSummary.cshtml" />
     <Content Include="Views\TNT\ManifestDetail.cshtml" />
     <Content Include="Views\TNT\GetOrderLabel.cshtml" />
+    <Content Include="Views\TNT\TestPrint.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationContextHolder.cs" />

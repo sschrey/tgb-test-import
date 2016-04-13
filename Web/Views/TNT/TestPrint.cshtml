@@ -1,0 +1,26 @@
+﻿
+@{
+    ViewBag.Title = "TestPrint";
+}
+@model List<SelectListItem>
+
+<h2>Print test</h2>
+
+<div>
+    <form method="post" action="@Url.Content("~/TNT/Print")">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="accountnumber">Select printer:</label>
+                    @Html.DropDownList("printer", Model)
+
+                    <button type="submit" value="Print">Print</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+
