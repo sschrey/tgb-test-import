@@ -62,6 +62,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
@@ -81,6 +82,29 @@
     <Compile Include="CarrierServices\TNTErrorCodes.cs" />
     <Compile Include="CarrierServices\TNTServiceTranslator.cs" />
     <Compile Include="CarrierServices\TNTShipping.cs" />
+    <Compile Include="CarrierServices\TNT\Label\request\labelrequest.cs">
+      <DependentUpon>labelrequest.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="CarrierServices\TNT\Label\response\labelresponse.cs">
+      <DependentUpon>labelresponse.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="CarrierServices\TNT\Label\TNTLabelRequest.cs" />
+    <Compile Include="CarrierServices\TNT\Label\TNTPiece.cs" />
+    <Compile Include="CarrierServices\TNT\Label\TNTPieceLine.cs" />
+    <Compile Include="CarrierServices\TNT\ManifestDetail\document.cs">
+      <DependentUpon>document.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="CarrierServices\TNT\ManifestSummary\document.cs">
+      <DependentUpon>document.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="CarrierServices\TNT\Price\PriceRequest.cs">
+      <DependentUpon>PriceRequest.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="CarrierServices\TNT\Price\PriceResponse.cs">
+      <DependentUpon>PriceResponse.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="CarrierServices\TNT\Price\TNTPriceChecker.cs" />
+    <Compile Include="CarrierServices\TNT\Price\TNTPriceService.cs" />
     <Compile Include="CarrierServices\UPSBelgium.cs" />
     <Compile Include="CarrierServices\UPSRRDonnely.cs" />
     <Compile Include="CarrierServices\UPSShipping.cs" />
@@ -129,6 +153,36 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="CarrierServices\TNT\Label\ExpressLabel%2520Integration%2520Guide.pdf" />
+    <None Include="CarrierServices\TNT\Label\ExpressLabel_TechnicalV2_0.pdf" />
+    <None Include="CarrierServices\TNT\Label\request\commonDefinitions.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CarrierServices\TNT\Label\request\labelrequest.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CarrierServices\TNT\Label\response\commonDefinitions.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CarrierServices\TNT\Label\response\labelresponse.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CarrierServices\TNT\ManifestDetail\document.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CarrierServices\TNT\ManifestSummary\document.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CarrierServices\TNT\Price\commonDefinitions.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CarrierServices\TNT\Price\PriceRequest.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CarrierServices\TNT\Price\PriceResponse.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="CarrierServices\TNT\Price\PriceServiceDocumentation.pdf" />
     <None Include="CarrierServices\UPS-Documentation.pdf" />
     <None Include="CarrierServices\TNTfull_import_for_ExpressManager.pdf" />
   </ItemGroup>

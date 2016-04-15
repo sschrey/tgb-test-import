@@ -71,29 +71,6 @@
     <Compile Include="Domain\Entity.cs" />
     <Compile Include="Domain\SNOrders\SNPackedContainer.cs" />
     <Compile Include="Domain\SNOrders\SNPackedOrderLine.cs" />
-    <Compile Include="Facade\Carriers\TNT\Label\TNTPiece.cs" />
-    <Compile Include="Facade\Carriers\TNT\Label\TNTPieceLine.cs" />
-    <Compile Include="Facade\Carriers\TNT\Label\response\labelresponse.cs">
-      <DependentUpon>labelresponse.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Facade\Carriers\TNT\Label\request\labelrequest.cs">
-      <DependentUpon>labelrequest.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Facade\Carriers\TNT\Label\TNTLabelRequest.cs" />
-    <Compile Include="Facade\Carriers\TNT\ManifestDetail\document.cs">
-      <DependentUpon>document.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Facade\Carriers\TNT\ManifestSummary\document.cs">
-      <DependentUpon>document.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Facade\Carriers\TNT\Price\PriceRequest.cs">
-      <DependentUpon>PriceRequest.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Facade\Carriers\TNT\Price\PriceResponse.cs">
-      <DependentUpon>PriceResponse.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Facade\Carriers\TNT\Price\TNTPriceChecker.cs" />
-    <Compile Include="Facade\Carriers\TNT\Price\TNTPriceService.cs" />
     <Compile Include="Facade\E1Data.cs" />
     <Compile Include="Facade\BaseFacade.cs" />
     <Compile Include="Facade\ContextConfiguration.cs" />
@@ -125,36 +102,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Facade\Carriers\TNT\Label\ExpressLabel%2520Integration%2520Guide.pdf" />
-    <None Include="Facade\Carriers\TNT\Label\ExpressLabel_TechnicalV2_0.pdf" />
-    <None Include="Facade\Carriers\TNT\Label\response\commonDefinitions.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Facade\Carriers\TNT\Label\request\commonDefinitions.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Facade\Carriers\TNT\Label\request\labelrequest.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Facade\Carriers\TNT\ManifestDetail\document.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Facade\Carriers\TNT\ManifestSummary\document.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Facade\Carriers\TNT\Price\commonDefinitions.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Facade\Carriers\TNT\Label\response\labelresponse.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Facade\Carriers\TNT\Price\PriceServiceDocumentation.pdf" />
-    <None Include="Facade\Carriers\TNT\Price\PriceRequest.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Facade\Carriers\TNT\Price\PriceResponse.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

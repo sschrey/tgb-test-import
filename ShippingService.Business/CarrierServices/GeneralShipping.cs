@@ -15,6 +15,10 @@ namespace ShippingService.Business.CarrierServices
         public event ShippingFactory.ErrorMessage Error;
 
         public Order Order { get; set; }
+        public bool CanPrint
+        {
+            get { return false; }
+        }
 
         public bool Execute() 
         {

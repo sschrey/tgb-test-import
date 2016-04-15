@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShippingService.Business.EF.Facade.Carriers.TNT.Label
+namespace ShippingService.Business.CarrierServices.TNT.Label
 {
     public class TNTPiece
     {

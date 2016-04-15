@@ -1,4 +1,4 @@
-﻿using ShippingService.Business.EF.Facade.Carriers.TNT.Price.PriceRequest;
+﻿using ShippingService.Business.CarrierServices.TNT.Price.PriceRequest;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Tweddle.Commons.Extensions;
 
-namespace ShippingService.Business.EF.Facade.Carriers.TNT.Price
+namespace ShippingService.Business.CarrierServices.TNT.Price
 {
 
     public static class ProductType

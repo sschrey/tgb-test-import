@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Xml;
 using Tweddle.Commons.Vies;
+using ShippingService.Business.CarrierServices.TNT.Label;
 
 namespace ShippingService.Business.CarrierServices
 {
@@ -22,10 +23,10 @@ namespace ShippingService.Business.CarrierServices
         public IFacade Facade { get; set; }
         public string Message { get; set; }
 
+        private string _consignmentNumber;
         private string _consignmentRef;
         private string _responseXml;
-        private string _consignmentNumber;
-        private decimal ShipPrice;        
+
 
         public TNTShipping()
         {
@@ -36,51 +37,82 @@ namespace ShippingService.Business.CarrierServices
         {
             throw new NotImplementedException();
         }
-
-
-        public string GetRecord()
+        public bool CanPrint
         {
-            if (Order == null)
-            {
-                return "No order found";
-            }
-            if(Order.Lines == null || Order.Lines.Count==0)
-            {
-                return "No orderlines found";
-            }
-            if (Order.Lines[0].Packs == null || Order.Lines[0].Packs.Count == 0)
-            {
-                return "No packs found in order line 1";
-            }
-
-            _consignmentNumber = Order.Lines[0].Packs[0].PackedContainer.TrackingNumber;
-            _consignmentRef = Order.ReferenceNumber;
-            var s = CreateRecords();
-
-            return s;
+            get { return true; }
         }
+
+        /// <summary>
+        /// After the order has been serialized into XML, send it to the XML service
+        /// </summary>
+        /// <param name="xml"></param>
+        /// <returns>XML response from TNT</returns>
+        public string SendLabelRequest(string xml)
+        {
+            string response = TNTLabelRequest.Send(xml);
+            
+            return response;
+        }
+
+        /// <summary>
+        /// Package an order into an XML message for TNT
+        /// </summary>
+        /// <returns></returns>
+        public string CreateLabelRequest()
+        {
+            var order = Order;
+            string tntAccountNumber = ConfigurationManager.AppSettings["TNTAccountNumber"];
+            var carriermodes = Facade.GetCarrierModes();
+            
+            List<TNTPieceLine> lines = new List<TNTPieceLine>();
+            int pccounter = 0;
+            foreach (var pc in order.PackedContainers)
+            {
+                pccounter++;
+                TNTPieceLine line = new TNTPieceLine();
+                lines.Add(line);
+                line.GoodsDescription = string.Join("\n", "box" + pccounter);
+                line.HeightInM = (double)pc.Container.Height * 0.001;
+                line.LengthInM = (double)pc.Container.Depth * 0.001;
+                line.WeightInKG = (double)pc.Weight * 0.001;
+                line.WidthInM = (double)pc.Container.Width * 0.001;
+
+                line.Pieces.Add(new TNTPiece() { Reference = order.ReferenceNumber });
+            }
+
+            TNTServiceTranslator trans = new TNTServiceTranslator(order.MainAddress.CountryCode, carriermodes.First(cm => cm.Id == order.ShippedCarrierModeOption));
+            string request = TNTLabelRequest.CreateRequest(
+                    consignmentnumber: order.PackedContainers[0].TrackingNumber,
+                    consignmentReference: order.ReferenceNumber,
+                    senderName: TGBAddress.CompanyName,
+                    senderAddressLine1: TGBAddress.AddressLine1,
+                    senderPostcode: TGBAddress.PostalCode,
+                    senderTown: TGBAddress.City,
+                    deliveryName: order.MainAddress.CompanyName,
+                    deliveryAddressLine1: order.MainAddress.AddressLine1,
+                    deliveryCountry: order.MainAddress.CountryCode,
+                    deliveryPostCode: order.MainAddress.PostalCode,
+                    deliveryTown: order.MainAddress.City,
+                    productType: trans.ProductType,
+                    productId: trans.ProductId,
+                    lineOfBusiness: trans.LineOfBusiness,
+                    accountNumber: tntAccountNumber,
+                    pieceLines: lines
+                    );
+
+            return request;
+        }
+
+
 
         public bool Execute()
         {
-            string path = ConfigurationManager.AppSettings["TNTDirectory"];
-            if (string.IsNullOrEmpty(path))
-                throw new ApplicationException("AppSetting TNTDirectory must be defined");
-            if (!Directory.Exists(path))
-                throw new ApplicationException("AppSetting TNTDirectory does not exist (or not accesible");
-
-            Init();
-            if (ShipPrice == 0) return false;
-
             CreateTrackingNumber();
-
-            Debug.WriteLine("Total Weight = " + Order.PackedContainers.Sum(pc => pc.Weight));
-            var s = CreateRecords();
-            //write "TNTFull.txt" to putput directory
-            var dateStamp = DateTime.Now.ToString("yyyyMMddHHmmss");
-            Log.Debug("Writing file " + Path.Combine(path, "TNTFUll" + dateStamp + ".txt"));
-            File.WriteAllText(Path.Combine(path, "TNTFUll" + dateStamp + ".txt"), s);
-
             UpdateTrackingNumber();
+            string requestxml = CreateLabelRequest();
+            string responsexml = SendLabelRequest(requestxml);
+            WriteLabel(responsexml);
+
 
             string UpdateE1AsString = ConfigurationManager.AppSettings["UPDATE_E1"];
             bool updateE1 = false;
@@ -97,40 +129,33 @@ namespace ShippingService.Business.CarrierServices
             {
                 Facade.Ship(Order, updateE1);
             }
-            
             return true;
         }
 
-        internal void Init()
+        private void WriteLabel(string xml)
         {
-            _consignmentRef = Order.ReferenceNumber;
-            
-            var sp = new ShippingTNTPriceInfo();
-
-            sp.City = Order.MainAddress.City;
-            sp.Country = Order.MainAddress.CountryCode;
-            sp.Pkgs = Order.PackedContainers.Count;
-            sp.PostalCode = Order.MainAddress.PostalCode;
-            sp.ShipFromAddress = TGBAddress.AddressLine1;
-            sp.ShipFromAttention = TGBAddress.Attention;
-            sp.ShipFromCity = TGBAddress.City;
-            sp.ShipFromCompany = TGBAddress.CompanyName;
-            sp.ShipFromCountry = TGBAddress.CountryCode;
-            sp.ShipFromPhone = TGBAddress.PhoneNumber;
-            sp.ShipFromPostal = TGBAddress.PostalCode;
-            sp.Weight = GrToKg(Order.PackedContainers.Sum(pac => pac.Weight));
-            sp.TotalVolume = Volume(Order.PackedContainers.Sum(pc => pc.Container.VolumeInM3));
-            sp.TNTLogin = ConfigurationManager.AppSettings["TNTLogin"];
-            sp.TNTPass = ConfigurationManager.AppSettings["TNTPass"];
-
-            string skipPriceCheck = ConfigurationManager.AppSettings["SkipTNTPriceCheck"];
-            if(!string.IsNullOrEmpty(skipPriceCheck) && skipPriceCheck == "1")
+            string filename = string.Format("Order{0}_{1}.xml", Order.ReferenceNumber, _consignmentNumber);
+            string filepath = Path.Combine(LabelStoragPath, filename);
+            File.WriteAllText(filepath, xml);
+            foreach (var pc in Order.PackedContainers)
             {
-                ShipPrice = 1;
+                pc.TNTLabel = filepath;
             }
-            else
-            { 
-                ShipPrice = GetTNTPrice(sp);
+        }
+
+        public static string LabelStoragPath
+        {
+            get
+            {
+                //Get the path to where the TNT labels will be saved and verify that it is valid
+                string tntLabelStoragePath = ConfigurationManager.AppSettings["TNTLabelDirectory"];
+                if (string.IsNullOrEmpty(tntLabelStoragePath))
+                    tntLabelStoragePath = @"\\192.168.0.25\Data\TNTLabels";
+
+                if (!Directory.Exists(tntLabelStoragePath))
+                    Directory.CreateDirectory(tntLabelStoragePath);
+
+                return tntLabelStoragePath;
             }
         }
 
@@ -143,6 +168,41 @@ namespace ShippingService.Business.CarrierServices
                     po.PackedContainer.TrackingNumber = _consignmentNumber;
                 }
             }
+        }
+
+        private void CreateTrackingNumber()
+        {
+
+            //the TNT consignment number is 9 digits long number including a final checkdigit 
+            int nextNumber = Facade.GetNextTNTConsignmentNoteNumber();
+            while (nextNumber < 10000000) nextNumber = nextNumber * 10;
+            //checkdigit using modulus 7 = con - (integer(con/7)*7
+            var check = (int)(nextNumber - (Math.Floor((double)nextNumber / 7) * 7));
+            _consignmentNumber = nextNumber.ToString() + check;
+        }
+
+
+        #region GetRecords
+        public string GetRecord()
+        {
+            if (Order == null)
+            {
+                return "No order found";
+            }
+            if (Order.Lines == null || Order.Lines.Count == 0)
+            {
+                return "No orderlines found";
+            }
+            if (Order.Lines[0].Packs == null || Order.Lines[0].Packs.Count == 0)
+            {
+                return "No packs found in order line 1";
+            }
+
+            _consignmentNumber = Order.Lines[0].Packs[0].PackedContainer.TrackingNumber;
+            _consignmentRef = Order.ReferenceNumber;
+            var s = CreateRecords();
+
+            return s;
         }
 
         internal string CreateRecords()
@@ -170,12 +230,12 @@ namespace ShippingService.Business.CarrierServices
             sb.Append(WriteField("", 60)); //6 Special Instructions len60
             sb.Append(WriteField(Order.ShippedCarrierMode, 5)); //7 Service Code len5
             sb.Append(WriteField("S", 1)); //8 Payment Indicator len1
-            sb.Append(WriteField(string.IsNullOrEmpty(Order.ShippedCarrierModeOption)?"": Order.ShippedCarrierModeOption, 3)); //9 Sub Service Option 1 len3 (eg PR for priority- we always remove)
+            sb.Append(WriteField(string.IsNullOrEmpty(Order.ShippedCarrierModeOption) ? "" : Order.ShippedCarrierModeOption, 3)); //9 Sub Service Option 1 len3 (eg PR for priority- we always remove)
             sb.Append(WriteField("", 3)); //10 Sub Service Option 2 len3
             sb.Append(WriteField("", 3)); //11 Sub Service Option 3
             sb.Append(WriteField("", 3)); //12 Sub Service Option 4
             sb.Append(WriteField(Order.PackedContainers.Count, 4)); //13 Total Packages
-            sb.Append(WriteField(GrToKg(Order.PackedContainers.Sum(pc => pc.Weight)) , 8, 3)); //14 Total Weight
+            sb.Append(WriteField(GrToKg(Order.PackedContainers.Sum(pc => pc.Weight)), 8, 3)); //14 Total Weight
             sb.Append(WriteField("EUR", 3)); //15 Currency Code (EUR) len3
             if (IsExport())
             {
@@ -206,18 +266,6 @@ namespace ShippingService.Business.CarrierServices
             sb.Append(WriteField(Order.OrderNumber, 60)); //32 Invoice Number 2 len60
             sb.Append(WriteField(Order.ZoneNumberDescription, 60)); //33 Invoice Number 3 len60
             sb.Append(Environment.NewLine);
-        }
-
-        private void CreateTrackingNumber()
-        {
-            
-            //the TNT consignment number is 9 digits long number including a final checkdigit 
-            int nextNumber = Facade.GetNextTNTConsignmentNoteNumber();
-            while (nextNumber < 10000000) nextNumber = nextNumber * 10;
-            //checkdigit using modulus 7 = con - (integer(con/7)*7
-            var check = (int)(nextNumber - (Math.Floor((double)nextNumber / 7) * 7));
-            _consignmentNumber = nextNumber.ToString() + check;
-            Debug.WriteLine(_consignmentNumber);
         }
 
         private void AddRecordB(StringBuilder sb)
@@ -299,19 +347,14 @@ namespace ShippingService.Business.CarrierServices
         private string GrToKg(double grams)
         {
             return (grams / 1000).ToString();
-            
+
         }
 
         private string Volume(double m3)
         {
             return m3.ToString("0.000");
         }
-
-        private string Cm3ToM3(int volumeInCm3)
-        {
-            return ((double)volumeInCm3 / 1000000).ToString();
-        }
-
+        
         private string CentsToEuro(int cents)
         {
             return ((double)cents / 100).ToString();
@@ -324,13 +367,13 @@ namespace ShippingService.Business.CarrierServices
             if (cm == 0)
                 return 1;
             else
-                return cm;            
+                return cm;
         }
 
         private void AddRecordC(StringBuilder sb)
         {
             var countPacks = 0;
-            
+
             foreach (var pc in Order.PackedContainerByContainerType)
             {
                 countPacks++;
@@ -378,12 +421,12 @@ namespace ShippingService.Business.CarrierServices
             }
         }
 
-        private void AddRecordD(StringBuilder sb, 
-            int countPacks, 
-            string partName, 
-            int packedQty, 
-            int value, 
-            int articleSequence, 
+        private void AddRecordD(StringBuilder sb,
+            int countPacks,
+            string partName,
+            int packedQty,
+            int value,
+            int articleSequence,
             double weightPerPart)
         {
             //This file describes the articles contained within the packages. There can be a number of article types within a package type.
@@ -472,135 +515,6 @@ namespace ShippingService.Business.CarrierServices
                 .Substring(0, length); //if too long
         }
 
-        private decimal GetTNTPrice(ShippingTNTPriceInfo shipInfo)
-        {
-            var xml = shipInfo.ToXml();
-
-            //Open Connection and send input-XML to TNT-webserver            
-            var url = "https://iConnection.tnt.com/Pricegate.asp";
-            var wr = WebRequest.Create(url);
-            wr.Method = "POST";
-            var encoding = new ASCIIEncoding(); //does not support Unicode
-            byte[] postBuffer = encoding.GetBytes("xml_in=" + xml);
-            wr.ContentLength = postBuffer.Length;
-            wr.ContentType = "application/x-www-form-urlencoded";
-            HttpWebResponse response;
-            try
-            {
-                using (Stream postData = wr.GetRequestStream())
-                {
-                    postData.Write(postBuffer, 0, postBuffer.Length);
-                }
-                // Set the content type of the data being posted.
-                response = (HttpWebResponse)wr.GetResponse();
-            }
-            catch (WebException)
-            {
-                ShippingFactory.ErrorMessage em = Error;
-                if (em != null) em("Cannot connect to TNT server " + url);
-                return 0; //invalid response
-            }
-            // Get the stream containing content returned by the server.
-            Stream dataStream = response.GetResponseStream();
-            // Open the stream using a StreamReader for easy access.
-            using (var reader = new StreamReader(dataStream))
-            {
-                // Read the content.
-                _responseXml = reader.ReadToEnd();
-            }
-            if (string.IsNullOrEmpty(_responseXml))
-            {
-                ShippingFactory.ErrorMessage em = Error;
-                if (em != null) em("No response from TNT server");
-                return 0; //invalid response
-            }
-            Log.Debug("TNT Price Response " + _responseXml);
-            var responseDoc = new XmlDocument();
-            responseDoc.LoadXml(_responseXml);
-
-            //Get the Values of these nodes
-            // TNT Exception:
-            // When a domestic shipment is requested from and into BE, the rate 30
-            // should be translated to 15N
-
-            string shipCode = Order.ShippedCarrierMode;
-            if (Order.MainAddress.CountryCode.ToUpper() == "BE" && shipCode == "30")
-            {
-                shipCode = "15N";
-            }
-
-            //another exception for 728 = TNT Budget Freight service
-            if (shipCode == "728")
-            {
-                return 1;
-            }
-
-
-            var rate = responseDoc.SelectSingleNode(@"//PRICE[OPTION[.='NONE'] and SERVICE[.='" + shipCode + "']]/RATE");
-            if (rate != null)
-                return Convert.ToDecimal(rate.InnerText);
-
-            //the old logic, the above xpath should be fine
-
-            XmlNodeList services = responseDoc.SelectNodes("//PRICE//SERVICE");
-            XmlNodeList serviceDescs = responseDoc.SelectNodes("//PRICE//SERVICEDESC");
-            XmlNodeList rates = responseDoc.SelectNodes("//PRICE//RATE");
-            XmlNodeList options = responseDoc.SelectNodes("//PRICE//OPTION");
-
-            if (rates != null && rates.Count == 0)
-            {
-                XmlNode xml_ValueCode = responseDoc.SelectSingleNode("//CODE");
-                string errcode = xml_ValueCode.InnerText;
-                if (errcode != "P13")
-                {
-                    var errDesc = TNTErrorCode.GetDescByCode(errcode);
-                    ShippingFactory.ErrorMessage em = Error;
-                    if (em != null) em(errDesc);
-                    return 0;
-                }
-                if (errcode == "P13")
-                    return 0.25m;
-            }
-
-            decimal shipprice = 0;
-
-            //Loop Thru Rates
-            for (int i = 0; i <= (rates.Count - 1); i++)
-            {
-                XmlNode xml_option = options[i];
-
-                if (xml_option.InnerText == "NONE")
-                {
-                    XmlNode value = rates[i];
-                    string price = value.InnerText;
-                    XmlNode service = services[i];
-                    string shipService = service.InnerText;
-                    if (price != "0.00")
-                    {
-                        string doctype;
-                        if (string.IsNullOrEmpty(shipService))
-                            doctype = " ";
-                        else if (shipService.EndsWith("N"))
-                            doctype = " (Non Documents)";
-                        else if (shipService.EndsWith("D"))
-                            doctype = " (Documents)";
-                        else
-                            doctype = " ";
-                        XmlNode serviceDesc = serviceDescs[i];
-                        string desc = serviceDesc.InnerText;
-                        Message = Message + "Available TNT Ship Types: " + desc + doctype + "-" + shipService +
-                                 " Price " + price + Environment.NewLine;
-                    }
-
-                    //When XML Matches Shipping Type capture the price for shipping
-                    if (shipService == Order.ShippedCarrierMode & price != "0.00")
-                    {
-                        shipprice = Convert.ToDecimal(price);
-                    }
-                }
-            }
-            return shipprice;
-        }
-
+        #endregion
     }
 }

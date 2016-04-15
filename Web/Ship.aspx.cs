@@ -204,7 +204,10 @@ namespace Web
                 //order is shipped and away
                 pnlOrder.Visible = false;
                 lblFeedBack.Text = string.Format("return order {0} shipped by {1}/{2}", order.Id, carrier.Name, carrierMode.Name);
-                TryToPrint(order);
+                if (shipping.CanPrint)
+                {
+                    TryToPrint(order);
+                }
             }
 
         }
@@ -216,8 +219,6 @@ namespace Web
 
         protected void TryToPrint(Order o)
         {
-            if(!o.IsUPSOrder)
-                return; //TNT etc not applicable
 
             ShowReturnLabelCreator(o);
 

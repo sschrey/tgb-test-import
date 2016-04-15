@@ -21,6 +21,7 @@ namespace ShippingService.Business.Domain
         public int Weight { get; set; }
         public string TrackingNumber { get; set; }
         public string UPSLabel { get; set; }
+        public string TNTLabel { get; set; }
         public string ReturnUPSLabel { get; set; }
         public int EstimatedWeight { get; set; }
         public DateTime? ShippedOn { get; set; }

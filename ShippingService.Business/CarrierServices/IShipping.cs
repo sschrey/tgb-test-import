@@ -14,5 +14,6 @@ namespace ShippingService.Business.CarrierServices
         Order Order { get; set; }
         bool Execute();
         void SetReturnShipment();
+        bool CanPrint { get; }
     }
 }

@@ -31,6 +31,11 @@ namespace ShippingService.Business.CarrierServices
         private bool isReturnShipment { get; set; }
         private static IUPS shippingData = new T();
         
+        public bool CanPrint
+        {
+            get { return true; }
+        }
+
 
         public UPSShipping()
         {

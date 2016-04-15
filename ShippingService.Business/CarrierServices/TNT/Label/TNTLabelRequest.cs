@@ -1,4 +1,4 @@
-﻿using ShippingService.Business.EF.Facade.Carriers.TNT.Label.Request;
+﻿using ShippingService.Business.CarrierServices.TNT.Label.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Tweddle.Commons.Extensions;
 
-namespace ShippingService.Business.EF.Facade.Carriers.TNT.Label
+namespace ShippingService.Business.CarrierServices.TNT.Label
 {
     public static class TNTLabelRequest
     {
