@@ -11,6 +11,8 @@ using System.Net;
 using System.Xml;
 using Tweddle.Commons.Vies;
 using ShippingService.Business.CarrierServices.TNT.Label;
+using Tweddle.Commons.Extensions;
+using Seagull.BarTender.Print;
 
 namespace ShippingService.Business.CarrierServices
 {
@@ -22,12 +24,11 @@ namespace ShippingService.Business.CarrierServices
         public Order Order { get; set; }
         public IFacade Facade { get; set; }
         public string Message { get; set; }
+        public string WebAppRoot { get; set; }
 
         private string _consignmentNumber;
         private string _consignmentRef;
-        private string _responseXml;
-
-
+        
         public TNTShipping()
         {
             Message = string.Empty;
@@ -516,5 +517,140 @@ namespace ShippingService.Business.CarrierServices
         }
 
         #endregion
+
+        public List<PrintFile> GetPrintFiles()
+        {
+            List<PrintFile> printfiles = new List<PrintFile>();
+            foreach (string tntLabel in Order.TNTLabels)
+            {
+                string fileRef = Path.Combine(LabelStoragPath, tntLabel);
+                printfiles.Add(new PrintFile() { Filename = fileRef });
+            }
+            return printfiles;
+        }
+
+        private string GetLabelFilePath()
+        {
+            string btwfilePath = Path.Combine(WebAppRoot, "Content/TNT/BTW/label.btw");
+
+            if (!System.IO.File.Exists(btwfilePath))
+            {
+                throw new ApplicationException("Could not find the label template at " + btwfilePath);
+            }
+            return btwfilePath;
+            
+        }
+
+        public bool Print(string printername)
+        {
+            var tntlabel = Order.TNTLabels.First();
+            StreamReader sr = new StreamReader(tntlabel);
+            string xml = sr.ReadToEnd();
+            sr.Close();
+            sr.Dispose();
+
+            bool ok = true;
+            
+            var responseobj = xml.ToObject<ShippingService.Business.CarrierServices.TNT.Label.Response.labelResponse>();
+
+            var engine = new Engine(true);
+            var format = engine.Documents.Open(GetLabelFilePath());
+            format.PrintSetup.PrinterName = printername;
+
+            if (responseobj.consignment == null)
+            {
+                throw new ApplicationException("no consignment found");
+            }
+
+            foreach (var consignment in responseobj.consignment)
+            {
+
+                var consignmentLabelData = consignment.consignmentLabelData;
+
+                format.SubStrings["marketDisplay"].Value = consignmentLabelData.marketDisplay.Value;
+                format.SubStrings["transportDisplay"].Value = consignmentLabelData.transportDisplay.Value;
+
+
+                var ishazardous = consignmentLabelData.option != null && consignmentLabelData.option.FirstOrDefault(o => o.id == "HZ") != null;
+                if (!ishazardous)
+                    format.SubStrings["hazardous"].Value = string.Empty;
+
+                format.SubStrings["xrayDisplay"].Value = consignmentLabelData.xrayDisplay.Value;
+                format.SubStrings["freeCirculationDisplay"].Value = consignmentLabelData.freeCirculationDisplay.Value;
+                format.SubStrings["sortSplitText"].Value = consignmentLabelData.sortSplitText;
+                format.SubStrings["consignmentNumber"].Value = consignmentLabelData.consignmentNumber;
+                format.SubStrings["service"].Value = consignmentLabelData.product.Value;
+
+
+                string option = string.Empty;
+                if (consignmentLabelData.option != null && consignmentLabelData.option.Count() > 1)
+                {
+                    foreach (var optionitem in consignmentLabelData.option)
+                    {
+                        option += optionitem.id + " ";
+                    }
+                }
+                else if (consignmentLabelData.option != null && consignmentLabelData.option.Count() == 1)
+                {
+                    format.SubStrings["option"].Value = consignmentLabelData.option[0].Value;
+                }
+                format.SubStrings["option"].Value = option;
+                format.SubStrings["accountNumber"].Value = consignmentLabelData.account.accountNumber;
+                format.SubStrings["originDepotCode"].Value = consignmentLabelData.originDepot.depotCode;
+                format.SubStrings["collectionDate"].Value = consignmentLabelData.collectionDate.ToString("dd MMM yyyy");
+                format.SubStrings["deliveryAddress"].Value = consignmentLabelData.delivery.name;
+                format.SubStrings["deliveryAddress"].Value += Environment.NewLine + consignmentLabelData.delivery.addressLine1;
+                if (!string.IsNullOrEmpty(consignmentLabelData.delivery.addressLine2))
+                    format.SubStrings["deliveryAddress"].Value += Environment.NewLine + consignmentLabelData.delivery.addressLine2;
+                if (!string.IsNullOrEmpty(consignmentLabelData.delivery.addressLine3))
+                    format.SubStrings["deliveryAddress"].Value += Environment.NewLine + consignmentLabelData.delivery.addressLine3;
+                format.SubStrings["deliveryAddress"].Value += Environment.NewLine + consignmentLabelData.delivery.postcode + " " + consignmentLabelData.delivery.town;
+                format.SubStrings["deliveryAddress"].Value += Environment.NewLine + consignmentLabelData.delivery.country;
+                var routing = string.Empty;
+                var sortDepotCode = string.Empty;
+                foreach (var transitdepot in consignmentLabelData.transitDepots)
+                {
+                    if (transitdepot is ShippingService.Business.CarrierServices.TNT.Label.Response.sortDepotType)
+                    {
+                        routing += ((ShippingService.Business.CarrierServices.TNT.Label.Response.sortDepotType)transitdepot).depotCode + "-" + ((ShippingService.Business.CarrierServices.TNT.Label.Response.sortDepotType)transitdepot).sortCellIndicator.Value + Environment.NewLine;
+                        sortDepotCode = ((ShippingService.Business.CarrierServices.TNT.Label.Response.sortDepotType)transitdepot).sortLocationCode;
+                    }
+                    if (transitdepot is ShippingService.Business.CarrierServices.TNT.Label.Response.actionDepotType)
+                    {
+                        routing += ((ShippingService.Business.CarrierServices.TNT.Label.Response.actionDepotType)transitdepot).depotCode + "-" + ((ShippingService.Business.CarrierServices.TNT.Label.Response.actionDepotType)transitdepot).actionDayOfWeek + Environment.NewLine;
+                    }
+                    if (transitdepot is ShippingService.Business.CarrierServices.TNT.Label.Response.depotType)
+                    {
+                        //this type has the name transitDepot
+                        routing += ((ShippingService.Business.CarrierServices.TNT.Label.Response.depotType)transitdepot).depotCode + Environment.NewLine;
+                    }
+                }
+                format.SubStrings["routing"].Value = routing;
+                format.SubStrings["sortDepotCode"].Value = sortDepotCode;
+
+                format.SubStrings["postcode"].Value = consignmentLabelData.clusterCode;
+                format.SubStrings["destDepotCode"].Value = consignmentLabelData.destinationDepot.depotCode + "-" + consignmentLabelData.destinationDepot.dueDayOfMonth;
+
+                foreach (var pieceLabelData in consignment.pieceLabelData)
+                {
+                    format.SubStrings["pieceData"].Value = pieceLabelData.pieceNumber + " of " + consignmentLabelData.totalNumberOfPieces;
+                    var isWeightHighlighted = pieceLabelData.weightDisplay.renderInstructions == ShippingService.Business.CarrierServices.TNT.Label.Response.renderInstructionsTypeRenderInstructions.highlighted;
+                    format.SubStrings["weight"].Value = isWeightHighlighted ? string.Empty : pieceLabelData.weightDisplay.Value;
+                    format.SubStrings["weightHighlighted"].Value = isWeightHighlighted ? pieceLabelData.weightDisplay.Value : string.Empty;
+                    format.SubStrings["customerReference"].Value = pieceLabelData.pieceReference;
+                    format.SubStrings["barcode"].Value = pieceLabelData.barcode.Value;
+
+                    var result = format.Print();
+                    if(ok)
+                    {
+                        ok = result == Result.Success;
+                    }
+
+                }
+            }
+            engine.Stop(SaveOptions.DoNotSaveChanges);
+
+            return ok;
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace ShippingService.Business.CarrierServices
     {
         public delegate void ErrorMessage(string msg);
 
-        public static IShipping GetShipping(string carrier, CarrierMode mode, Order order, IFacade facade)
+        public static IShipping GetShipping(string carrier, CarrierMode mode, Order order, IFacade facade, string webAppRoot)
         {
 
             if (carrier == null) return null;
@@ -27,7 +27,7 @@ namespace ShippingService.Business.CarrierServices
                     break;
 
                 case "87433": //"TNT BENELUX":
-                    shipper = new TNTShipping { Order = order, ShippingVendor = mode, Facade = facade };
+                    shipper = new TNTShipping { Order = order, ShippingVendor = mode, Facade = facade, WebAppRoot = webAppRoot };
                     break;
              
                 default:

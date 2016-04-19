@@ -120,26 +120,7 @@ namespace Web
             Page.Validate();
             if (!Page.IsValid) return;
 
-            var order = GetOrder();
-            if (order == null)
-            {
-                Page.Validators.Add(new BusinessValidationError("Cannot find order"));
-                return;
-            }
-
-            order.ShippedCarrier = ddlCarrier.SelectedValue;
-            order.ShippedCarrierMode = ddlCarrierMode.SelectedValue;
-            var carrierModeText = ddlCarrierMode.SelectedItem.Text;
-            if (carrierModeText.Contains('{') && carrierModeText.Contains('}'))
-            {
-                order.ShippedCarrierModeOption = carrierModeText.Substring(carrierModeText.IndexOf('{') + 1, carrierModeText.IndexOf('}') - carrierModeText.IndexOf('{') - 1);
-            }
-           
-
-            var carrierMode = ApplicationContextHolder.Instance.Facade.GetCarrierModeById(ddlCarrierMode.SelectedValue);
-            var carrier = ApplicationContextHolder.Instance.Facade.GetCarrierById(ddlCarrier.SelectedValue);
-
-            var shipping = ShippingFactory.GetShipping(ddlCarrier.SelectedValue, carrierMode, order, ApplicationContextHolder.Instance.Facade);
+            IShipping shipping = GetShipping();
 
             if (shipping == null)
             {
@@ -147,6 +128,8 @@ namespace Web
                 return;
             }
             shipping.Error += Shipping_Error;
+            var order = shipping.Order;
+
             if (!shipping.Execute())
                 Page.Validators.Add(new BusinessValidationError(shipping.Message.Replace(Environment.NewLine, "<br/>")));
             else
@@ -155,25 +138,44 @@ namespace Web
                 //we set the status here, because of the ups return label creation to work properly
                 order.E1Status = "560";
                 pnlOrder.Visible = false;
-                lblFeedBack.Text = string.Format("Order {0} shipped by {1}/{2}", order.Id, carrier.Name, carrierMode.Name);
-                TryToPrint(order);
+                lblFeedBack.Text = string.Format("Order {0} shipped by {1}/{2}", order.Id, ddlCarrier.SelectedItem.Text, ddlCarrierMode.SelectedItem.Text);
+                TryToPrint(shipping);
             }
+        }
+
+        private IShipping GetShipping()
+        {
+            var order = GetOrder();
+            if (order == null)
+            {
+                Page.Validators.Add(new BusinessValidationError("Cannot find order"));
+                return null;
+            }
+
+            order.ShippedCarrier = ddlCarrier.SelectedValue;
+            order.ShippedCarrierMode = ddlCarrierMode.SelectedValue;
+            var carrierModeText = ddlCarrierMode.SelectedItem.Text;
+
+            if (carrierModeText.Contains('{') && carrierModeText.Contains('}'))
+            {
+                order.ShippedCarrierModeOption = carrierModeText.Substring(carrierModeText.IndexOf('{') + 1, carrierModeText.IndexOf('}') - carrierModeText.IndexOf('{') - 1);
+            }
+            
+            var carrierMode = ApplicationContextHolder.Instance.Facade.GetCarrierModeById(ddlCarrierMode.SelectedValue);
+            var carrier = ApplicationContextHolder.Instance.Facade.GetCarrierById(ddlCarrier.SelectedValue);
+            var shipping = ShippingFactory.GetShipping(ddlCarrier.SelectedValue, carrierMode, order, ApplicationContextHolder.Instance.Facade, Server.MapPath("~/"));
+            
+            return shipping;
         }
 
         protected void btnPrint_Click(object sender, EventArgs e)
         {
-            bool ok = true;
+            var shipping = GetShipping();
             string printer = ddlPrinters.SelectedValue;
-            if (string.IsNullOrEmpty(printer)) return;
-            foreach (ListItem item in bullFiles.Items)
-            {
-                if (string.IsNullOrEmpty(item.Text)) continue;
-                //PrintManager.Print(item.Text, printer);
-                bool print = RAWPrinterHelper.SendFileToPrinter(printer, item.Text);
-                if (ok)
-                    print = ok;
-            };
 
+            if (string.IsNullOrEmpty(printer)) return;
+
+            var ok = shipping.Print(printer);
             if(ok)
             {
                 Response.Redirect("barcode-entry.aspx");
@@ -192,8 +194,7 @@ namespace Web
             var carrierMode = ApplicationContextHolder.Instance.Facade.GetCarrierModeById(ddlCarrierMode.SelectedValue);
             var carrier = ApplicationContextHolder.Instance.Facade.GetCarrierById(ddlCarrier.SelectedValue);
 
-            var shipping = ShippingFactory.GetShipping(ddlCarrier.SelectedValue, carrierMode, order, ApplicationContextHolder.Instance.Facade);
-            //var shipping = ShippingFactory.GetShipping(carrier, carrierMode, order, ApplicationContextHolder.Instance.Facade);
+            var shipping = ShippingFactory.GetShipping(ddlCarrier.SelectedValue, carrierMode, order, ApplicationContextHolder.Instance.Facade, Server.MapPath("~/"));
             shipping.SetReturnShipment();
             
             shipping.Error += Shipping_Error;
@@ -206,7 +207,7 @@ namespace Web
                 lblFeedBack.Text = string.Format("return order {0} shipped by {1}/{2}", order.Id, carrier.Name, carrierMode.Name);
                 if (shipping.CanPrint)
                 {
-                    TryToPrint(order);
+                    TryToPrint(shipping);
                 }
             }
 
@@ -217,18 +218,15 @@ namespace Web
             pnlReturnLabel.Visible = o.Status == OrderStatus.Shipped && !o.HasReturnLabel;
         }
 
-        protected void TryToPrint(Order o)
+        protected void TryToPrint(IShipping shipping)
         {
-
-            ShowReturnLabelCreator(o);
+            ShowReturnLabelCreator(shipping.Order);
 
             bullFiles.Items.Clear();
             bullFiles.Target = "new";
-            foreach (string upsLabel in o.UPSLabels)
+            foreach (var label in shipping.GetPrintFiles())
             {
-                string fileRef = Path.Combine(UPSShipping<UPSBelgium>.LabelStoragPath, upsLabel);
-
-                bullFiles.Items.Add(new ListItem(fileRef, "file://" + fileRef.Replace("\\", "/")));
+                bullFiles.Items.Add(new ListItem(label.Filename, "file://" + label.Filename.Replace("\\", "/")));
             }
            
             ddlPrinters.DataSource = PrintManager.InstalledPrinters();

@@ -47,6 +47,10 @@
     <Reference Include="log4net">
       <HintPath>..\Lib\log4net.dll</HintPath>
     </Reference>
+    <Reference Include="Seagull.BarTender.Print, Version=11.0.2.1, Culture=neutral, PublicKeyToken=109ff779a1b4cbc7, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\Seagull.BarTender.Print.dll</HintPath>
+    </Reference>
     <Reference Include="Spring.Aop">
       <HintPath>..\Lib\Spring.Aop.dll</HintPath>
     </Reference>

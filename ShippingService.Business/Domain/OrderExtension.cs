@@ -66,6 +66,25 @@ namespace ShippingService.Business.Domain
             }
         }
 
+        public List<string> TNTLabels
+        {
+            get
+            {
+                List<string> tntLabels = new List<string>();
+                foreach (var l in Lines)
+                {
+                    foreach (var p in l.Packs)
+                    {
+                        if (!string.IsNullOrEmpty(p.PackedContainer.TNTLabel) && !tntLabels.Contains(p.PackedContainer.TNTLabel))
+                        {
+                            tntLabels.Add(p.PackedContainer.TNTLabel);
+                        }
+                    }
+                }
+                return tntLabels;
+            }
+        }
+
         public virtual OrderStatus Status
         {
             get

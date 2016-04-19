@@ -15,5 +15,14 @@ namespace ShippingService.Business.CarrierServices
         bool Execute();
         void SetReturnShipment();
         bool CanPrint { get; }
+
+        List<PrintFile> GetPrintFiles();
+        bool Print(string printername);
+    }
+
+    public class PrintFile
+
+    {
+        public string Filename { get; set; }
     }
 }

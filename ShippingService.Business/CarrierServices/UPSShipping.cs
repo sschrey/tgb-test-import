@@ -11,6 +11,7 @@ using System.Net;
 using System.IO;
 using Tweddle.Commons.Extensions;
 using System.Globalization;
+using Tweddle.Commons.RAWPrinter;
 
 namespace ShippingService.Business.CarrierServices
 {
@@ -514,6 +515,29 @@ namespace ShippingService.Business.CarrierServices
                 returnService.AddElement("Code").InnerText = "9";
 
             }
+        }
+
+        public List<PrintFile> GetPrintFiles()
+        {
+            List<PrintFile> printfiles = new List<PrintFile>();
+            foreach (string upsLabel in Order.UPSLabels)
+            {
+                string fileRef = Path.Combine(LabelStoragPath, upsLabel);
+                printfiles.Add(new PrintFile() { Filename = fileRef  });
+            }
+            return printfiles;
+        }
+
+        public bool Print(string printername)
+        {
+            bool ok = true;
+            foreach(var printFile in GetPrintFiles())
+            {
+                bool print = RAWPrinterHelper.SendFileToPrinter(printername, printFile.Filename);
+                if (ok)
+                    ok = print;
+            }
+            return ok;
         }
     }
 
