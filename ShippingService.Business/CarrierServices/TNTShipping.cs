@@ -81,7 +81,7 @@ namespace ShippingService.Business.CarrierServices
                 line.Pieces.Add(new TNTPiece() { Reference = order.ReferenceNumber });
             }
 
-            TNTServiceTranslator trans = new TNTServiceTranslator(order.MainAddress.CountryCode, carriermodes.First(cm => cm.Id == order.ShippedCarrierModeOption));
+            TNTServiceTranslator trans = new TNTServiceTranslator(order.MainAddress.CountryCode, carriermodes.First(cm => cm.Id == order.ShippedCarrierMode));
             string request = TNTLabelRequest.CreateRequest(
                     consignmentnumber: order.PackedContainers[0].TrackingNumber,
                     consignmentReference: order.ReferenceNumber,
@@ -544,7 +544,7 @@ namespace ShippingService.Business.CarrierServices
         public bool Print(string printername)
         {
             var tntlabel = Order.TNTLabels.First();
-            StreamReader sr = new StreamReader(tntlabel);
+            StreamReader sr = new StreamReader(Path.Combine(LabelStoragPath, tntlabel));
             string xml = sr.ReadToEnd();
             sr.Close();
             sr.Dispose();

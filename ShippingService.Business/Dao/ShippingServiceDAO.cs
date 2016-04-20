@@ -132,6 +132,7 @@ namespace ShippingService.Business.Dao
 
                 insertParams.AddWithValue("TrackingNumber", pc.TrackingNumber);
                 insertParams.AddWithValue("UPSLabel", pc.UPSLabel);
+                insertParams.AddWithValue("TNTLabel", pc.TNTLabel);
                 insertParams.AddWithValue("PackageCode", pc.Id);
                 insertParams.AddWithValue("ShippedOn", DateTime.Now);
 
@@ -389,6 +390,7 @@ namespace ShippingService.Business.Dao
                                           ,pc.[Weight]
                                           ,pc.[TrackingNumber]
                                           ,pc.[UPSLabel]
+                                          ,pc.[TNTLabel]
                                           ,pc.[ShipConfirmedOn]
                                           ,pc.[ReturnUPSLabel]
                                           ,pc.[ShippedOn]
@@ -593,6 +595,7 @@ namespace ShippingService.Business.Dao
                             Id = dr["packagecode"].ToString(),
                             TrackingNumber = dr["TrackingNumber"].ToString(),
                             UPSLabel = dr["UPSLabel"].ToString(),
+                            TNTLabel = dr["TNTLabel"].ToString(),
                             ShippedOn = dr["ShippedOn"] == DBNull.Value? null : (DateTime?)dr["ShippedOn"]
                         };
                     }

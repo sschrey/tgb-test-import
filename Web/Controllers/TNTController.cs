@@ -128,7 +128,7 @@ namespace Web.Controllers
             StringBuilder sb = new StringBuilder();
             foreach (var order in orders)
             {
-                var carriermode = carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierModeOption);
+                var carriermode = carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierMode);
                 var shipper = new TNTShipping { Order = order, ShippingVendor = carriermode, Facade = facade };
                 var record = shipper.GetRecord();
                 sb.Append(record);
@@ -181,7 +181,7 @@ namespace Web.Controllers
                     line.Pieces.Add(new TNTPiece() { Reference = order.ReferenceNumber });
                 }
 
-                TNTServiceTranslator trans = new TNTServiceTranslator(order.MainAddress.CountryCode, carriermodes.First(cm => cm.Id == order.ShippedCarrierModeOption));
+                TNTServiceTranslator trans = new TNTServiceTranslator(order.MainAddress.CountryCode, carriermodes.First(cm => cm.Id == order.ShippedCarrierMode));
                 string request = TNTLabelRequest.CreateRequest(
                        consignmentnumber: order.PackedContainers[0].TrackingNumber,
                        consignmentReference: order.ReferenceNumber,
@@ -254,7 +254,7 @@ namespace Web.Controllers
                     var consignments = new List<ShippingService.Business.CarrierServices.TNT.ManifestDetail.consignment>();
                     foreach (var order in item.Value)
                     {
-                        var carriermode = carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierModeOption);
+                        var carriermode = carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierMode);
                         var consignment = new ShippingService.Business.CarrierServices.TNT.ManifestDetail.consignment();
                         consignments.Add(consignment);
 
@@ -356,7 +356,7 @@ namespace Web.Controllers
             var consignments = new List<ShippingService.Business.CarrierServices.TNT.ManifestSummary.consignment>();
             foreach (var order in orders)
             {
-                var carriermode = carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierModeOption);
+                var carriermode = carriermodes.FirstOrDefault(cm => cm.Id == order.ShippedCarrierMode);
                 var shipper = new TNTShipping { Order = order, ShippingVendor = carriermode, Facade = facade };
 
                 var consignment = new ShippingService.Business.CarrierServices.TNT.ManifestSummary.consignment();

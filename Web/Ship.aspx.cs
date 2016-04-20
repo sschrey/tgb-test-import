@@ -55,7 +55,7 @@ namespace Web
                 return ApplicationContextHolder.Instance.Facade.GetOrders(new OrderCriteria() { Id = Request["Id"] })[0];
             }
 
-            return ApplicationContextHolder.Instance.Facade.GetTodoOrderById(Request["Id"]);
+            return ApplicationContextHolder.Instance.Facade.GetOrderbyId(Request["Id"]);
         }
         private Order GetOrder()
         {

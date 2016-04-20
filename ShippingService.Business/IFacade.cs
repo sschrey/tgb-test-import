@@ -12,6 +12,7 @@ namespace ShippingService.Business
         Container GetContainerById(string id);
         IList<Container> GetContainers();
         Order GetTodoOrderById(string id);
+        Order GetOrderbyId(string id);
         IList<Order> GetTodoOrders();
         IList<CarrierMode> GetCarrierModes();
         IList<CarrierMode> GetCarrierModes(string carrier, IList<CarrierMode> carriermodes = null, IList<CarrierModeFilter> carriermodefilters = null);

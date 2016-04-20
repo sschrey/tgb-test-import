@@ -21,6 +21,14 @@ namespace ShippingService.Business
 
             return Dao.GetOrders(oc).FirstOrDefault();
         }
+        public Order GetOrderbyId(string id)
+        {
+            var oc = new OrderCriteria();
+            oc.Id = id;
+
+            return Dao.GetOrders(oc).FirstOrDefault();
+        }
+
         public IList<Carrier> GetCarriers()
         {
             return Dao.GetCarriers();
@@ -53,8 +61,8 @@ namespace ShippingService.Business
             {
                 if(order.Status == OrderStatus.Shipped)
                 {
-                    order.ShippedCarrierMode = order.ProposedCarrier;
-                    order.ShippedCarrierModeOption = order.ProposedCarrierMode;
+                    order.ShippedCarrier = order.ProposedCarrier;
+                    order.ShippedCarrierMode = order.ProposedCarrierMode;
                 }
             }
 
