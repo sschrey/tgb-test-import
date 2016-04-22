@@ -127,7 +127,7 @@ namespace ShippingService.Business.Dao
 
             foreach (PackedContainer pc in o.PackedContainers)
             {
-                string cmdText = @"update packedcontainer set TrackingNumber = @TrackingNumber, UPSLabel = @UPSLabel, ShippedOn = @ShippedOn WHERE PackageCode = @PackageCode";
+                string cmdText = @"update packedcontainer set TrackingNumber = @TrackingNumber, UPSLabel = @UPSLabel, TNTLabel = @TNTLabel, ShippedOn = @ShippedOn WHERE PackageCode = @PackageCode";
                 IDbParameters insertParams = CreateDbParameters();
 
                 insertParams.AddWithValue("TrackingNumber", pc.TrackingNumber);
@@ -144,13 +144,14 @@ namespace ShippingService.Business.Dao
         {
             foreach (PackedContainer pc in o.PackedContainers)
             {
-                string cmdText = @"update packedcontainer set TrackingNumber = @TrackingNumber, UPSLabel = @UPSLabel, ShippedOn = @ShippedOn WHERE PackageCode = @PackageCode";
+                string cmdText = @"update packedcontainer set TrackingNumber = @TrackingNumber, UPSLabel = @UPSLabel, TNTLabel = @TNTLabel, ShippedOn = @ShippedOn WHERE PackageCode = @PackageCode";
                 IDbParameters insertParams = CreateDbParameters();
 
                 insertParams.AddWithValue("TrackingNumber", pc.TrackingNumber);
                 insertParams.AddWithValue("UPSLabel", pc.UPSLabel);
                 insertParams.AddWithValue("PackageCode", pc.Id);
                 insertParams.AddWithValue("ShippedOn", DateTime.Now);
+                insertParams.AddWithValue("TNTLabel", pc.TNTLabel);
 
                 AdoTemplate.ExecuteNonQuery(CommandType.Text, cmdText, insertParams);
             }

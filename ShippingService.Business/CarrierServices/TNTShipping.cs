@@ -140,7 +140,7 @@ namespace ShippingService.Business.CarrierServices
             File.WriteAllText(filepath, xml);
             foreach (var pc in Order.PackedContainers)
             {
-                pc.TNTLabel = filepath;
+                pc.TNTLabel = filename;
             }
         }
 
