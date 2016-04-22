@@ -113,7 +113,12 @@ namespace ShippingService.Business.CarrierServices
             string requestxml = CreateLabelRequest();
             string responsexml = SendLabelRequest(requestxml);
             WriteLabel(responsexml);
-
+            string errors = ReadErrors(responsexml);
+            if(!string.IsNullOrEmpty(errors))
+            {
+                Message = errors;
+                return false;
+            }
 
             string UpdateE1AsString = ConfigurationManager.AppSettings["UPDATE_E1"];
             bool updateE1 = false;
@@ -142,6 +147,20 @@ namespace ShippingService.Business.CarrierServices
             {
                 pc.TNTLabel = filename;
             }
+        }
+
+        private string ReadErrors(string xml)
+        {
+            string errors = string.Empty;
+            ShippingService.Business.CarrierServices.TNT.Label.Response.labelResponse response = xml.ToObject<ShippingService.Business.CarrierServices.TNT.Label.Response.labelResponse>();
+            if(response.brokenRules != null && response.brokenRules.Count() > 0)
+            {
+                foreach(var brokenrule in response.brokenRules)
+                {
+                    errors += brokenrule.errorCode + "-" + brokenrule.errorDescription + Environment.NewLine;
+                }
+            }
+            return errors;
         }
 
         public static string LabelStoragPath
